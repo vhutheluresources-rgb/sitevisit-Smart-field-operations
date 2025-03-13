@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>SignUp | Gr12 - WebApp</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+	<main class="form-container">
+		<h1>Sign Up</h1>
+		
+		<!-- Display error message here -->
+		<p th:text="${error}" style="color: red; font-size: smaller;"></p>
+		<form id="signup-form" action="/register" method="post" onsubmit="return checkForm()">
+			<table>
+				<tr>
+					<td>
+						<label for="fullName">Full Name:</label>
+						<input type="text" id="fullName" name="fullName" required>
+						<div class="error"></div>
+					</td>
+					<td class="mtd"></td>
+					
+					<td>
+						<label for="email">Email:</label>
+						<input type="email" id="email" name="email" required>
+						<div class="error"></div>
+					</td>
+					
+				</tr>
+				<tr>
+					<td>
+						<label for="idNumber">ID Number:</label>
+						<input type="text" id="idNumber" name="idNumber" maxlength="13" required>
+						<div id="id_validation_message" style="display: none; color: red;font-size: smaller;"></div>
+						<div class="error"></div>
+					</td>
+					<td class="mtd"></td>
+					
+					<td>
+						<label for="phoneNumber">Phone Number:</label>
+						<input type="number" id="phoneNumber" name="phoneNumber" required>
+						<div id="phone_validation_message" style="display: none; color: red;font-size: smaller;"></div>
+						<div class="error"></div>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<label for="role">Role:</label>
+						<select id="role" name="role" required>
+							<option value="USER">Student</option>
+							<option value="ADMIN">Educator</option>
+						</select>
+						<div class="error"></div>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<label for="password">Password:</label>
+						<input type="password" name="password" id="password" class="user-password" required>
+						<div class="error"></div>
+					</td>
+					
+					<td class="mtd"></td>
+					<td>
+						<label for="confirm_password">Confirm Password:</label>
+						<input type="password" id="confirm_password" name="confirm_password"
+							class="password-confirmation" required>
+						<div class="error"></div>
+						<div id="password_match_message" style="display: none; color: red;font-size: smaller;">Passwords do not match!</div>
+					</td>
+				</tr>
+				
+				</table>
+				<div class="show-password-container">
+				                <input type="checkbox" id="show-password" onclick="passwordVisibility()" />
+				                <p>Show Password</p>
+				            </div>
+				<div id="password_requirements">
+					<p style="text-align: start;font-size: smaller;">Password must contain:</p>
+					<ul>
+						<li id="special_character">At least one special character (e.g., !, @, #)</li>
+						<li id="number">At least one numeric digit (0-9)</li>
+						<li id="lowercase">At least one lowercase letter (a-z)</li>
+						<li id="uppercase">At least one uppercase letter (A-Z)</li>
+					</ul>
+				</div>
+				<button type="submit">Sign Up</button>
+		</form>
+
+		<p>Already have an account? <a href="/login">Login</a></p>
+
+	</main>
+</body>
+<script src="script.js"></script>
+
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard | Study Portal</title>
+    <style>
+		/* Reset some default styles */
+		* {
+		    margin: 0;
+		    padding: 0;
+		    box-sizing: border-box;
+		}
+		
+		/* Body and overall layout */
+		body {
+		    font-family: Arial, sans-serif;
+		    background-color: #f4f7fb;
+		    color: #333;
+		}
+		
+		/* Header */
+		.dashboard-header {
+		    background-color: #2c3e50;
+		    color: white;
+		    padding: 20px 0;
+		}
+		
+		.dashboard-header .container {
+		    width: 80%;
+		    margin: 0 auto;
+		    text-align: center;
+		}
+		
+		.dashboard-header h1 {
+		    font-size: 2.5rem;
+		}
+		
+		.dashboard-header p {
+		    font-size: 1rem;
+		    margin-top: 5px;
+		}
+		
+		/* Main Dashboard Section */
+		.dashboard-main {
+		    width: 80%;
+		    margin: 20px auto;
+		}
+		
+		.section {
+		    margin-bottom: 40px;
+		}
+		
+		.section h2 {
+		    font-size: 1.8rem;
+		    margin-bottom: 10px;
+		    color: #2c3e50;
+		}
+		
+		.subjects {
+		    display: flex;
+		    gap: 20px;
+		}
+		
+		.subject {
+		    background-color: white;
+		    border-radius: 8px;
+		    padding: 15px;
+		    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		    text-align: center;
+		    flex: 1;
+		}
+		
+		.subject h3 {
+		    font-size: 1.2rem;
+		    margin-bottom: 10px;
+		}
+		
+		.subject .btn {
+		    background-color: #3498db;
+		    color: white;
+		    padding: 8px 16px;
+		    text-decoration: none;
+		    border-radius: 5px;
+		}
+		
+		.subject .btn:hover {
+		    background-color: #2980b9;
+		}
+		
+		/* Progress Tracking */
+		.progress {
+		    display: flex;
+		    align-items: center;
+		}
+		
+		.progress-bar {
+		    width: 100%;
+		}
+		
+		.progress-percentage {
+		    margin-left: 10px;
+		    font-weight: bold;
+		}
+		
+		/* Feedback & Suggestions */
+		.feedback form {
+		    display: flex;
+		    flex-direction: column;
+		    gap: 10px;
+		}
+		
+		.feedback textarea {
+		    padding: 10px;
+		    border: 1px solid #ddd;
+		    border-radius: 5px;
+		    resize: vertical;
+		}
+		
+		.feedback button {
+		    background-color: #27ae60;
+		    color: white;
+		    padding: 12px 20px;
+		    border: none;
+		    border-radius: 5px;
+		    cursor: pointer;
+		}
+		
+		.feedback button:hover {
+		    background-color: #2ecc71;
+		}
+		
+		/* Detailed Progress Insights */
+		.insights {
+		    display: flex;
+		    gap: 30px;
+		}
+		
+		.insight {
+		    flex: 1;
+		    background-color: white;
+		    padding: 15px;
+		    border-radius: 8px;
+		    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+		
+		.insight h3 {
+		    font-size: 1.2rem;
+		    margin-bottom: 10px;
+		}
+		
+		/* Notifications */
+		.notifications .notification {
+		    background-color: #ecf0f1;
+		    padding: 15px;
+		    margin-bottom: 10px;
+		    border-radius: 8px;
+		}
+		
+		.notification strong {
+		    color: #3498db;
+		}
+		
+		/* Footer */
+		.dashboard-footer {
+		    background-color: #34495e;
+		    color: white;
+		    padding: 20px 0;
+		    text-align: center;
+		}
+		
+		.dashboard-footer p {
+		    font-size: 0.9rem;
+		}
+
+	</style>
+</head>
+<body>
+
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <h1>Welcome Back, <span id="user-name">John Doe</span>!</h1>
+            <p>Your recent activity: <span id="recent-activity">Completed 3 new revisions in Mathematics</span></p>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Content -->
+    <main class="dashboard-main container">
+
+        <!-- Subject Overview Section -->
+        <section class="section">
+            <h2>Subject Overview</h2>
+            <div class="subjects">
+                <div class="subject">
+                    <h3>Mathematics</h3>
+                    <a href="#" class="btn">View Past Papers</a>
+                </div>
+                <div class="subject">
+                    <h3>Physics</h3>
+                    <a href="#" class="btn">View Past Papers</a>
+                </div>
+                <div class="subject">
+                    <h3>Chemistry</h3>
+                    <a href="#" class="btn">View Past Papers</a>
+                </div>
+                <div class="subject">
+                    <h3>Biology</h3>
+                    <a href="#" class="btn">View Past Papers</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Tracking Section -->
+        <section class="section">
+            <h2>Progress Tracking</h2>
+            <div class="progress">
+                <label for="progress-bar">Completed Revisions: </label>
+                <progress id="progress-bar" value="70" max="100"></progress>
+                <span class="progress-percentage">70%</span>
+            </div>
+        </section>
+
+        <!-- Feedback & Suggestions Section -->
+        <section class="section feedback">
+            <h2>User Feedback & Suggestions</h2>
+            <form action="#" method="post">
+                <label for="feedback-textarea">Your Feedback:</label>
+                <textarea id="feedback-textarea" placeholder="Let us know your thoughts..."></textarea>
+                <label for="suggestions-textarea">Suggestions:</label>
+                <textarea id="suggestions-textarea" placeholder="Any areas for improvement?"></textarea>
+                <button type="submit" class="btn">Submit Feedback</button>
+            </form>
+        </section>
+
+        <!-- Detailed Progress Insights Section -->
+        <section class="section">
+            <h2>Detailed Progress Insights</h2>
+            <div class="insights">
+                <div class="insight">
+                    <h3>Time Spent on Each Subject</h3>
+                    <p>Mathematics: 5 hours</p>
+                    <p>Physics: 3 hours</p>
+                    <p>Chemistry: 4 hours</p>
+                    <p>Biology: 2 hours</p>
+                </div>
+                <div class="insight">
+                    <h3>Performance Analysis</h3>
+                    <p>Strengths: Algebra, Mechanics</p>
+                    <p>Weaknesses: Organic Chemistry, Optics</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notifications & Announcements Section -->
+        <section class="section">
+            <h2>Notifications & Announcements</h2>
+            <div class="notifications">
+                <div class="notification">
+                    <p><strong>Reminder:</strong> Your final exam is in 5 days. Start revising!</p>
+                </div>
+                <div class="notification">
+                    <p><strong>New Content:</strong> New revision notes on Optics are available. Check them out!</p>
+                </div>
+                <div class="notification">
+                    <p><strong>Achievement:</strong> You’ve completed 10 subjects revisions!</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="dashboard-footer">
+        <p>&copy; 2025 Study Portal. All Rights Reserved.</p>
+    </footer>
+
+    <script >
+		// Dynamic Greeting and Recent Activity (can be based on user data)
+		document.getElementById("user-name").textContent = "Jane Smith"; // Example dynamic name
+		document.getElementById("recent-activity").textContent = "Completed 5 new revisions in Physics"; // Example dynamic activity
+		
+		// Example of a progress bar change
+		document.getElementById("progress-bar").value = 85; // Dynamically change the progress bar value
+		document.querySelector(".progress-percentage").textContent = "85%"; // Update the progress percentage
+
+	</script>
+
+</body>
+</html>

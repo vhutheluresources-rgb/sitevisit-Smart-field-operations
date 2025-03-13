@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Add New Subject</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+
+<body>
+	<div class="container mt-5">
+		<h2 class="text-center">Add New Subject</h2>
+		<form action="/subject/addSubject" method="post" class="mt-4">
+			<div class="mb-3">
+				<!-- Display error message here -->
+				<p th:text="${error}" style="color: red; font-size: smaller; font-weight: bold;"></p>
+				<label for="subjectName" class="form-label">Select Subject</label>
+				<select class="form-control" id="subjectName" name="subjectName" required>
+					<option value="" selected disabled>Select a subject</option>
+					<option value="Accounting">Accounting</option>
+					<option value="Afrikaans">Afrikaans</option>
+					<option value="Agricultural Science">Agricultural Sciences</option>
+					<option value="Business Studies">Business Studies</option>
+					<option value="Economics">Economics</option>
+					<option value="English">English</option>
+					<option value="Geography">Geography</option>
+					<option value="History">History</option>
+					<option value="IsiNdebele">IsiNdebele</option>
+					<option value="IsiXhosa">IsiXhosa</option>
+					<option value="IsiZulu">IsiZulu</option>
+					<option value="Life Orientation">Life Orientation</option>
+					<option value="Life Science">Life Science</option>
+					<option value="Geography">Geography</option>
+					<option value="Mathematics">Mathematics</option>
+					<option value="Mathematical Literacy">Mathematical Literacy</option>
+					<option value="Physical Sciences">Physical Sciences</option>
+					<option value="Sepedi">Sepedi</option>
+					<option value="Sesotho">Sesotho</option>
+					<option value="Setswana">Setswana</option>
+					<option value="Siswati">Siswati</option>
+					<option value="Technical Mathematics">Technical Mathematics</option>
+					<option value="Tourism">Tourism</option>
+					<option value="Tshivenda">Tshivenda</option>
+					<option value="Xitsonga">Xitsonga</option>
+
+				</select>
+			</div>
+			<div class="d-flex justify-content-between">
+				<a href="/subject/allSubjects" class="btn btn-secondary">Cancel</a>
+				<button type="submit" class="btn btn-success">Save Subject</button>
+			</div>
+		</form>
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

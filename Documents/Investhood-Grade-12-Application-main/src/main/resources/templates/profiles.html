@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Profile</title>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="styles.css" rel="stylesheet">
+	<style>
+		/* General Reset and Body Styling */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Roboto', sans-serif;
+			background-color: #f1f3f6;
+			color: #333;
+			display: flex;
+			height: 100vh;
+		}
+
+		.dashboard-container {
+			display: flex;
+			flex-grow: 1;
+			width: 100%;
+			overflow: hidden;
+		}
+
+		/* Sidebar Styling */
+		.sidebar {
+			width: 250px;
+			background-color: #34495e;
+			color: #fff;
+			padding: 20px;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.sidebar-header h2 {
+			text-align: center;
+			font-size: 26px;
+			margin-bottom: 40px;
+		}
+
+		.sidebar-nav ul {
+			list-style: none;
+			padding: 0;
+		}
+
+		.sidebar-nav li {
+			margin: 15px 0;
+		}
+
+		.sidebar-nav a {
+			text-decoration: none;
+			color: #fff;
+			font-size: 18px;
+			padding: 10px;
+			display: block;
+			border-radius: 5px;
+			transition: background-color 0.3s, padding-left 0.3s;
+		}
+
+		.sidebar-nav a:hover {
+			background-color: #2c3e50;
+			padding-left: 20px;
+		}
+
+		/* Main Content Styling */
+		.main-content {
+			flex-grow: 1;
+			padding: 30px;
+			background-color: #fff;
+			overflow-y: auto;
+		}
+
+		.top-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 15px 0;
+			border-bottom: 2px solid #ecf0f1;
+		}
+
+		.top-bar .welcome-message h1 {
+			font-size: 20px;
+		}
+
+		.top-bar .welcome-message h1 span {
+			color: #3498db;
+			font-size: 24px;
+			font-weight: bold;
+		}
+
+		.notifications button {
+			padding: 12px 20px;
+			background-color: #3498db;
+			/* Blue */
+			color: #fff;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 16px;
+			display: flex;
+			align-items: center;
+			position: relative;
+		}
+
+		.notifications button:hover {
+			background-color: #2980b9;
+			/* Darker blue */
+		}
+
+		.notifications button i {
+			margin-right: 10px;
+			font-size: 20px;
+		}
+
+		.notification-badge {
+			position: absolute;
+			top: -5px;
+			right: -5px;
+			background-color: red;
+			color: white;
+			font-size: 12px;
+			border-radius: 50%;
+			padding: 5px 10px;
+		}
+
+		.notification-panel {
+			display: none;
+			position: absolute;
+			top: 50px;
+			right: 0;
+			width: 250px;
+			background-color: white;
+			border: 1px solid #ddd;
+			padding: 10px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		.notification-panel ul {
+			list-style: none;
+			padding: 0;
+		}
+
+		.notification-panel li {
+			padding: 10px;
+			border-bottom: 1px solid #ddd;
+		}
+
+		/* Profile Details Section */
+		.profile-details {
+			margin-top: 30px;
+		}
+
+		.profile-details h2 {
+			font-size: 24px;
+			margin-bottom: 20px;
+		}
+
+		.profile-card {
+			background-color: #ecf0f1;
+			padding: 20px;
+			border-radius: 8px;
+			margin-bottom: 20px;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.profile-card .details {
+			flex: 1;
+			margin-right: 20px;
+		}
+
+		.profile-card .details h3 {
+			font-size: 20px;
+			margin-bottom: 10px;
+		}
+
+		.profile-card .details p {
+			font-size: 16px;
+			margin-bottom: 5px;
+			color: #7f8c8d;
+		}
+
+		.profile-card .actions button {
+			padding: 10px 20px;
+			background-color: #3498db;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s ease-in-out;
+		}
+
+		.profile-card .actions button:hover {
+			background-color: #2980b9;
+		}
+
+		/* Progress Section */
+		.progress-section {
+			margin-top: 40px;
+		}
+
+		.progress-section h2 {
+			font-size: 24px;
+			margin-bottom: 20px;
+		}
+
+		.progress-bar-container {
+			background-color: #ecf0f1;
+			padding: 15px;
+			border-radius: 8px;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+		}
+
+		.progress-bar {
+			background-color: #3498db;
+			height: 20px;
+			border-radius: 5px;
+			transition: width 0.4s ease-in-out;
+		}
+
+		/* Settings Section */
+		.settings-section {
+			margin-top: 40px;
+		}
+
+		.settings-section h2 {
+			font-size: 24px;
+			margin-bottom: 20px;
+		}
+
+		.settings-section .settings-btn {
+			padding: 10px 20px;
+			background-color: #3498db;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			margin-right: 10px;
+			transition: background-color 0.3s ease-in-out;
+		}
+
+		.settings-section .settings-btn:hover {
+			background-color: #2980b9;
+		}
+
+		/* Responsive Design */
+		@media (max-width: 768px) {
+			.profile-card {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+
+			.profile-card .details {
+				margin-bottom: 20px;
+			}
+		}
+
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 1000;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+			background-color: rgba(0, 0, 0, 0.4);
+			justify-content: center;
+			align-items: center;
+		}
+
+		.modal-content {
+			background-color: #fff;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+			width: 80%;
+			max-width: 400px;
+			margin: auto;
+		}
+
+		.modal-content h2 {
+			margin-bottom: 20px;
+		}
+
+		.modal-content label {
+			display: block;
+			font-weight: bold;
+			margin-top: 10px;
+		}
+
+		.modal-content input {
+			width: 100%;
+			padding: 8px;
+			margin-top: 5px;
+			margin-bottom: 20px;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+		}
+
+		.modal-content button {
+			padding: 10px 20px;
+			background-color: #3498db;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s ease-in-out;
+		}
+
+		.modal-content button:hover {
+			background-color: #2980b9;
+		}
+
+		.close-button {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			font-size: 24px;
+			font-weight: bold;
+			color: #aaa;
+			cursor: pointer;
+		}
+
+		.close-button:hover {
+			color: #000;
+		}
+	</style>
+
+</head>
+
+<body>
+	<div class="dashboard-container">
+		<!-- Sidebar -->
+		<aside class="sidebar">
+			<div class="sidebar-header">
+				<h2>Profile</h2>
+			</div>
+			<nav class="sidebar-nav">
+				<ul>
+					<li><a href="/dashboard">Dashboard</a></li>
+					<li><a href="/resources">Resources</a></li>
+					<li><a href="/subject/allSubjects">Subjects</a></li>
+					<li><a href="/quiz">Quizzes</a></li>
+					<li><a href="/grades">Grades</a></li>
+					<li><a href="/chatroom">ChatRoom</a></li>
+					<li style="background-color: #2980b9;margin: 5px;"><a href="/profile">Profile</a></li>
+					<li><a href="/">Logout</a></li>
+				</ul>
+			</nav>
+		</aside>
+
+		<!-- Main Content -->
+		<main class="main-content">
+			<!-- Top Bar -->
+			<div class="top-bar">
+				<div class="welcome-message">
+					<h1>Welcome, <span th:text="${user.fullName}"></span></h1>
+				</div>
+				<div class="notifications">
+					<button class="notification-button" onclick="toggleNotifications()">
+						<i class="fa fa-bell"></i>
+						<span class="notification-badge">3</span>
+					</button>
+
+					<div id="notification-panel" class="notification-panel">
+						<ul>
+							<li>New notification 1</li>
+							<li>New notification 2</li>
+							<li>New notification 3</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<!-- User Profile Details -->
+			<div class="card p-4 shadow-sm">
+				<h2 class="text-center mb-4">Profile Information</h2>
+				<div class="mb-3 text-center">
+					<label class="form-label d-block">Profile Picture:</label>
+					<img src="profile.jpg" alt="Profile Picture" class="rounded-circle img-thumbnail" width="150"><br>
+					<button class="btn btn-primary btn-sm mt-2" id="editPicture">Upload Profile Picture</button>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Full Name:</label> <span id="fullname" class="me-3"
+						th:text="${user.fullName}"></span>
+					<div class="d-flex align-items-center">
+
+						<button class="btn btn-secondary btn-sm" id="editFullName">Edit Your Full Name</button>
+					</div>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Phone Number:</label> <span id="phone" class="me-3"
+						th:text="${user.phoneNumber}"></span>
+					<div class="d-flex align-items-center">
+
+						<button class="btn btn-secondary btn-sm" id="editPhoneNumber">Edit Your Phone Number</button>
+					</div>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Email:</label> <span class="me-3" th:text="${user.email}"></span>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Role:</label> <span class="me-3" th:text="${user.role}"></span>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Password:</label> <span class="me-3">**********</span>
+					<div class="d-flex align-items-center">
+
+						<button class="btn btn-secondary btn-sm" id="editPassword">Edit Your Password</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Pop up form that Updates the full name of the user -->
+			<div id="editFullNameModal" class="modal">
+				<div class="modal-content">
+					<span class="close-button" onclick="toggleFullNameModal()">&times;</span>
+					<h2>Edit Full Name</h2>
+					<form id="editProfileForm" action="/profile/updateFullName" method="post">
+						<label for="fullName">Full Name:</label>
+						<input type="text" id="fullName" name="fullName" value="" required>
+						<button type="submit">Save Changes</button>
+					</form>
+				</div>
+			</div>
+
+			<!-- Pop up form that Updates the Phone Number of the user -->
+			<div id="editPhoneNumberModal" class="modal">
+				<div class="modal-content">
+					<span class="close-button" onclick="togglePhoneNumberModal()">&times;</span>
+					<h2>Edit Phone Number</h2>
+					<form id="editProfileForm" action="/profile/updatePhoneNumber" method="post">
+						<label for="phoneNumber">Phone Number:</label>
+						<input type="text" id="phoneNumber" name="phoneNumber" value="" required>
+						<button type="submit">Save Changes</button>
+					</form>
+				</div>
+			</div>
+
+			<!-- Pop up form that Updates the Profile Picture of the user -->
+			<div id="editProfilePictureModal" class="modal">
+				<div class="modal-content">
+					<span class="close-button" onclick="togglePictureModal()">&times;</span>
+					<h2>Edit Profile Picture</h2>
+					<form id="editProfileForm" action="/profile/updateProfilePicture" method="post"
+						enctype="multipart/form-data">
+						<label for="profilePicture">Profile Picturer:</label>
+						<input type="file" id="profilePicture" name="profilePicture" accept="/images" value="" required>
+						<button type="submit">Save Changes</button>
+					</form>
+				</div>
+			</div>
+
+			<!-- Pop up form that Updates the Phone Number of the user -->
+			<div id="editPasswordModal" class="modal">
+				<div class="modal-content">
+					<span class="close-button" onclick="togglePasswordModel()">&times;</span>
+					<h2>Edit Password</h2>
+					<form id="editProfileForm" action="/profile/updatePassword" method="post">
+						<label for="password">New Password:</label>
+						<input type="password" id="password" name="password" value="" required>
+
+						<div class="show-password-container">
+							<input type="checkbox" id="show-password" onclick="passwordVisibility()" />
+							<p>Show Password</p>
+						</div>
+						<div id="password_requirements">
+							<p style="text-align: start;font-size: smaller;">Password must contain:</p>
+							<ul>
+								<li id="special_character">At least one special character (e.g., !, @, #)</li>
+								<li id="number">At least one numeric digit (0-9)</li>
+								<li id="lowercase">At least one lowercase letter (a-z)</li>
+								<li id="uppercase">At least one uppercase letter (A-Z)</li>
+							</ul>
+						</div>
+						<button type="submit">Save Changes</button>
+					</form>
+				</div>
+			</div>
+
+
+		</main>
+	</div>
+</body>
+
+<!-- Updated JavaScript for Modal -->
+<script>
+	function toggleFullNameModal() {
+		var modal = document.getElementById('editFullNameModal');
+		if (modal.style.display === 'none' || modal.style.display === '') {
+			modal.style.display = 'flex';
+
+		} else {
+			modal.style.display = 'none';
+		}
+	}
+	// Attach event listener to the Edit Profile button
+	document.getElementById('editFullName').addEventListener('click', toggleFullNameModal);
+
+	// Close modal when clicking outside of it
+	window.onclick = function (event) {
+		var modal = document.getElementById('editFullNameModal');
+		if (event.target === modal) {
+			modal.style.display = 'none';
+		}
+	};
+
+	function togglePhoneNumberModal() {
+		var modal = document.getElementById('editPhoneNumberModal');
+		if (modal.style.display === 'none' || modal.style.display === '') {
+			modal.style.display = 'flex';
+		} else {
+			modal.style.display = 'none';
+		}
+	}
+	// Attach event listener to the Edit Profile button
+	document.getElementById('editPhoneNumber').addEventListener('click', togglePhoneNumberModal);
+
+	// Close modal when clicking outside of it
+	window.onclick = function (event) {
+		var modal = document.getElementById('editPhoneNumberModal');
+		if (event.target === modal) {
+			modal.style.display = 'none';
+		}
+	};
+
+	function togglePasswordModel() {
+		var modal = document.getElementById('editPasswordModal');
+		if (modal.style.display === 'none' || modal.style.display === '') {
+			modal.style.display = 'flex';
+
+		} else {
+			modal.style.display = 'none';
+		}
+	}
+	// Attach event listener to the Edit Profile button
+	document.getElementById('editPassword').addEventListener('click', togglePasswordModel);
+
+	// Close modal when clicking outside of it
+	window.onclick = function (event) {
+		var modal = document.getElementById('editPasswordModal');
+		if (event.target === modal) {
+			modal.style.display = 'none';
+		}
+	};
+
+	function togglePictureModal() {
+		var modal = document.getElementById('editProfilePictureModal');
+		if (modal.style.display === 'none' || modal.style.display === '') {
+			modal.style.display = 'flex';
+
+		} else {
+			modal.style.display = 'none';
+		}
+	}
+	// Attach event listener to the Edit Profile button
+	document.getElementById('editPicture').addEventListener('click', togglePictureModal);
+
+	// Close modal when clicking outside of it
+	window.onclick = function (event) {
+		var modal = document.getElementById('editProfilePictureModal');
+		if (event.target === modal) {
+			modal.style.display = 'none';
+		}
+	};
+
+
+
+</script>
+<script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</html>

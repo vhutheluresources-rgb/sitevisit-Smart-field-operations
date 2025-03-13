@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Tutorial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, rgba(52, 73, 94, 0.9), rgba(44, 62, 80, 0.9)),
+                url('/images/resources_background.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #f39c12;
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        input, textarea, button {
+            padding: 10px;
+            background: white;
+            color: black;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px;
+            background: #f39c12;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #e67e22;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Upload a Tutorial</h2>
+		<h2 th:text="${message}" style="color: rgb(128, 255, 128);"></h2>
+		<form action="/tutorials/save" method="post">
+		    <label for="title">Title:</label>
+		    <input type="text" id="title" name="title" required>
+
+		    <label for="description">Description:</label>
+		    <textarea id="description" name="description" required></textarea>
+
+		    <label for="videoUrl">Video URL:</label>
+		    <input type="url" id="videoUrl" name="videoUrl" required>
+
+		    <label for="additionalResourceUrl">Additional Resource URL:</label>
+		    <input type="url" id="additionalResourceUrl" name="additionalResourceUrl">
+
+		    <button type="submit">Submit Tutorial</button>
+		</form>
+
+
+    </div>
+
+</body>
+
+</html>
