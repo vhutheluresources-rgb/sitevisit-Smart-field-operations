@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>isiNdebele Past Papers</title>
+	<style>
+		* {
+			margin: 0px;
+			padding: 0;
+			text-decoration: none;
+		}
+
+		body {
+			background-color: silver;
+
+		}
+
+		h1 {
+			text-align: center;
+			font-size: 32px;
+			padding-top: 5px;
+			padding-bottom: 5px;
+			margin-left: 500px;
+
+			color: white;
+			text-shadow: 2px 2px 0px rgba(30, 80, 223, 10);
+
+		}
+
+		.logo-paper {
+			background-color: rgb(72, 106, 136);
+			margin: 15px;
+			border: 2px solid grey;
+			padding: 20px;
+			margin: 20px 0;
+			display: flex;
+			align-items: center;
+
+		}
+
+		.back-btn {
+			font-family: Arial, Helvetica, sans-serif;
+			padding: 5px;
+
+			border-radius: 5px;
+			border: none;
+			font-size: 18px;
+		}
+
+		.back-btn a {
+			color: black;
+
+		}
+
+		.back-btn a:hover {
+			text-decoration: underline;
+			text-decoration-color: cadetblue;
+			color: cadetblue;
+			cursor: pointer;
+
+
+		}
+
+		.style-container {
+			margin-top: 15px;
+			margin-left: 35px;
+		}
+
+		.style-container ol li {
+			padding-bottom: 10px;
+			font-size: 20px;
+
+
+		}
+
+		.style-container ol li a {
+			color: black;
+
+
+		}
+
+		.style-container ol li a:hover {
+
+			color: white;
+			text-decoration: underline;
+
+
+		}
+
+		#home-paper {
+			margin-top: 45px;
+			margin-bottom: 20px;
+			margin-left: 20px;
+			text-decoration: underline;
+			font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+		}
+
+		#fal-paper {
+			margin-top: 10px;
+			margin-bottom: 20px;
+			margin-left: 15px;
+			text-decoration: underline;
+			font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+		}
+
+		#info-paragraph {
+			text-align: center;
+			margin-top: 20px;
+		}
+
+		.pdf-list {
+			list-style-type: none;
+			padding: 20px;
+		}
+
+		.pdf-item {
+			margin: 10px 0;
+		}
+
+		.view-btn {
+			background-color: #007bff;
+			color: white;
+			padding: 5px 10px;
+			border-radius: 5px;
+			display: inline-block;
+			cursor: pointer;
+		}
+
+		.view-btn:hover {
+			background-color: #0056b3;
+		}
+
+		.pdf-container {
+			margin-top: 20px;
+			display: none;
+			border: 1px solid #ccc;
+			padding: 10px;
+			width: 90%;
+			max-width: 800px;
+			margin-left: auto;
+			margin-right: auto;
+			background: white;
+		}
+
+		embed {
+			width: 100%;
+			height: 500px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="logo-paper">
+		<button class="back-btn"><a href="/subject/allSubjects">Back</a></button>
+		<h1>isiNdebele Past Papers </h1>
+	</div>
+	<p id="info-paragraph">Click on a paper below to view and download</p>
+
+
+	<h2 id="home-paper">Below includes IsiNdebele Past Papers Both HL and FAL</h2>
+	<!-- List of available PDFs -->
+	<ul id="pdfList" class="pdf-list"></ul>
+
+	<!-- Container to display the selected PDF -->
+	<div id="pdfContainer" class="pdf-container">
+		<embed id="pdfEmbed" type="application/pdf">
+	</div>
+
+	<script>
+		// List of available PDFs
+		const pdfFiles = [
+			"IsiNdebele FAL P1 Nov 2022.pdf",
+			"IsiNdebele FAL P2 Nov 2022.pdf",
+			"IsiNdebele FAL P3 Nov 2022.pdf",
+			"IsiNdebele HL P1 Nov 2022.pdf",
+			"IsiNdebele HL P2 Nov 2022.pdf",
+			"IsiNdebele HL P3 Nov 2022.pdf"
+		];
+
+		const pdfListElement = document.getElementById("pdfList");
+		const pdfContainer = document.getElementById("pdfContainer");
+		const pdfEmbed = document.getElementById("pdfEmbed");
+
+		// Generate list items dynamically
+		pdfFiles.forEach(pdf => {
+			const listItem = document.createElement("li");
+			listItem.classList.add("pdf-item");
+
+			const viewLink = document.createElement("a");
+			viewLink.href = "#"; // Prevent default navigation
+			viewLink.classList.add("view-btn");
+			viewLink.textContent = `View ${pdf}`;
+			viewLink.setAttribute("data-pdf-url", `/pastpapers/${pdf}`); // Corrected URL path
+
+			// Handle click to display the PDF
+			viewLink.addEventListener("click", function (event) {
+				event.preventDefault(); // Prevent the default link behavior
+				const pdfUrl = this.getAttribute("data-pdf-url");
+				pdfEmbed.src = pdfUrl; // Update the embed source
+				pdfContainer.style.display = "block"; // Show the container
+			});
+
+			listItem.appendChild(viewLink);
+			pdfListElement.appendChild(listItem);
+		});
+	</script>
+</body>
+
+</html>

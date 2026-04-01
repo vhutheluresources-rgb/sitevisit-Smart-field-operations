@@ -1,0 +1,133 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #1653d9;
+  color: #fff;
+}
+header {
+  background-color: linear-gradient(
+    45deg,
+    rgb(16, 137, 211) 0%,
+    rgb(18, 177, 209) 100%
+  );;
+  padding: 1rem;
+  color: #fff;
+}
+header nav ul {
+  list-style: none;
+  display: flexbox;
+  justify-content: center;
+  padding: 0;
+}
+header nav ul li {
+  margin-right: 25px;
+}
+header nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: large;
+}
+header nav ul li a:hover{
+  color: brown;
+}
+.hero {
+  text-align: center;
+  padding: 10rem;
+  background-color: rgb(26, 51, 88);
+  color: white;
+  height: 150px;
+}
+.hero button {
+  
+}
+.form-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: rgb(26, 51, 88);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+.form-container form label {
+  display: block;
+  margin-top: 1rem;
+}
+.form-container form input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+.form-container form button {
+  width: 100%;
+  padding: 0.7rem;
+  margin-top: 1rem;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+.form-container form button:hover {
+  background-color: #3f84b6;
+  color: #333;
+  cursor: pointer;
+}
+.mtd {
+  width: 20px;
+}
+h1,
+.pic {
+  text-align: center;
+}
+.pic img {
+  width: 75px;
+  height: 70px;
+}
+a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: block;
+  margin: 10px 0;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+p {
+  font-size: 0.9rem;
+  margin-top: 15px;
+}
+
+p a {
+  font-weight: bold;
+}
+p,
+a {
+  text-align: center;
+}
+/* Styling for the "Show Password" checkbox */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+}
+
+#show-password {
+  /* Added spacing between checkbox and label */
+  color: #333; /* Dark text color */
+  cursor: pointer;
+}
+li {
+  font-size: x-small;
+}
+.show-password-container {
+  display: flex;
+  align-items: center;
+}
+.form-container form .show-password-container input {
+  width: 20px;
+  margin-top: 1px;
+}

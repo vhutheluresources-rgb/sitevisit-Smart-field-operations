@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Grades</title>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+	<style>
+		/* General Reset and Body Styling */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Roboto', sans-serif;
+			background-color: #f1f3f6;
+			color: #333;
+			display: flex;
+			height: 100vh;
+		}
+
+		.dashboard-container {
+			display: flex;
+			flex-grow: 1;
+			width: 100%;
+			overflow: hidden;
+		}
+
+		/* Sidebar Styling */
+		.sidebar {
+			width: 250px;
+			background-color: #34495e;
+			color: #fff;
+			padding: 20px;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.sidebar-header h2 {
+			text-align: center;
+			font-size: 26px;
+			margin-bottom: 40px;
+		}
+
+		.sidebar-nav ul {
+			list-style: none;
+			padding: 0;
+		}
+
+		.sidebar-nav li {
+			margin: 15px 0;
+		}
+
+		.sidebar-nav a {
+			text-decoration: none;
+			color: #fff;
+			font-size: 18px;
+			padding: 10px;
+			display: block;
+			border-radius: 5px;
+			transition: background-color 0.3s, padding-left 0.3s;
+		}
+
+		.sidebar-nav a:hover {
+			background-color: #2c3e50;
+			padding-left: 20px;
+		}
+
+		/* Main Content Styling */
+		.main-content {
+			flex-grow: 1;
+			padding: 30px;
+			background-color: #fff;
+			overflow-y: auto;
+		}
+
+		.top-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 15px 0;
+			border-bottom: 2px solid #ecf0f1;
+		}
+
+		.top-bar .welcome-message h1 {
+			font-size: 15px;
+		}
+
+		.top-bar .welcome-message h1 span {
+			color: #3498db;
+			font-size: 30px;
+			font-weight: bold;
+		}
+
+		.notifications button {
+			padding: 12px 20px;
+			background-color: #3498db;
+			/* Blue */
+			color: #fff;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 16px;
+			display: flex;
+			align-items: center;
+			position: relative;
+		}
+
+		.notifications button:hover {
+			background-color: #2980b9;
+			/* Darker blue */
+		}
+
+		.notifications button i {
+			margin-right: 10px;
+			font-size: 20px;
+		}
+
+		.notification-badge {
+			position: absolute;
+			top: -5px;
+			right: -5px;
+			background-color: red;
+			color: white;
+			font-size: 12px;
+			border-radius: 50%;
+			padding: 5px 10px;
+		}
+
+		.notification-panel {
+			display: none;
+			position: absolute;
+			top: 50px;
+			right: 0;
+			width: 250px;
+			background-color: white;
+			border: 1px solid #ddd;
+			padding: 10px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		.notification-panel ul {
+			list-style: none;
+			padding: 0;
+		}
+
+		.notification-panel li {
+			padding: 10px;
+			border-bottom: 1px solid #ddd;
+		}
+
+		/* Grades Table Styling */
+		.grades-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 30px;
+		}
+
+		.grades-table th,
+		.grades-table td {
+			padding: 12px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+
+		.grades-table th {
+			background-color: #f1f3f6;
+			font-weight: bold;
+		}
+
+		.grades-table .progress-bar {
+			width: 100%;
+			background-color: #ecf0f1;
+			border-radius: 5px;
+			overflow: hidden;
+			height: 10px;
+		}
+
+		.grades-table .progress-bar div {
+			height: 100%;
+			background-color: #3498db;
+		}
+
+		.grades-table .progress-text {
+			position: absolute;
+			color: #fff;
+			font-size: 14px;
+			top: -20px;
+			left: 0;
+			right: 0;
+			text-align: center;
+		}
+
+		/* Responsive design */
+		@media (max-width: 768px) {
+
+			.stats-cards,
+			.quiz-cards {
+				flex-direction: column;
+				align-items: center;
+			}
+
+			.sidebar {
+				width: 200px;
+			}
+
+			.main-content {
+				padding: 20px;
+			}
+
+			.grades-table th,
+			.grades-table td {
+				padding: 8px;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div class="dashboard-container">
+		<!-- Sidebar -->
+		<aside class="sidebar">
+			<div class="sidebar-header">
+				<h2>Grades</h2>
+			</div>
+			<nav class="sidebar-nav">
+				<ul>
+					<li><a href="/dashboard">Dashboard</a></li>
+					<li><a href="/resources">Resources</a></li>
+					<li><a href="/subject/allSubjects">Subjects</a></li>
+					<li><a href="/quiz">Quizzes</a></li>
+					<li style="background-color: #2980b9;margin: 5px;"><a href="/grades">Grades</a></li>
+					<li><a href="/chatroom">ChatRoom</a></li>
+					<li><a href="/profile">Profile</a></li>
+					<li><a href="/">Logout</a></li>
+				</ul>
+			</nav>
+		</aside>
+
+		<!-- Main Content -->
+		<main class="main-content">
+			<!-- Top Bar -->
+			<div class="top-bar">
+				<div class="welcome-message">
+					<h1>Welcome,<span th:text="${user.fullName}"></span></h1>
+				</div>
+				<div class="notifications">
+					<button class="notification-button" onclick="toggleNotifications()">
+						<i class="fa fa-bell"></i> Notifications
+						<span class="notification-badge">3</span>
+					</button>
+
+					<div id="notification-panel" class="notification-panel">
+						<ul>
+							<li>New notification 1</li>
+							<li>New notification 2</li>
+							<li>New notification 3</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<!-- Grades Table -->
+			<table class="grades-table">
+				<thead>
+					<tr>
+						<th>Subject</th>
+						<th>Grade</th>
+						<th>Progress</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Mathematics</td>
+						<td>A</td>
+						<td>
+							<div class="progress-bar">
+								<div style="width: 90%;"></div>
+							</div>
+							<span class="progress-text">90%</span>
+						</td>
+					</tr>
+					<tr>
+						<td>Science</td>
+						<td>B+</td>
+						<td>
+							<div class="progress-bar">
+								<div style="width: 85%;"></div>
+							</div>
+							<span class="progress-text">85%</span>
+						</td>
+					</tr>
+					<tr>
+						<td>History</td>
+						<td>B</td>
+						<td>
+							<div class="progress-bar">
+								<div style="width: 75%;"></div>
+							</div>
+							<span class="progress-text">75%</span>
+						</td>
+					</tr>
+					<tr>
+						<td>English</td>
+						<td>A-</td>
+						<td>
+							<div class="progress-bar">
+								<div style="width: 88%;"></div>
+							</div>
+							<span class="progress-text">88%</span>
+						</td>
+					</tr>
+					<tr>
+						<td>Computer Science</td>
+						<td>A</td>
+						<td>
+							<div class="progress-bar">
+								<div style="width: 95%;"></div>
+							</div>
+							<span class="progress-text">95%</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</main>
+	</div>
+</body>
+<script>
+
+	function toggleNotifications() {
+		var panel = document.getElementById('notification-panel');
+		// Toggle the visibility of the notification panel
+		if (panel.style.display === 'none' || panel.style.display === '') {
+			panel.style.display = 'block';
+		} else {
+			panel.style.display = 'none';
+		}
+	}
+</script>
+
+</html>

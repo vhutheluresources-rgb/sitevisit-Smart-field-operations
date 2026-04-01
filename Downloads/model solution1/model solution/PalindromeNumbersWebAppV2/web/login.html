@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Login Page</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Login</h1>
+        <p>
+            Please enter your name and login credentials below.
+        </p>
+        <form action="StartSessionServlet.do" method="POST">
+            <table>
+                <tr>
+                    <td>Name: </td>
+                    <td><input type="text" name="name" required="" /> </td>
+                </tr>
+                <tr>
+                    <td>Username: </td>
+                    <td><input type="text" name="username" required="" /> </td>
+                </tr>
+                <tr>
+                    <td>Password: </td>
+                    <td><input type="text" name="password" required="" /> </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="SUBMIT"/> </td>
+                </tr>
+            </table>
+        </form>        
+    </body>
+</html>
