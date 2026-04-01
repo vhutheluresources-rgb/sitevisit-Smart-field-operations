@@ -17,15 +17,16 @@ public class SecurityConfig {
                                 "/",
                                 "/index.html",
                                 "/login.html",
-                                "/dashbord.html",
+                                "/dashboard.html",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
                                 "/api/auth/**"
                         ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
-                .formLogin(form -> form.disable());
+                .formLogin(form -> form.disable())
+                .httpBasic(httpBasic -> httpBasic.disable());
 
         return http.build();
     }

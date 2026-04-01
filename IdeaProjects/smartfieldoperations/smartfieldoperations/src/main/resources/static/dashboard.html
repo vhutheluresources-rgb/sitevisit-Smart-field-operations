@@ -177,6 +177,35 @@
     function showMessage(message) {
         alert(message);
     }
+
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const fullName = localStorage.getItem("fullName");
+    const role = localStorage.getItem("role");
+
+    if (isLoggedIn !== "true") {
+        window.location.href = "/login.html";
+    }
+
+    const welcomeText = document.querySelector(".dashboard-topbar p");
+    const profileName = document.querySelector(".profile-card h4");
+    const profileRole = document.querySelector(".profile-card span");
+    const profileAvatar = document.querySelector(".profile-avatar");
+
+    if (fullName && welcomeText) {
+        welcomeText.textContent = "Welcome back, " + fullName + ". Here is your operations overview.";
+    }
+
+    if (fullName && profileName) {
+        profileName.textContent = fullName;
+    }
+
+    if (role && profileRole) {
+        profileRole.textContent = role;
+    }
+
+    if (fullName && profileAvatar) {
+        profileAvatar.textContent = fullName.charAt(0).toUpperCase();
+    }
 </script>
 
 </body>
