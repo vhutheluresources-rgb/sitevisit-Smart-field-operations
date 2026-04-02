@@ -7,7 +7,8 @@ public class LoginResponse {
     private String fullName;
     private String role;
 
-    public LoginResponse() {}
+    public LoginResponse() {
+    }
 
     public LoginResponse(boolean success, String message, String fullName, String role) {
         this.success = success;
@@ -30,5 +31,21 @@ public class LoginResponse {
 
     public String getRole() {
         return role;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

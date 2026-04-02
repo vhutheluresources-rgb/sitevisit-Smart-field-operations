@@ -19,16 +19,16 @@ public class AuthService {
 
     public LoginResponse login(LoginRequest request) {
 
-        Optional<User> userOptional = userRepository.findByUsername(request.getUsername());
+        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
 
         if (userOptional.isEmpty()) {
-            return new LoginResponse(false, "Invalid username or password", null, null);
+            return new LoginResponse(false, "Invalid email or password", null, null);
         }
 
         User user = userOptional.get();
 
         if (!user.getPassword().equals(request.getPassword())) {
-            return new LoginResponse(false, "Invalid username or password", null, null);
+            return new LoginResponse(false, "Invalid email or password", null, null);
         }
 
         return new LoginResponse(true, "Login successful", user.getFullName(), user.getRole());

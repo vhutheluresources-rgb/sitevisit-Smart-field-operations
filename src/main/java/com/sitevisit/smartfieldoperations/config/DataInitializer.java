@@ -17,12 +17,11 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (userRepository.count() == 0) {
+            userRepository.save(new User("Nomsa Metfula", "nomsa@sitevisit.com", "1234", "PROJECT_MANAGER"));
+            userRepository.save(new User("Lindokuhle Zulu", "lindokuhle@sitevisit.com", "1234", "TEAM_MEMBER"));
+            userRepository.save(new User("Amahle Mchunu", "amahle@sitevisit.com", "1234", "TEAM_MEMBER"));
 
-            userRepository.save(new User("Nomsa Metfula", "nomsa", "1234", "PROJECT_MANAGER"));
-            userRepository.save(new User("Lindokuhle Zulu", "lindokuhle", "1234", "TEAM_MEMBER"));
-            userRepository.save(new User("Amahle Mchunu", "amahle", "1234", "TEAM_MEMBER"));
-
-            System.out.println("✅ Default users inserted");
+            System.out.println("Default users inserted");
         }
     }
 }
