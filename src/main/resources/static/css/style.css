@@ -697,6 +697,21 @@ tbody tr {
 .quick-actions button:hover {
     background: #2f6b52;
 }
+.logout-btn {
+    margin-left: 15px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background-color: #e53935;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #c62828;
+}
 
 /* RESPONSIVE */
 @media (max-width: 1200px) {

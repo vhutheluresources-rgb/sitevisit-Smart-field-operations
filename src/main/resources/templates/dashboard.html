@@ -52,6 +52,8 @@
                         <h4>Nommy Metsula</h4>
                         <span>Administrator</span>
                     </div>
+
+                    <button class="logout-btn" onclick="logout()">Logout</button>
                 </div>
             </div>
 
@@ -176,6 +178,19 @@
 <script>
     function showMessage(message) {
         alert(message);
+    }
+
+    function showMessage(message) {
+        alert(message);
+    }
+
+    function logout() {
+        // Clear stored user data
+        localStorage.removeItem("fullName");
+        localStorage.removeItem("role");
+
+        // Redirect to login page
+        window.location.href = "/login";
     }
 </script>
 

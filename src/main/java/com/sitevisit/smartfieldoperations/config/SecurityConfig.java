@@ -15,8 +15,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
+                                "/index.html",
                                 "/login",
+                                "/login.html",
+                                "/forgot-password",
+                                "/forgot-password.html",
+                                "/reset-password",
+                                "/reset-password.html",
                                 "/dashboard",
+                                "/dashboard.html",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
@@ -24,7 +31,8 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form.disable());
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable());
 
         return http.build();
     }

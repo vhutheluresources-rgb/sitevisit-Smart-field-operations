@@ -16,6 +16,16 @@ public class PageController {
         return "login";
     }
 
+    @GetMapping("/forgot-password")
+    public String forgotPasswordPage() {
+        return "forgot-password";
+    }
+
+    @GetMapping("/reset-password")
+    public String resetPasswordPage() {
+        return "reset-password";
+    }
+
     @GetMapping("/dashboard")
     public String dashboard() {
         return "dashboard";
