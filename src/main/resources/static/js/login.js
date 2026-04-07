@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (response.ok && data.success) {
                 localStorage.setItem("fullName", data.fullName);
                 localStorage.setItem("role", data.role);
-                window.location.href = "/dashboard";
+                window.location.href = "/dashboard.html";
             } else {
                 if (errorMessage) errorMessage.textContent = data.message || "Invalid email or password";
                 if (errorContainer) errorContainer.style.display = "flex";

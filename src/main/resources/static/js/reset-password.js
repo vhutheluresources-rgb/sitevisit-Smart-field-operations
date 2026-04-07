@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const tokenInput = document.getElementById("token");
 
     const savedToken = localStorage.getItem("resetToken");
-    if (savedToken) {
+    if (savedToken && tokenInput) {
         tokenInput.value = savedToken;
     }
 
@@ -31,13 +31,14 @@ document.addEventListener("DOMContentLoaded", function () {
             messageBox.style.display = "block";
             messageBox.textContent = data.message;
 
-            if (data.success) {
+            if (response.ok && data.success) {
                 localStorage.removeItem("resetToken");
                 setTimeout(() => {
-                    window.location.href = "/login";
+                    window.location.href = "/login.html";
                 }, 1500);
             }
         } catch (error) {
+            console.error("Reset password error:", error);
             messageBox.style.display = "block";
             messageBox.textContent = "Something went wrong. Please try again.";
         }

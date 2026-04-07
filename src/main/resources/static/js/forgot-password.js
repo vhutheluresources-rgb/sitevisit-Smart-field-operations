@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.success && data.token) {
                 localStorage.setItem("resetToken", data.token);
                 setTimeout(() => {
-                    window.location.href = "/reset-password";
+                    window.location.href = "/reset-password.html";
                 }, 1500);
             }
         } catch (error) {
