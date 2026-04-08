@@ -35,7 +35,7 @@
                 <a href="#">Team Activity</a>
                 <a href="#">Reminders</a>
                 <a href="#">Settings</a>
-                <a href="/templates/index.html">Back to Welcome</a>
+                <a href="/">Back to Welcome</a>
             </nav>
         </aside>
 
@@ -183,7 +183,7 @@
     const role = localStorage.getItem("role");
 
     if (isLoggedIn !== "true") {
-        window.location.href = "/login.html";
+        window.location.href = "/login";
     }
 
     const welcomeText = document.querySelector(".dashboard-topbar p");

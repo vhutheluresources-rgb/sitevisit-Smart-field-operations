@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (response.ok && data.success) {
                 localStorage.removeItem("resetToken");
                 setTimeout(() => {
-                    window.location.href = "/login.html";
+                    window.location.href = "/login";
                 }, 1500);
             }
         } catch (error) {
