@@ -13,12 +13,12 @@
     />
 </head>
 <body>
+
 <header class="hero-header">
     <nav class="navbar">
         <div class="brand">
             <div class="brand-logo">
-                <img src="../static/images/siteVisit%20logo.png" alt="SiteVisit Logo" class="actual-logo" />
-            </div>
+                <img src="/images/siteVisit%20logo.png" alt="SiteVisit Logo" class="actual-logo" />            </div>
             <div>
                 <h2>SiteVisit</h2>
                 <p>Smart Field Operations</p>
@@ -26,43 +26,45 @@
         </div>
 
         <div class="nav-links">
-            <a href="#">Home</a>
-            <a href="#">Features</a>
-            <a href="#">Solutions</a>
-            <a href="#">About</a>
+            <a href="#home">Home</a>
+            <a href="#features">Features</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
         </div>
 
         <div class="nav-actions">
             <button class="btn btn-light" onclick="goToLogin()">Login</button>
-            <button class="btn btn-primary" onclick="showMessage('Get Started clicked')">Get Started</button>
+            <button class="btn btn-primary" onclick="scrollToSection('contact')">Get Started</button>
         </div>
     </nav>
 
-    <section class="hero">
+    <section class="hero" id="home">
         <div class="hero-text">
             <span class="badge">Professional Site Operations Platform</span>
-            <h1>Manage site visits, field reports, teams, and follow-ups beautifully in one place.</h1>
+            <h1>Manage site visits, reports, teams, and follow-ups in one professional system.</h1>
             <p>
-                SiteVisit helps organizations improve coordination, reporting, reminders,
-                and team visibility through a modern, centralized, and professional system.
+                SiteVisit is designed to help organizations manage field operations with
+                better planning, improved reporting, stronger team coordination, and
+                real-time visibility across all activities.
             </p>
 
             <div class="hero-buttons">
-                <button class="btn btn-primary btn-large" onclick="scrollToDashboard()">View Dashboard</button>
+                <button class="btn btn-primary btn-large" onclick="scrollToSection('features')">Explore Features</button>
+                <button class="btn btn-outline btn-large" onclick="goToLogin()">Login to System</button>
             </div>
 
             <div class="hero-stats">
                 <div>
                     <h3>98%</h3>
-                    <p>Operational visibility</p>
+                    <p>Better visibility</p>
                 </div>
                 <div>
                     <h3>24/7</h3>
-                    <p>Live access to updates</p>
+                    <p>Access to updates</p>
                 </div>
                 <div>
                     <h3>100+</h3>
-                    <p>Activities tracked</p>
+                    <p>Activities managed</p>
                 </div>
             </div>
         </div>
@@ -71,51 +73,26 @@
             <div class="main-preview-card">
                 <div class="preview-top">
                     <div>
-                        <small>Operations Overview</small>
-                        <h3>Live Performance</h3>
+                        <small>Welcome to SiteVisit</small>
+                        <h3>Modern Field Management</h3>
                     </div>
-                    <span class="live-pill">Live</span>
+                    <span class="live-pill">Active</span>
                 </div>
 
-                <div class="chart-bars">
-                    <div class="bar-group">
-                        <div class="bar bar1"></div>
-                        <span>Mon</span>
+                <div class="welcome-card-content">
+                    <div class="welcome-info-box">
+                        <h4>Centralized Operations</h4>
+                        <p>Keep site visits, team activities, reports, and reminders in one secure place.</p>
                     </div>
-                    <div class="bar-group">
-                        <div class="bar bar2"></div>
-                        <span>Tue</span>
-                    </div>
-                    <div class="bar-group">
-                        <div class="bar bar3"></div>
-                        <span>Wed</span>
-                    </div>
-                    <div class="bar-group">
-                        <div class="bar bar4"></div>
-                        <span>Thu</span>
-                    </div>
-                    <div class="bar-group">
-                        <div class="bar bar5"></div>
-                        <span>Fri</span>
-                    </div>
-                </div>
 
-                <div class="mini-grid">
-                    <div class="mini-box">
-                        <strong>128</strong>
-                        <span>Total Visits</span>
+                    <div class="welcome-info-box">
+                        <h4>Smart Reporting</h4>
+                        <p>Create structured reports that are easier to submit, review, and monitor.</p>
                     </div>
-                    <div class="mini-box">
-                        <strong>14</strong>
-                        <span>Pending Reports</span>
-                    </div>
-                    <div class="mini-box">
-                        <strong>23</strong>
-                        <span>Active Team</span>
-                    </div>
-                    <div class="mini-box">
-                        <strong>9</strong>
-                        <span>Reminders</span>
+
+                    <div class="welcome-info-box">
+                        <h4>Improved Coordination</h4>
+                        <p>Support better planning, faster communication, and efficient task follow-up.</p>
                     </div>
                 </div>
             </div>
@@ -124,13 +101,13 @@
 </header>
 
 <main>
-    <section class="features-section">
+    <section class="features-section" id="features">
         <div class="section-heading">
             <span class="section-badge">Core Features</span>
-            <h2>Everything needed to run site operations professionally</h2>
+            <h2>Everything needed to run field operations professionally</h2>
             <p>
-                A polished and reliable platform built to reduce delays, improve structured
-                reporting, and give management a clear operational view.
+                A modern and polished system built to reduce delays, improve structured
+                workflows, and give management clear operational visibility.
             </p>
         </div>
 
@@ -138,189 +115,109 @@
             <div class="feature-card">
                 <div class="feature-icon">📍</div>
                 <h3>Visit Scheduling</h3>
-                <p>Plan and assign site visits with a clear and organized process.</p>
+                <p>Plan, organize, and assign site visits with a clear and efficient process.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">📑</div>
                 <h3>Structured Reports</h3>
-                <p>Create professional reports that are easy to review and track.</p>
+                <p>Create consistent and professional reports that are easy to manage.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">👥</div>
-                <h3>Team Visibility</h3>
-                <p>Monitor team progress, assignments, and activities in real time.</p>
+                <h3>Team Monitoring</h3>
+                <p>Track team assignments, responsibilities, and field activities in one place.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">🔔</div>
                 <h3>Smart Reminders</h3>
-                <p>Stay ahead of deadlines with timely follow-ups and alerts.</p>
+                <p>Stay on top of deadlines and follow-ups with timely notifications.</p>
             </div>
         </div>
     </section>
 
-    <section class="dashboard-section" id="dashboard">
-        <div class="dashboard-shell">
-            <aside class="sidebar">
-                <div class="sidebar-brand">
-                    <div class="sidebar-logo">
-                        <div class="logo-circle small-logo">
-                            <span>S</span><span class="v">V</span>
-                            <span class="logo-star">✦</span>
-                        </div>
-                    </div>
-                    <div>
-                        <h3>SiteVisit</h3>
-                        <p>Operations Panel</p>
-                    </div>
+    <section class="about-section" id="about">
+        <div class="about-container">
+            <div class="about-text">
+                <span class="section-badge">Why SiteVisit</span>
+                <h2>A smarter way to manage site operations</h2>
+                <p>
+                    Many organizations still rely on manual processes to manage site visits,
+                    reports, follow-ups, and team coordination. SiteVisit helps solve this by
+                    offering a centralized, professional, and easy-to-use platform.
+                </p>
+                <p>
+                    With SiteVisit, teams can work more efficiently, managers can monitor
+                    progress more clearly, and reporting becomes more structured and reliable.
+                </p>
+            </div>
+
+            <div class="about-cards">
+                <div class="about-card">
+                    <h3>Centralized Information</h3>
+                    <p>All important data is stored in one place for easy access and better management.</p>
                 </div>
 
-                <nav class="sidebar-links">
-                    <a href="#" class="active">Dashboard</a>
-                    <a href="#">Site Visits</a>
-                    <a href="#">Reports</a>
-                    <a href="#">Team Activity</a>
-                    <a href="#">Reminders</a>
-                    <a href="#">Settings</a>
-                </nav>
-            </aside>
-
-            <section class="dashboard-content">
-                <div class="dashboard-topbar">
-                    <div>
-                        <h2>Executive Dashboard</h2>
-                        <p>Welcome back, Nommy. Here is your operations overview.</p>
-                    </div>
-
-                    <div class="profile-card">
-                        <div class="profile-avatar">N</div>
-                        <div>
-                            <h4>Nommy Metsula</h4>
-                            <span>Administrator</span>
-                        </div>
-                    </div>
+                <div class="about-card">
+                    <h3>Operational Visibility</h3>
+                    <p>Get a clearer picture of ongoing activities, pending tasks, and completed work.</p>
                 </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <span>Total Site Visits</span>
-                        <h3>128</h3>
-                        <p>+12 from last week</p>
-                    </div>
-
-                    <div class="stat-card">
-                        <span>Pending Reports</span>
-                        <h3>14</h3>
-                        <p>Needs follow-up</p>
-                    </div>
-
-                    <div class="stat-card">
-                        <span>Active Members</span>
-                        <h3>23</h3>
-                        <p>On duty today</p>
-                    </div>
-
-                    <div class="stat-card">
-                        <span>Upcoming Tasks</span>
-                        <h3>09</h3>
-                        <p>Due before 5 PM</p>
-                    </div>
+                <div class="about-card">
+                    <h3>Professional Workflow</h3>
+                    <p>Improve the quality of planning, execution, reporting, and communication.</p>
                 </div>
+            </div>
+        </div>
+    </section>
 
-                <div class="dashboard-grid">
-                    <div class="panel large-panel">
-                        <div class="panel-header">
-                            <h3>Scheduled Site Visits</h3>
-                            <button class="btn btn-primary small-btn" onclick="showMessage('View all site visits clicked')">View All</button>
-                        </div>
-
-                        <div class="table-wrapper">
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th>Visit ID</th>
-                                    <th>Location</th>
-                                    <th>Date</th>
-                                    <th>Assigned To</th>
-                                    <th>Status</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>SV-001</td>
-                                    <td>Johannesburg South</td>
-                                    <td>24 Mar 2026</td>
-                                    <td>Thabo</td>
-                                    <td><span class="status completed">Completed</span></td>
-                                </tr>
-                                <tr>
-                                    <td>SV-002</td>
-                                    <td>Pretoria Central</td>
-                                    <td>25 Mar 2026</td>
-                                    <td>Lerato</td>
-                                    <td><span class="status pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>SV-003</td>
-                                    <td>Soweto</td>
-                                    <td>26 Mar 2026</td>
-                                    <td>James</td>
-                                    <td><span class="status progress">In Progress</span></td>
-                                </tr>
-                                <tr>
-                                    <td>SV-004</td>
-                                    <td>Midrand</td>
-                                    <td>27 Mar 2026</td>
-                                    <td>Amanda</td>
-                                    <td><span class="status pending">Pending</span></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-side">
-                        <div class="panel">
-                            <div class="panel-header">
-                                <h3>Recent Reports</h3>
-                            </div>
-
-                            <ul class="report-list">
-                                <li>
-                                    <strong>Weekly Field Report</strong>
-                                    <span>Submitted 2 hours ago</span>
-                                </li>
-                                <li>
-                                    <strong>Safety Inspection Report</strong>
-                                    <span>Submitted yesterday</span>
-                                </li>
-                                <li>
-                                    <strong>Attendance Summary</strong>
-                                    <span>Pending upload</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="panel">
-                            <div class="panel-header">
-                                <h3>Quick Actions</h3>
-                            </div>
-
-                            <div class="quick-actions">
-                                <button onclick="showMessage('Create new site visit')">+ New Site Visit</button>
-                                <button onclick="showMessage('Create new report')">+ New Report</button>
-                                <button onclick="showMessage('Send reminder')">+ Send Reminder</button>
-                                <button onclick="showMessage('View team activity')">+ Team Activity</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+    <section class="cta-section" id="contact">
+        <div class="cta-box">
+            <span class="section-badge">Get Started</span>
+            <h2>Ready to improve your field operations?</h2>
+            <p>
+                Use SiteVisit to manage visits, reports, reminders, and team activities in a
+                more organized and professional way.
+            </p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary btn-large" onclick="goToLogin()">Login</button>
+                <button class="btn btn-outline btn-large" onclick="showMessage('Contact support for more information')">Contact Us</button>
+            </div>
         </div>
     </section>
 </main>
+
+<footer class="site-footer">
+    <div class="footer-container">
+
+        <div class="footer-brand">
+            <h3>SiteVisit</h3>
+            <p>Smart Field Operations System</p>
+        </div>
+
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <a href="#home">Home</a>
+            <a href="#features">Features</a>
+            <a href="#about">About</a>
+        </div>
+
+        <div class="footer-section">
+            <h4>Contact Us</h4>
+            <p>📞 064 922 5930</p>
+            <p>💬 063 313 0468</p>
+            <p>📧 info@sitevisit.co.za</p>
+            <p>📍 Pretoria, South Africa</p>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2026 SiteVisit. All rights reserved.</p>
+    </div>
+</footer>
 
 <script src="/js/script.js"></script>
 <script>
@@ -328,8 +225,8 @@
         window.location.href = "/login";
     }
 
-    function scrollToDashboard() {
-        document.getElementById("dashboard").scrollIntoView({ behavior: "smooth" });
+    function scrollToSection(sectionId) {
+        document.getElementById(sectionId).scrollIntoView({ behavior: "smooth" });
     }
 
     function showMessage(msg) {

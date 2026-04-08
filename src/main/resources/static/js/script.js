@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 localStorage.setItem("fullName", data.fullName);
                 localStorage.setItem("role", data.role);
 
-                window.location.href = "/dashboard.html";
+                window.location.href = "/dashboard";
             } else {
                 message.textContent = data.message;
             }

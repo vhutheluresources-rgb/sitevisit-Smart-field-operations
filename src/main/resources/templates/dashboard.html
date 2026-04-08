@@ -35,7 +35,7 @@
                 <a href="#">Team Activity</a>
                 <a href="#">Reminders</a>
                 <a href="#">Settings</a>
-                <a href="/templates/index.html">Back to Welcome</a>
+                <a href="/">Back to Welcome</a>
             </nav>
         </aside>
 
@@ -52,8 +52,6 @@
                         <h4>Nommy Metsula</h4>
                         <span>Administrator</span>
                     </div>
-
-                    <button class="logout-btn" onclick="logout()">Logout</button>
                 </div>
             </div>
 
@@ -180,17 +178,33 @@
         alert(message);
     }
 
-    function showMessage(message) {
-        alert(message);
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const fullName = localStorage.getItem("fullName");
+    const role = localStorage.getItem("role");
+
+    if (isLoggedIn !== "true") {
+        window.location.href = "/login";
     }
 
-    function logout() {
-        // Clear stored user data
-        localStorage.removeItem("fullName");
-        localStorage.removeItem("role");
+    const welcomeText = document.querySelector(".dashboard-topbar p");
+    const profileName = document.querySelector(".profile-card h4");
+    const profileRole = document.querySelector(".profile-card span");
+    const profileAvatar = document.querySelector(".profile-avatar");
 
-        // Redirect to login page
-        window.location.href = "/login";
+    if (fullName && welcomeText) {
+        welcomeText.textContent = "Welcome back, " + fullName + ". Here is your operations overview.";
+    }
+
+    if (fullName && profileName) {
+        profileName.textContent = fullName;
+    }
+
+    if (role && profileRole) {
+        profileRole.textContent = role;
+    }
+
+    if (fullName && profileAvatar) {
+        profileAvatar.textContent = fullName.charAt(0).toUpperCase();
     }
 </script>
 
