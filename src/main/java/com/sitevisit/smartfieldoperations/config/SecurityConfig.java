@@ -19,6 +19,8 @@ public class SecurityConfig {
                                 "/forgot-password",
                                 "/reset-password",
                                 "/dashboard",
+                                "/members",
+                                "/companies",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",

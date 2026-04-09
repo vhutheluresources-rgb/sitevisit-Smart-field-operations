@@ -31,4 +31,14 @@ public class PageController {
         return "dashboard";
     }
 
+    @GetMapping("/companies")
+    public String companiesPage() {
+        return "companies";
+    }
+
+    @GetMapping("/members")
+    public String membersPage() {
+        return "members";
+    }
+
 }
