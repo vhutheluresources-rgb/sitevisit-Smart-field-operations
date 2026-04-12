@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/smartfieldoperations.iml" filepath="$PROJECT_DIR$/.idea/smartfieldoperations.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smartfieldoperations/smartfieldoperations.iml" filepath="$PROJECT_DIR$/smartfieldoperations/smartfieldoperations.iml" />
     </modules>
   </component>
 </project>
