@@ -1,6 +1,31 @@
 // companies.js - Company Management Frontend Logic
 const API_URL = '/api/companies';
 
+// ===== CSRF TOKEN HELPERS =====
+function getCsrfToken() {
+    // Try meta tag first (Spring Boot default)
+    const metaToken = document.querySelector('meta[name="_csrf"]')?.content;
+    if (metaToken) return metaToken;
+    
+    // Try hidden input field
+    const inputToken = document.querySelector('input[name="_csrf"]')?.value;
+    if (inputToken) return inputToken;
+    
+    // Try cookie (fallback)
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'XSRF-TOKEN') {
+            return decodeURIComponent(value);
+        }
+    }
+    return null;
+}
+
+function getCsrfHeaderName() {
+    return document.querySelector('meta[name="_csrf_header"]')?.content || 'X-CSRF-TOKEN';
+}
+
 // ===== INITIALIZE ON PAGE LOAD =====
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Page loaded, fetching companies...');
@@ -28,6 +53,11 @@ async function fetchCompanies() {
         const response = await fetch(API_URL);
         
         if (!response.ok) {
+            if (response.status === 401 || response.status === 403) {
+                console.warn('Authentication required - redirecting to login');
+                window.location.href = '/login';
+                return;
+            }
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
@@ -113,15 +143,37 @@ async function handleFormSubmit(e) {
 
         console.log(`Sending ${method} request to ${url}`);
 
+        // Build headers with CSRF token
+        const headers = { 
+            'Content-Type': 'application/json' 
+        };
+        
+        const csrfToken = getCsrfToken();
+        const csrfHeader = getCsrfHeaderName();
+        
+        if (csrfToken) {
+            headers[csrfHeader] = csrfToken;
+            console.log('CSRF token included in request');
+        } else {
+            console.warn('CSRF token not found - request may be rejected');
+        }
+
         const response = await fetch(url, {
             method: method,
-            headers: { 
-                'Content-Type': 'application/json' 
-            },
-            body: JSON.stringify(companyData)
+            headers: headers,
+            body: JSON.stringify(companyData),
+            credentials: 'same-origin' // Important for cookies/session
         });
 
         console.log('Response status:', response.status);
+
+        // Handle authentication/authorization errors
+        if (response.status === 401 || response.status === 403) {
+            console.warn('Access denied - redirecting to login');
+            alert('⚠️ Session expired. Please log in again.');
+            window.location.href = '/login';
+            return;
+        }
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -148,9 +200,28 @@ async function deleteCompany(id) {
 
     try {
         console.log('Deleting company with ID:', id);
+        
+        // Build headers with CSRF token for DELETE
+        const headers = {};
+        const csrfToken = getCsrfToken();
+        const csrfHeader = getCsrfHeaderName();
+        
+        if (csrfToken) {
+            headers[csrfHeader] = csrfToken;
+        }
+
         const response = await fetch(`${API_URL}/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: headers,
+            credentials: 'same-origin'
         });
+
+        // Handle authentication/authorization errors
+        if (response.status === 401 || response.status === 403) {
+            alert('⚠️ Session expired. Please log in again.');
+            window.location.href = '/login';
+            return;
+        }
 
         if (!response.ok) {
             throw new Error(`Delete failed: ${response.status}`);

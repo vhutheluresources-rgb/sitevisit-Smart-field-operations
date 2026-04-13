@@ -3,11 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSRF Token Meta Tags (Spring Boot Security) -->
+<meta name="_csrf" content="${_csrf.token}" th:if="${_csrf}">
+<meta name="_csrf_header" content="${_csrf.headerName}" th:if="${_csrf}">
     <title>Company Management | SiteVisit</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/companies.css">
 </head>
+
+<script>
+// Debug: Check if user info exists in storage
+document.addEventListener('DOMContentLoaded', () => {
+    const storedUser = localStorage.getItem('currentUser');
+    console.log('Stored user:', storedUser);
+    
+    if (storedUser) {
+        try {
+            const user = JSON.parse(storedUser);
+            document.querySelector('.profile-info strong').textContent = user.fullName || user.name || 'User';
+            document.querySelector('.profile-info span').textContent = user.role || 'Member';
+            
+            // Generate initials for avatar
+            const name = user.fullName || user.name || 'U';
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            document.querySelector('.avatar').textContent = initials;
+            
+            console.log('✅ Profile updated from localStorage');
+        } catch (e) {
+            console.error('❌ Error parsing user:', e);
+        }
+    } else {
+        console.warn('⚠️ No user found in localStorage - user may not be logged in');
+    }
+});
+</script>
+
 <body>
     <div class="dashboard-shell">
         <!-- ===== SIDEBAR ===== -->
@@ -54,10 +85,10 @@
                     <p>Manage all registered companies in the system.</p>
                 </div>
                 <div class="user-profile">
-                    <div class="profile-info">
+                    <!-- <div class="profile-info">
                         <strong>Lindokuhle Zulu</strong>
                         <span>Administrator</span>
-                    </div>
+                    </div>  -->
                     <div class="avatar">LZ</div>
                 </div>
             </header>
