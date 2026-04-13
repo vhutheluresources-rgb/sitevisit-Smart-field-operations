@@ -4,21 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company Management | SiteVisit</title>
-    <!-- Boxicons for Icons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/companies.css">
 </head>
 <body>
     <div class="dashboard-shell">
         <!-- ===== SIDEBAR ===== -->
         <aside class="sidebar">
-            <!-- Logo Badge -->
+            <!-- Logo with Brand Text -->
             <div class="sidebar-logo-container">
                 <div class="logo-badge">
                     <img src="/images/siteVisit logo.png" alt="SiteVisit Logo">
+                </div>
+                <div class="sidebar-brand">
+                    <strong>SiteVisit</strong>
+                    <span>Operations Panel</span>
                 </div>
             </div>
             
@@ -64,54 +65,58 @@
                 </div>
             </header>
 
-            <!-- ===== FORM SECTION (Requirement 1: Create/Update) ===== -->
+            <!-- ===== FORM SECTION ===== -->
             <div class="panel">
                 <div class="panel-header">
-                    <h3 id="formTitle">Add Company</h3>
+                    <h3>Add Company</h3>
                 </div>
-                <form id="companyForm" class="grid-form">
-                    <input type="hidden" id="compId">
-                    
-                    <div class="input-field">
-                        <label for="name">Company Name</label>
-                        <input type="text" id="name" placeholder="Enter company name" required>
-                    </div>
-                    
-                    <div class="input-field">
-                        <label for="regNumber">Registration Number</label>
-                        <input type="text" id="regNumber" placeholder="CIPC Reg No" required>
-                    </div>
-                    
-                    <div class="input-field">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" placeholder="contact@company.co.za" required>
-                    </div>
-                    
-                    <div class="input-field">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" placeholder="+27 XX XXX XXXX">
-                    </div>
-                    
-                    <div class="input-field">
-                        <label for="status">Status</label>
-                        <select id="status">
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-btn-area">
-                        <button type="submit" id="saveBtn" class="btn-primary">Save Company</button>
-                    </div>
-                </form>
+                <div class="form-container">
+                    <form id="companyForm" class="grid-form">
+                        <input type="hidden" id="compId">
+                        
+                        <div class="input-field">
+                            <label for="name">Company Name *</label>
+                            <input type="text" id="name" placeholder="Enter company name" required>
+                        </div>
+                        
+                        <div class="input-field">
+                            <label for="regNumber">Registration Number *</label>
+                            <input type="text" id="regNumber" placeholder="CIPC Reg No" required>
+                        </div>
+                        
+                        <div class="input-field">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" placeholder="contact@company.co.za" required>
+                        </div>
+                        
+                        <div class="input-field">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" placeholder="+27 XX XXX XXXX">
+                        </div>
+                        
+                        <div class="input-field">
+                            <label for="status">Status</label>
+                            <select id="status">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-btn-area">
+                            <button type="submit" id="saveBtn" class="btn-save">
+                                <i class='bx bx-plus'></i> Save Company
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
-            <!-- ===== TABLE SECTION (Requirement 2: Read + Requirement 3: Edit/Delete) ===== -->
+            <!-- ===== TABLE SECTION ===== -->
             <div class="panel">
-                <div class="panel-header">
+                <div class="table-header">
                     <h3>Registered Companies</h3>
-                    <button id="viewAllBtn" class="btn-primary" style="background: #64748b; font-size: 12px; padding: 8px 16px;">
-                        <i class='bx bx-refresh'></i> View All / Refresh
+                    <button id="viewAllBtn" class="btn-primary">
+                        <i class='bx bx-refresh'></i> View All
                     </button>
                 </div>
                 <div class="table-wrapper">
@@ -126,9 +131,8 @@
                             </tr>
                         </thead>
                         <tbody id="companyTableBody">
-                            <!-- Loading state -->
                             <tr>
-                                <td colspan="5" style="text-align: center; padding: 2rem; color: #64748b;">
+                                <td colspan="5" style="text-align: center; padding: 2rem; color: #6b7280;">
                                     <i class='bx bx-loader-alt bx-spin' style="font-size: 24px; margin-right: 8px;"></i>
                                     Loading companies...
                                 </td>
@@ -140,7 +144,6 @@
         </main>
     </div>
 
-    <!-- JavaScript -->
     <script src="/js/companies.js"></script>
 </body>
 </html>
