@@ -35,14 +35,8 @@
 
                 <a href="/site-visits">Site Visits</a>
                 <a href="/reports">Reports</a>
-                <a href="/team-activity">Team Activity</a>
-                <a href="/reminders">Reminders</a>
-                <a href="/notifications">Notifications</a>
-                <a href="/settings">Settings</a>
+                <a href="/reminders&notifications">Reminders&Notifications</a>
                 <a href="/profile">Profile</a>
-                <a href="/change-password">Change Password</a>
-
-                <a href="/">Back to Welcome</a>
                 <a href="/login">Logout</a>
             </nav>
         </aside>
@@ -51,14 +45,15 @@
             <div class="dashboard-topbar">
                 <div>
                     <h2>Executive Dashboard</h2>
-                    <p>Welcome back, Nommy. Here is your operations overview.</p>
+                    <p th:text="'Welcome back, ' + ${fullName} + '. Here is your operations overview.'">
+                        Welcome back, User. Here is your operations overview.
+                    </p>
                 </div>
 
                 <div class="profile-card">
-                    <div class="profile-avatar">N</div>
+                    <div class="profile-avatar" th:text="${initial}">N</div>
                     <div>
-                        <h4>Nommy Metsula</h4>
-                        <span>Administrator</span>
+                        <h4 th:text="${fullName}">Nommy Metsula</h4>
                     </div>
                 </div>
             </div>
