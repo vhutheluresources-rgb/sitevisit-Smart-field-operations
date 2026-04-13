@@ -4,37 +4,47 @@ import com.sitevisit.smartfieldoperations.entity.Company;
 import com.sitevisit.smartfieldoperations.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/companies")
+@CrossOrigin(origins = "*") // 🔥 important for frontend requests
 public class CompanyController {
 
     @Autowired
-    private CompanyRepository repo;
+    private CompanyRepository companyRepository;
 
-    @GetMapping
-    public List<Company> get() {
-        return repo.findAll();
-    }
-
+    // ✅ CREATE
     @PostMapping
-    public Company save(@RequestBody Company c) {
-        return repo.save(c);
+    public Company createCompany(@RequestBody Company company) {
+        System.out.println("Saving company: " + company.getName()); // debug
+        return companyRepository.save(company);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        repo.deleteById(id);
+    // ✅ READ
+    @GetMapping
+    public List<Company> getAllCompanies() {
+        return companyRepository.findAll();
     }
 
+    // ✅ UPDATE
     @PutMapping("/{id}")
-    public Company update(@PathVariable Long id, @RequestBody Company c) {
-        Company old = repo.findById(id).orElseThrow();
-        old.setName(c.getName());
-        old.setRegNumber(c.getRegNumber());
-        old.setEmail(c.getEmail());
-        old.setStatus(c.getStatus());
-        return repo.save(old);
+    public Company updateCompany(@PathVariable Long id, @RequestBody Company updatedCompany) {
+        return companyRepository.findById(id).map(company -> {
+            company.setName(updatedCompany.getName());
+            company.setRegNumber(updatedCompany.getRegNumber());
+            company.setEmail(updatedCompany.getEmail());
+            company.setPhone(updatedCompany.getPhone());
+            company.setAddress(updatedCompany.getAddress()); // ✅ FIXED
+            company.setStatus(updatedCompany.getStatus());
+            return companyRepository.save(company);
+        }).orElseThrow(() -> new RuntimeException("Company not found"));
+    }
+
+    // ✅ DELETE
+    @DeleteMapping("/{id}")
+    public void deleteCompany(@PathVariable Long id) {
+        companyRepository.deleteById(id);
     }
 }
