@@ -32,7 +32,6 @@
 
                 <a href="/companies">Company Management</a>
                 <a href="/members">Member Management</a>
-
                 <a href="/site-visits">Site Visits</a>
                 <a href="/reports">Reports</a>
                 <a href="/reminders&notifications">Reminders&Notifications</a>
@@ -42,21 +41,6 @@
         </aside>
 
         <section class="dashboard-content">
-            <div class="dashboard-topbar">
-                <div>
-                    <h2>Executive Dashboard</h2>
-                    <p th:text="'Welcome back, ' + ${fullName} + '. Here is your operations overview.'">
-                        Welcome back, User. Here is your operations overview.
-                    </p>
-                </div>
-
-                <div class="profile-card">
-                    <div class="profile-avatar" th:text="${initial}">N</div>
-                    <div>
-                        <h4 th:text="${fullName}">Nommy Metsula</h4>
-                    </div>
-                </div>
-            </div>
 
             <div class="stats-grid">
                 <div class="stat-card">
