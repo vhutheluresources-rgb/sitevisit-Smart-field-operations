@@ -12,7 +12,6 @@
     <div class="dashboard-shell">
         <!-- ===== SIDEBAR ===== -->
         <aside class="sidebar">
-            <!-- Logo with Brand Text -->
             <div class="sidebar-logo-container">
                 <div class="logo-badge">
                     <img src="/images/siteVisit logo.png" alt="SiteVisit Logo">
@@ -23,7 +22,6 @@
                 </div>
             </div>
             
-            <!-- Navigation Links -->
             <nav class="sidebar-links">
                 <a href="/dashboard.html" class="nav-link">
                     <i class='bx bx-grid-alt'></i>
@@ -50,7 +48,6 @@
 
         <!-- ===== MAIN CONTENT ===== -->
         <main class="dashboard-content">
-            <!-- Top Bar -->
             <header class="topbar">
                 <div class="header-text">
                     <h2>Company Management</h2>
@@ -68,7 +65,7 @@
             <!-- ===== FORM SECTION ===== -->
             <div class="panel">
                 <div class="panel-header">
-                    <h3>Add Company</h3>
+                    <h3 id="formTitle">Add Company</h3>
                 </div>
                 <div class="form-container">
                     <form id="companyForm" class="grid-form">
@@ -92,6 +89,11 @@
                         <div class="input-field">
                             <label for="phone">Phone Number</label>
                             <input type="tel" id="phone" placeholder="+27 XX XXX XXXX">
+                        </div>
+
+                        <div class="input-field">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" placeholder="Company physical address">
                         </div>
                         
                         <div class="input-field">
@@ -126,13 +128,14 @@
                                 <th>Reg Number</th>
                                 <th>Company Name</th>
                                 <th>Email</th>
+                                <th>Phone</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="companyTableBody">
                             <tr>
-                                <td colspan="5" style="text-align: center; padding: 2rem; color: #6b7280;">
+                                <td colspan="6" style="text-align: center; padding: 2rem; color: #6b7280;">
                                     <i class='bx bx-loader-alt bx-spin' style="font-size: 24px; margin-right: 8px;"></i>
                                     Loading companies...
                                 </td>
