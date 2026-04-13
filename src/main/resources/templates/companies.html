@@ -1,157 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company Management | SiteVisit</title>
-    <link rel="stylesheet" href="/css/dashboard.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-            rel="stylesheet"
-    />
+    <!-- Boxicons for Icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/companies.css">
 </head>
 <body>
-
-<section class="dashboard-section">
     <div class="dashboard-shell">
-
+        <!-- ===== SIDEBAR ===== -->
         <aside class="sidebar">
-            <div class="sidebar-brand">
-                <div class="sidebar-logo">
-                    <img src="/images/siteVisit%20logo.png" alt="SiteVisit Logo" class="actual-logo" />
-                </div>
-                <div>
-                    <h3>SiteVisit</h3>
-                    <p>Operations Panel</p>
+            <!-- Logo Badge -->
+            <div class="sidebar-logo-container">
+                <div class="logo-badge">
+                    <img src="/images/siteVisit logo.png" alt="SiteVisit Logo">
                 </div>
             </div>
-
+            
+            <!-- Navigation Links -->
             <nav class="sidebar-links">
-                <a href="/dashboard">Dashboard</a>
-                <a href="/companies" class="active">Company Management</a>
-                <a href="/members">Member Management</a>
-                <a href="/site-visits">Site Visits</a>
-                <a href="/reports">Reports</a>
-                <a href="/team-activity">Team Activity</a>
-                <a href="/reminders">Reminders</a>
-                <a href="/notifications">Notifications</a>
-                <a href="/settings">Settings</a>
-                <a href="/profile">Profile</a>
-                <a href="/change-password">Change Password</a>
-                <a href="/">Back to Welcome</a>
-                <a href="/login">Logout</a>
+                <a href="/dashboard.html" class="nav-link">
+                    <i class='bx bx-grid-alt'></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/companies.html" class="nav-link active">
+                    <i class='bx bx-buildings'></i>
+                    <span>Company Management</span>
+                </a>
+                <a href="/members.html" class="nav-link">
+                    <i class='bx bx-group'></i>
+                    <span>Member Management</span>
+                </a>
+                <a href="/reports.html" class="nav-link">
+                    <i class='bx bx-bar-chart-alt-2'></i>
+                    <span>Reports</span>
+                </a>
+                <a href="/" class="nav-link" style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 1rem;">
+                    <i class='bx bx-log-out'></i>
+                    <span>Logout</span>
+                </a>
             </nav>
         </aside>
 
-        <section class="dashboard-content">
-            <div class="dashboard-topbar">
-                <div>
+        <!-- ===== MAIN CONTENT ===== -->
+        <main class="dashboard-content">
+            <!-- Top Bar -->
+            <header class="topbar">
+                <div class="header-text">
                     <h2>Company Management</h2>
-                    <p>Manage all companies registered in the system.</p>
+                    <p>Manage all registered companies in the system.</p>
                 </div>
-
-                <div class="profile-card">
-                    <div class="profile-avatar">N</div>
-                    <div>
-                        <h4>Nommy Metsula</h4>
+                <div class="user-profile">
+                    <div class="profile-info">
+                        <strong>Lindokuhle Zulu</strong>
                         <span>Administrator</span>
                     </div>
+                    <div class="avatar">LZ</div>
                 </div>
-            </div>
+            </header>
 
-            <div class="panel" style="margin-bottom: 24px;">
+            <!-- ===== FORM SECTION (Requirement 1: Create/Update) ===== -->
+            <div class="panel">
                 <div class="panel-header">
-                    <h3>Add Company</h3>
+                    <h3 id="formTitle">Add Company</h3>
                 </div>
-
-                <form style="display:grid; grid-template-columns: repeat(2, 1fr); gap:16px;">
-                    <div>
-                        <label>Company Name</label>
-                        <input type="text" placeholder="Enter company name" class="form-input" />
+                <form id="companyForm" class="grid-form">
+                    <input type="hidden" id="compId">
+                    
+                    <div class="input-field">
+                        <label for="name">Company Name</label>
+                        <input type="text" id="name" placeholder="Enter company name" required>
                     </div>
-
-                    <div>
-                        <label>Registration Number</label>
-                        <input type="text" placeholder="Enter registration number" class="form-input" />
+                    
+                    <div class="input-field">
+                        <label for="regNumber">Registration Number</label>
+                        <input type="text" id="regNumber" placeholder="CIPC Reg No" required>
                     </div>
-
-                    <div>
-                        <label>Email Address</label>
-                        <input type="email" placeholder="Enter email address" class="form-input" />
+                    
+                    <div class="input-field">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="contact@company.co.za" required>
                     </div>
-
-                    <div>
-                        <label>Phone Number</label>
-                        <input type="text" placeholder="Enter phone number" class="form-input" />
+                    
+                    <div class="input-field">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" placeholder="+27 XX XXX XXXX">
                     </div>
-
-                    <div>
-                        <label>Address</label>
-                        <input type="text" placeholder="Enter address" class="form-input" />
-                    </div>
-
-                    <div>
-                        <label>Status</label>
-                        <select class="form-input">
-                            <option>Active</option>
-                            <option>Inactive</option>
+                    
+                    <div class="input-field">
+                        <label for="status">Status</label>
+                        <select id="status">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
                         </select>
                     </div>
-
-                    <div style="grid-column: 1 / -1;">
-                        <button type="submit" class="btn btn-primary small-btn">+ Save Company</button>
+                    
+                    <div class="form-btn-area">
+                        <button type="submit" id="saveBtn" class="btn-primary">Save Company</button>
                     </div>
                 </form>
             </div>
 
-            <div class="panel large-panel">
+            <!-- ===== TABLE SECTION (Requirement 2: Read + Requirement 3: Edit/Delete) ===== -->
+            <div class="panel">
                 <div class="panel-header">
                     <h3>Registered Companies</h3>
-                    <button class="btn btn-primary small-btn">View All</button>
+                    <button id="viewAllBtn" class="btn-primary" style="background: #64748b; font-size: 12px; padding: 8px 16px;">
+                        <i class='bx bx-refresh'></i> View All / Refresh
+                    </button>
                 </div>
-
                 <div class="table-wrapper">
                     <table>
                         <thead>
-                        <tr>
-                            <th>Company ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Status</th>
-                        </tr>
+                            <tr>
+                                <th>Reg Number</th>
+                                <th>Company Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td>COMP-001</td>
-                            <td>ABC Holdings</td>
-                            <td>info@abcholdings.co.za</td>
-                            <td>012 345 6789</td>
-                            <td><span class="status completed">Active</span></td>
-                        </tr>
-                        <tr>
-                            <td>COMP-002</td>
-                            <td>Bright Future Projects</td>
-                            <td>admin@brightfuture.co.za</td>
-                            <td>011 222 3344</td>
-                            <td><span class="status pending">Inactive</span></td>
-                        </tr>
-                        <tr>
-                            <td>COMP-003</td>
-                            <td>Vision Tech Solutions</td>
-                            <td>support@visiontech.co.za</td>
-                            <td>013 456 7788</td>
-                            <td><span class="status completed">Active</span></td>
-                        </tr>
+                        <tbody id="companyTableBody">
+                            <!-- Loading state -->
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 2rem; color: #64748b;">
+                                    <i class='bx bx-loader-alt bx-spin' style="font-size: 24px; margin-right: 8px;"></i>
+                                    Loading companies...
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </section>
+        </main>
     </div>
-</section>
 
+    <!-- JavaScript -->
+    <script src="/js/companies.js"></script>
 </body>
 </html>
