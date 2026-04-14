@@ -27,9 +27,9 @@
                     <p>Operations Panel</p>
                 </div>
             </div>
+
             <nav class="sidebar-links">
                 <a href="/dashboard" class="active">Dashboard</a>
-
                 <a href="/companies">Company Management</a>
                 <a href="/members">Member Management</a>
                 <a href="/site-visits">Site Visits</a>
@@ -41,6 +41,23 @@
         </aside>
 
         <section class="dashboard-content">
+
+            <div class="dashboard-topbar">
+                <div>
+                    <h2>Executive Dashboard</h2>
+                    <p th:text="'Welcome back, ' + ${fullName} + '. Here is your operations overview.'">
+                        Welcome back, User. Here is your operations overview.
+                    </p>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-avatar" th:text="${initial}">N</div>
+                    <div>
+                        <h4 th:text="${fullName}"></h4>
+                        <span th:text="${role}"></span>
+                    </div>
+                </div>
+            </div>
 
             <div class="stats-grid">
                 <div class="stat-card">
@@ -72,7 +89,9 @@
                 <div class="panel large-panel">
                     <div class="panel-header">
                         <h3>Scheduled Site Visits</h3>
-                        <button class="btn btn-primary small-btn" onclick="showMessage('View all site visits clicked')">View All</button>
+                        <button class="btn btn-primary small-btn" onclick="showMessage('View all site visits clicked')">
+                            View All
+                        </button>
                     </div>
 
                     <div class="table-wrapper">
@@ -156,6 +175,7 @@
                     </div>
                 </div>
             </div>
+
         </section>
     </div>
 </section>
@@ -163,35 +183,6 @@
 <script>
     function showMessage(message) {
         alert(message);
-    }
-
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    const fullName = localStorage.getItem("fullName");
-    const role = localStorage.getItem("role");
-
-    if (isLoggedIn !== "true") {
-        window.location.href = "/login";
-    }
-
-    const welcomeText = document.querySelector(".dashboard-topbar p");
-    const profileName = document.querySelector(".profile-card h4");
-    const profileRole = document.querySelector(".profile-card span");
-    const profileAvatar = document.querySelector(".profile-avatar");
-
-    if (fullName && welcomeText) {
-        welcomeText.textContent = "Welcome back, " + fullName + ". Here is your operations overview.";
-    }
-
-    if (fullName && profileName) {
-        profileName.textContent = fullName;
-    }
-
-    if (role && profileRole) {
-        profileRole.textContent = role;
-    }
-
-    if (fullName && profileAvatar) {
-        profileAvatar.textContent = fullName.charAt(0).toUpperCase();
     }
 </script>
 

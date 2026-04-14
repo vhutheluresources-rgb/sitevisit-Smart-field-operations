@@ -38,36 +38,62 @@ public class PageController {
         return "reset-password";
     }
 
+    // ✅ DASHBOARD
     @GetMapping("/dashboard")
     public String dashboard(Model model, HttpSession session) {
-        String email = (String) session.getAttribute("loggedInUserEmail");
+        User user = getLoggedInUser(session);
 
-        if (email == null) {
+        if (user == null) {
             return "redirect:/login";
         }
 
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-
-        if (optionalUser.isEmpty()) {
-            return "redirect:/login";
-        }
-
-        User user = optionalUser.get();
-
-        model.addAttribute("fullName", user.getFullName());
-        model.addAttribute("role", user.getRole());
-        model.addAttribute("initial", user.getFullName().substring(0, 1).toUpperCase());
-
+        addUserToModel(model, user);
         return "dashboard";
     }
 
+    // ✅ COMPANIES
     @GetMapping("/companies")
-    public String companiesPage() {
+    public String companiesPage(Model model, HttpSession session) {
+        User user = getLoggedInUser(session);
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        addUserToModel(model, user);
         return "companies";
     }
 
+    // ✅ MEMBERS
     @GetMapping("/members")
-    public String membersPage() {
+    public String membersPage(Model model, HttpSession session) {
+        User user = getLoggedInUser(session);
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        addUserToModel(model, user);
         return "members";
+    }
+
+    // 🔹 Helper: get logged-in user
+    private User getLoggedInUser(HttpSession session) {
+        String email = (String) session.getAttribute("loggedInUserEmail");
+
+        if (email == null) {
+            return null;
+        }
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        return optionalUser.orElse(null);
+    }
+
+    // 🔹 Helper: add data to Thymeleaf
+    private void addUserToModel(Model model, User user) {
+        model.addAttribute("fullName", user.getFullName());
+        model.addAttribute("role", user.getRole());
+        model.addAttribute("initial",
+                user.getFullName().substring(0, 1).toUpperCase());
     }
 }

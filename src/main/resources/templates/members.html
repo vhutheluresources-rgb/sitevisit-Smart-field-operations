@@ -27,20 +27,15 @@
                     <p>Operations Panel</p>
                 </div>
             </div>
-
             <nav class="sidebar-links">
-                <a href="/dashboard">Dashboard</a>
+                <a href="/dashboard" class="active">Dashboard</a>
+
                 <a href="/companies">Company Management</a>
-                <a href="/members" class="active">Member Management</a>
+                <a href="/members">Member Management</a>
                 <a href="/site-visits">Site Visits</a>
                 <a href="/reports">Reports</a>
-                <a href="/team-activity">Team Activity</a>
-                <a href="/reminders">Reminders</a>
-                <a href="/notifications">Notifications</a>
-                <a href="/settings">Settings</a>
+                <a href="/reminders&notifications">Reminders&Notifications</a>
                 <a href="/profile">Profile</a>
-                <a href="/change-password">Change Password</a>
-                <a href="/">Back to Welcome</a>
                 <a href="/login">Logout</a>
             </nav>
         </aside>
@@ -49,14 +44,16 @@
             <div class="dashboard-topbar">
                 <div>
                     <h2>Member Management</h2>
-                    <p>Manage all team members and their information.</p>
+                    <p th:text="'Welcome back, ' + ${fullName} + '. Here is your operations overview.'">
+                        Welcome back, User. Here is your operations overview.
+                    </p>
                 </div>
 
                 <div class="profile-card">
-                    <div class="profile-avatar">N</div>
+                    <div class="profile-avatar" th:text="${initial}">N</div>
                     <div>
-                        <h4>Nommy Metsula</h4>
-                        <span>Administrator</span>
+                        <h4 th:text="${fullName}"></h4>
+                        <span th:text="${role}"></span>
                     </div>
                 </div>
             </div>

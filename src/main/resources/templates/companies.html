@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Company Management | SiteVisit</title>
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/companies.css">
+    <link rel="stylesheet" href="/css/dashboard.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+    />
 </head>
 <body>
+
+<section class="dashboard-section">
     <div class="dashboard-shell">
-        <!-- ===== SIDEBAR ===== -->
+
         <aside class="sidebar">
             <div class="sidebar-brand">
                 <div class="sidebar-logo">
@@ -21,10 +27,10 @@
                     <p>Operations Panel</p>
                 </div>
             </div>
-            <nav class="sidebar-links">
-                <a href="/dashboard" class="active">Dashboard</a>
 
-                <a href="/companies">Company Management</a>
+            <nav class="sidebar-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/companies" class="active">Company Management</a>
                 <a href="/members">Member Management</a>
                 <a href="/site-visits">Site Visits</a>
                 <a href="/reports">Reports</a>
@@ -34,102 +40,101 @@
             </nav>
         </aside>
 
-        <!-- ===== MAIN CONTENT ===== -->
-        <main class="dashboard-content">
-            <!-- Top Bar -->
-            <header class="topbar">
-                <div class="header-text">
+        <section class="dashboard-content">
+            <div class="dashboard-topbar">
+                <div>
                     <h2>Company Management</h2>
-                    <p>Manage all registered companies in the system.</p>
+                    <p th:text="'Welcome back, ' + ${fullName} + '. Here is your operations overview.'">
+                        Welcome back, User. Here is your operations overview.
+                    </p>
                 </div>
-                <div class="user-profile">
-                    <div class="profile-info">
-                        <strong>Lindokuhle Zulu</strong>
-                        <span>Administrator</span>
-                    </div>
-                    <div class="avatar">LZ</div>
-                </div>
-            </header>
 
-            <!-- ===== FORM SECTION ===== -->
-            <div class="panel">
+                <div class="profile-card">
+                    <div class="profile-avatar" th:text="${initial}">N</div>
+                    <div>
+                        <h4 th:text="${fullName}"></h4>
+                        <span th:text="${role}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" style="margin-bottom: 24px;">
                 <div class="panel-header">
                     <h3>Add Company</h3>
                 </div>
+
                 <div class="form-container">
-                    <form id="companyForm" class="grid-form">
-                        <input type="hidden" id="compId">
-                        
-                        <div class="input-field">
+                    <form id="companyForm" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:16px;">
+                        <input type="hidden" id="compId" />
+
+                        <div>
                             <label for="name">Company Name *</label>
-                            <input type="text" id="name" placeholder="Enter company name" required>
+                            <input type="text" id="name" class="form-input" placeholder="Enter company name" required />
                         </div>
-                        
-                        <div class="input-field">
+
+                        <div>
                             <label for="regNumber">Registration Number *</label>
-                            <input type="text" id="regNumber" placeholder="CIPC Reg No" required>
+                            <input type="text" id="regNumber" class="form-input" placeholder="CIPC Reg No" required />
                         </div>
-                        
-                        <div class="input-field">
+
+                        <div>
                             <label for="email">Email Address *</label>
-                            <input type="email" id="email" placeholder="contact@company.co.za" required>
+                            <input type="email" id="email" class="form-input" placeholder="contact@company.co.za" required />
                         </div>
-                        
-                        <div class="input-field">
+
+                        <div>
                             <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" placeholder="+27 XX XXX XXXX">
+                            <input type="tel" id="phone" class="form-input" placeholder="+27 XX XXX XXXX" />
                         </div>
-                        
-                        <div class="input-field">
+
+                        <div>
                             <label for="status">Status</label>
-                            <select id="status">
+                            <select id="status" class="form-input">
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
                             </select>
                         </div>
-                        
-                        <div class="form-btn-area">
+
+                        <div style="grid-column: 1 / -1; display:flex; gap:12px; flex-wrap: wrap;">
                             <button type="submit" id="saveBtn" class="btn-save">
-                                <i class='bx bx-plus'></i> Save Company
+                                Save Company
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <!-- ===== TABLE SECTION ===== -->
-            <div class="panel">
-                <div class="table-header">
+            <div class="panel large-panel">
+                <div class="panel-header">
                     <h3>Registered Companies</h3>
-                    <button id="viewAllBtn" class="btn-primary">
-                        <i class='bx bx-refresh'></i> View All
+                    <button id="viewAllBtn" class="btn-primary" type="button">
+                        View All
                     </button>
                 </div>
+
                 <div class="table-wrapper">
                     <table>
                         <thead>
-                            <tr>
-                                <th>Reg Number</th>
-                                <th>Company Name</th>
-                                <th>Email</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
+                        <tr>
+                            <th>Reg Number</th>
+                            <th>Company Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
                         </thead>
                         <tbody id="companyTableBody">
-                            <tr>
-                                <td colspan="5" style="text-align: center; padding: 2rem; color: #6b7280;">
-                                    <i class='bx bx-loader-alt bx-spin' style="font-size: 24px; margin-right: 8px;"></i>
-                                    Loading companies...
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="5" style="text-align:center;">Loading companies...</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </main>
+        </section>
     </div>
+</section>
 
-    <script src="/js/companies.js"></script>
+<script src="/js/companies.js"></script>
 </body>
 </html>
