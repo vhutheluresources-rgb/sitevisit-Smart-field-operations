@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Site Visits | SiteVisit Smart Field Operations</title>
+    <link rel="stylesheet" href="/css/site-visits.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<section class="dashboard-section">
+    <div class="dashboard-shell">
+
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-logo">
+                    <img src="/images/siteVisit%20logo.png" alt="SiteVisit Logo" class="actual-logo" />
+                </div>
+                <div>
+                    <h3>SiteVisit</h3>
+                    <p>Operations Panel</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/companies">Company Management</a>
+                <a href="/members">Member Management</a>
+                <a href="/site-visits" class="active">Site Visits</a>
+                <a href="/reports">Reports</a>
+                <a href="/reminders&notifications">Reminders & Notifications</a>
+                <a href="/profile">Profile</a>
+                <a href="/login">Logout</a>
+            </nav>
+        </aside>
+
+        <section class="dashboard-content">
+            <div class="dashboard-topbar">
+                <div>
+                    <h2>Site Visits</h2>
+                    <p>Manage visit attendance with one check-in and one check-out per visit.</p>
+                </div>
+            </div>
+
+            <div id="messageBox" class="message-box" style="display:none;"></div>
+
+            <div class="panel large-panel">
+                <div class="panel-header">
+                    <h3>Scheduled Site Visits</h3>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Visit ID</th>
+                            <th>Location</th>
+                            <th>Date</th>
+                            <th>Assigned To</th>
+                            <th>Visit Status</th>
+                            <th>Attendance Status</th>
+                            <th>Check In Time</th>
+                            <th>Check Out Time</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="visit : ${siteVisits}">
+                            <td th:text="${visit.id}">1</td>
+                            <td th:text="${visit.location}">Johannesburg South</td>
+                            <td th:text="${visit.date}">2026-03-24</td>
+                            <td th:text="${visit.assignedTo}">Thabo</td>
+                            <td>
+                                <span class="status"
+                                      th:classappend="${visit.status == 'Completed'} ? ' completed' :
+                                                      (${visit.status == 'In Progress'} ? ' progress' : ' pending')"
+                                      th:text="${visit.status}">
+                                    Scheduled
+                                </span>
+                            </td>
+
+                            <td th:attr="id='attendance-status-' + ${visit.id}">Loading...</td>
+                            <td th:attr="id='checkin-time-' + ${visit.id}">-</td>
+                            <td th:attr="id='checkout-time-' + ${visit.id}">-</td>
+                            <td th:attr="id='action-' + ${visit.id}">
+                                <button class="btn btn-primary small-btn"
+                                        th:attr="onclick='loadAttendanceAndRenderAction(' + ${visit.id} + ')'">
+                                    Load Action
+                                </button>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(siteVisits)}">
+                            <td colspan="9">No site visits available.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+
+<script>
+    function showMessage(message, isSuccess) {
+        const messageBox = document.getElementById("messageBox");
+        messageBox.style.display = "block";
+        messageBox.textContent = message;
+        messageBox.style.backgroundColor = isSuccess ? "#dcfce7" : "#fee2e2";
+        messageBox.style.color = isSuccess ? "#166534" : "#b91c1c";
+        messageBox.style.border = isSuccess ? "1px solid #86efac" : "1px solid #fca5a5";
+    }
+
+    function formatTime(time) {
+        if (!time) return "-";
+        return time;
+    }
+
+    function renderAttendance(visitId, attendance) {
+        const attendanceStatus = document.getElementById(`attendance-status-${visitId}`);
+        const checkInTime = document.getElementById(`checkin-time-${visitId}`);
+        const checkOutTime = document.getElementById(`checkout-time-${visitId}`);
+        const actionCell = document.getElementById(`action-${visitId}`);
+
+        if (!attendance) {
+            attendanceStatus.textContent = "Not Started";
+            checkInTime.textContent = "-";
+            checkOutTime.textContent = "-";
+            actionCell.innerHTML = `<button class="btn btn-primary small-btn" onclick="checkIn(${visitId})">Check In</button>`;
+            return;
+        }
+
+        attendanceStatus.textContent = attendance.status || "Checked In";
+        checkInTime.textContent = formatTime(attendance.checkInTime);
+        checkOutTime.textContent = formatTime(attendance.checkOutTime);
+
+        if (attendance.checkInTime && !attendance.checkOutTime) {
+            actionCell.innerHTML = `<button class="btn btn-primary small-btn" onclick="checkOut(${visitId})">Check Out</button>`;
+        } else if (attendance.checkInTime && attendance.checkOutTime) {
+            actionCell.innerHTML = `<button class="btn small-btn" disabled>Done</button>`;
+        } else {
+            actionCell.innerHTML = `<button class="btn btn-primary small-btn" onclick="checkIn(${visitId})">Check In</button>`;
+        }
+    }
+
+    async function loadAttendanceAndRenderAction(visitId) {
+        try {
+            const response = await fetch(`/api/attendance/${visitId}`);
+            const optionalData = await response.json();
+
+            if (optionalData && optionalData.present && optionalData.value) {
+                renderAttendance(visitId, optionalData.value);
+            } else if (optionalData && optionalData.id) {
+                renderAttendance(visitId, optionalData);
+            } else {
+                renderAttendance(visitId, null);
+            }
+        } catch (error) {
+            renderAttendance(visitId, null);
+            console.error(error);
+        }
+    }
+
+    async function checkIn(visitId) {
+        try {
+            const response = await fetch(`/api/attendance/check-in/${visitId}`, {
+                method: "POST"
+            });
+
+            const data = await response.json();
+            showMessage(data.message, data.success);
+
+            if (data.success) {
+                await loadAttendanceAndRenderAction(visitId);
+                window.location.reload();
+            }
+        } catch (error) {
+            showMessage("Check-in failed.", false);
+            console.error(error);
+        }
+    }
+
+    async function checkOut(visitId) {
+        try {
+            const response = await fetch(`/api/attendance/check-out/${visitId}`, {
+                method: "POST"
+            });
+
+            const data = await response.json();
+            showMessage(data.message, data.success);
+
+            if (data.success) {
+                await loadAttendanceAndRenderAction(visitId);
+                window.location.reload();
+            }
+        } catch (error) {
+            showMessage("Check-out failed.", false);
+            console.error(error);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const rows = document.querySelectorAll("[id^='attendance-status-']");
+        rows.forEach(row => {
+            const visitId = row.id.replace("attendance-status-", "");
+            loadAttendanceAndRenderAction(visitId);
+        });
+    });
+</script>
+
+</body>
+</html>

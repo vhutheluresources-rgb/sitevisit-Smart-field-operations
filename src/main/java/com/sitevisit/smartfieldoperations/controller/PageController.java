@@ -1,6 +1,7 @@
 package com.sitevisit.smartfieldoperations.controller;
 
 import com.sitevisit.smartfieldoperations.entity.User;
+import com.sitevisit.smartfieldoperations.repository.SiteVisitRepository;
 import com.sitevisit.smartfieldoperations.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -13,9 +14,11 @@ import java.util.Optional;
 public class PageController {
 
     private final UserRepository userRepository;
+    private final SiteVisitRepository siteVisitRepository;
 
-    public PageController(UserRepository userRepository) {
+    public PageController(UserRepository userRepository, SiteVisitRepository siteVisitRepository) {
         this.userRepository = userRepository;
+        this.siteVisitRepository = siteVisitRepository;
     }
 
     @GetMapping("/")
@@ -38,7 +41,6 @@ public class PageController {
         return "reset-password";
     }
 
-    // ✅ DASHBOARD
     @GetMapping("/dashboard")
     public String dashboard(Model model, HttpSession session) {
         User user = getLoggedInUser(session);
@@ -51,7 +53,6 @@ public class PageController {
         return "dashboard";
     }
 
-    // ✅ COMPANIES
     @GetMapping("/companies")
     public String companiesPage(Model model, HttpSession session) {
         User user = getLoggedInUser(session);
@@ -64,7 +65,6 @@ public class PageController {
         return "companies";
     }
 
-    // ✅ MEMBERS
     @GetMapping("/members")
     public String membersPage(Model model, HttpSession session) {
         User user = getLoggedInUser(session);
@@ -77,7 +77,19 @@ public class PageController {
         return "members";
     }
 
-    // 🔹 Helper: get logged-in user
+    @GetMapping("/site-visits")
+    public String siteVisitsPage(Model model, HttpSession session) {
+        User user = getLoggedInUser(session);
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        addUserToModel(model, user);
+        model.addAttribute("siteVisits", siteVisitRepository.findAll());
+        return "site-visits";
+    }
+
     private User getLoggedInUser(HttpSession session) {
         String email = (String) session.getAttribute("loggedInUserEmail");
 
@@ -89,11 +101,9 @@ public class PageController {
         return optionalUser.orElse(null);
     }
 
-    // 🔹 Helper: add data to Thymeleaf
     private void addUserToModel(Model model, User user) {
         model.addAttribute("fullName", user.getFullName());
         model.addAttribute("role", user.getRole());
-        model.addAttribute("initial",
-                user.getFullName().substring(0, 1).toUpperCase());
+        model.addAttribute("initial", user.getFullName().substring(0, 1).toUpperCase());
     }
 }

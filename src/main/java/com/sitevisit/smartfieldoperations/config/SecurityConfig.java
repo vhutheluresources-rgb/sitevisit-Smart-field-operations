@@ -21,12 +21,14 @@ public class SecurityConfig {
                                 "/dashboard",
                                 "/members",
                                 "/companies",
+                                "/site-visits",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
                                 "/api/auth/**",
                                 "/api/companies/**",
-                                "/api/members/**"
+                                "/api/members/**",
+                                "/api/attendance/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
