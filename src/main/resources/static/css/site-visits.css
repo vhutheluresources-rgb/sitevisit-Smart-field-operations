@@ -1,4 +1,36 @@
-* {
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #3b2f1e;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d6c7a8;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fff;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-actions {
+    margin-top: 20px;
+}* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;

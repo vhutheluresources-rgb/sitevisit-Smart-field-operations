@@ -2,6 +2,7 @@ package com.sitevisit.smartfieldoperations.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "site_visits")
@@ -11,10 +12,18 @@ public class SiteVisit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String location;
-    private LocalDate date;
-    private String assignedTo;
+    // 🔗 Link to Company
+    @ManyToOne
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
+
+    private LocalDate visitDate;
+    private LocalTime visitTime;
+
     private String status;
+
+    @Column(length = 1000)
+    private String notes;
 
     public SiteVisit() {
     }
@@ -23,28 +32,28 @@ public class SiteVisit {
         return id;
     }
 
-    public String getLocation() {
-        return location;
+    public Company getCompany() {
+        return company;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getVisitDate() {
+        return visitDate;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setVisitDate(LocalDate visitDate) {
+        this.visitDate = visitDate;
     }
 
-    public String getAssignedTo() {
-        return assignedTo;
+    public LocalTime getVisitTime() {
+        return visitTime;
     }
 
-    public void setAssignedTo(String assignedTo) {
-        this.assignedTo = assignedTo;
+    public void setVisitTime(LocalTime visitTime) {
+        this.visitTime = visitTime;
     }
 
     public String getStatus() {
@@ -53,5 +62,13 @@ public class SiteVisit {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

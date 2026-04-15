@@ -1,6 +1,7 @@
 package com.sitevisit.smartfieldoperations.controller;
 
 import com.sitevisit.smartfieldoperations.entity.User;
+import com.sitevisit.smartfieldoperations.repository.CompanyRepository;
 import com.sitevisit.smartfieldoperations.repository.SiteVisitRepository;
 import com.sitevisit.smartfieldoperations.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -15,10 +16,12 @@ public class PageController {
 
     private final UserRepository userRepository;
     private final SiteVisitRepository siteVisitRepository;
+    private final CompanyRepository companyRepository;
 
-    public PageController(UserRepository userRepository, SiteVisitRepository siteVisitRepository) {
+    public PageController(UserRepository userRepository, SiteVisitRepository siteVisitRepository,CompanyRepository companyRepository) {
         this.userRepository = userRepository;
         this.siteVisitRepository = siteVisitRepository;
+        this.companyRepository = companyRepository;
     }
 
     @GetMapping("/")
@@ -86,7 +89,9 @@ public class PageController {
         }
 
         addUserToModel(model, user);
+        model.addAttribute("companies", companyRepository.findAll());
         model.addAttribute("siteVisits", siteVisitRepository.findAll());
+
         return "site-visits";
     }
 

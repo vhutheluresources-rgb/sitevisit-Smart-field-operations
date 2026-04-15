@@ -22,6 +22,8 @@ public class SecurityConfig {
                                 "/members",
                                 "/companies",
                                 "/site-visits",
+                                "/site-visits/save",
+                                "/site-visits/update-status/**",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
@@ -34,7 +36,6 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable());
-
         return http.build();
     }
 }
