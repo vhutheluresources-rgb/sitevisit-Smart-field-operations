@@ -71,7 +71,7 @@ document.getElementById('reportModal')?.addEventListener('click', (e) => {
     if (e.target.id === 'reportModal') closeModal();
 });
 
-// ✅ NEW: VIEW REPORT MODAL
+// ===== VIEW REPORT MODAL =====
 function viewReport(id) {
     fetch(`${API_URL}/${id}`)
         .then(res => {
@@ -79,7 +79,6 @@ function viewReport(id) {
             return res.json();
         })
         .then(r => {
-            // Create view modal dynamically
             const modal = document.createElement('div');
             modal.id = 'viewModal';
             modal.className = 'modal';
@@ -91,37 +90,18 @@ function viewReport(id) {
                         <h3 style="margin:0;color:#1a3f3a;">📄 Report #${r.id}</h3>
                         <button onclick="closeViewModal()" style="background:none;border:none;font-size:24px;cursor:pointer;color:#6b7280;">&times;</button>
                     </div>
-                    
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px;">
-                        <div>
-                            <strong style="color:#6b7280;font-size:13px;">Title</strong>
-                            <p style="margin:5px 0 0 0;font-weight:600;color:#1a3f3a;">${escapeHtml(r.title)}</p>
-                        </div>
-                        <div>
-                            <strong style="color:#6b7280;font-size:13px;">Site Visit ID</strong>
-                            <p style="margin:5px 0 0 0;font-weight:600;color:#1a3f3a;">${r.siteVisitId || '-'}</p>
-                        </div>
-                        <div>
-                            <strong style="color:#6b7280;font-size:13px;">Created</strong>
-                            <p style="margin:5px 0 0 0;font-weight:600;color:#1a3f3a;">${formatDate(r.createdAt)}</p>
-                        </div>
-                        <div>
-                            <strong style="color:#6b7280;font-size:13px;">Updated</strong>
-                            <p style="margin:5px 0 0 0;font-weight:600;color:#1a3f3a;">${r.updatedAt ? formatDate(r.updatedAt) : '-'}</p>
-                        </div>
+                        <div><strong style="color:#6b7280;font-size:13px;">Title</strong><p style="margin:5px 0 0 0;font-weight:600;color:#1a3f3a;">${escapeHtml(r.title)}</p></div>
+                        <div><strong style="color:#6b7280;font-size:13px;">Site Visit ID</strong><p style="margin:5px 0 0 0;font-weight:600;color:#1a3f3a;">${r.siteVisitId || '-'}</p></div>
+                        <div><strong style="color:#6b7280;font-size:13px;">Created</strong><p style="margin:5px 0 0 0;font-weight:600;color:#1a3f3a;">${formatDate(r.createdAt)}</p></div>
+                        <div><strong style="color:#6b7280;font-size:13px;">Updated</strong><p style="margin:5px 0 0 0;font-weight:600;color:#1a3f3a;">${r.updatedAt ? formatDate(r.updatedAt) : '-'}</p></div>
                     </div>
-                    
-                    <div style="margin-bottom:15px;">
-                        <strong style="color:#6b7280;font-size:13px;">Summary</strong>
-                        <p style="margin:5px 0 0 0;line-height:1.6;color:#374151;white-space:pre-wrap;">${escapeHtml(r.summary)}</p>
-                    </div>
-                    
+                    <div style="margin-bottom:15px;"><strong style="color:#6b7280;font-size:13px;">Summary</strong><p style="margin:5px 0 0 0;line-height:1.6;color:#374151;white-space:pre-wrap;">${escapeHtml(r.summary)}</p></div>
                     ${r.findings ? `<div style="margin-bottom:15px;"><strong style="color:#6b7280;font-size:13px;">Findings</strong><p style="margin:5px 0 0 0;line-height:1.6;color:#374151;white-space:pre-wrap;">${escapeHtml(r.findings)}</p></div>` : ''}
                     ${r.issues ? `<div style="margin-bottom:15px;"><strong style="color:#6b7280;font-size:13px;">Issues</strong><p style="margin:5px 0 0 0;line-height:1.6;color:#374151;white-space:pre-wrap;">${escapeHtml(r.issues)}</p></div>` : ''}
                     ${r.actionsTaken ? `<div style="margin-bottom:15px;"><strong style="color:#6b7280;font-size:13px;">Actions Taken</strong><p style="margin:5px 0 0 0;line-height:1.6;color:#374151;white-space:pre-wrap;">${escapeHtml(r.actionsTaken)}</p></div>` : ''}
                     ${r.recommendations ? `<div style="margin-bottom:15px;"><strong style="color:#6b7280;font-size:13px;">Recommendations</strong><p style="margin:5px 0 0 0;line-height:1.6;color:#374151;white-space:pre-wrap;">${escapeHtml(r.recommendations)}</p></div>` : ''}
                     ${r.notes ? `<div style="margin-bottom:15px;"><strong style="color:#6b7280;font-size:13px;">Notes</strong><p style="margin:5px 0 0 0;line-height:1.6;color:#374151;white-space:pre-wrap;">${escapeHtml(r.notes)}</p></div>` : ''}
-                    
                     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:25px;padding-top:15px;border-top:1px solid #e5e7eb;">
                         <button onclick="closeViewModal()" style="background:#6b7280;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;">Close</button>
                         <button onclick="closeViewModal(); openModal(${JSON.stringify(r).replace(/"/g, '&quot;')})" style="background:#2563eb;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;">✏️ Edit</button>
@@ -129,29 +109,18 @@ function viewReport(id) {
                     </div>
                 </div>
             `;
-            
             document.body.appendChild(modal);
-            
-            // Close on outside click
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeViewModal();
-            });
-            
+            modal.addEventListener('click', (e) => { if (e.target === modal) closeViewModal(); });
         })
-        .catch(err => {
-            console.error('Error viewing report:', err);
-            alert('❌ Failed to load report details');
-        });
+        .catch(err => { console.error('Error viewing report:', err); alert('❌ Failed to load report details'); });
 }
 
 function closeViewModal() {
     const modal = document.getElementById('viewModal');
-    if (modal) {
-        modal.remove();
-    }
+    if (modal) modal.remove();
 }
 
-// ===== FETCH & DISPLAY REPORTS =====
+// ===== FETCH & DISPLAY REPORTS - ✅ NO ICONS, LIGHT-BLACK TEXT =====
 async function fetchReports() {
     const tbody = document.getElementById('reportsTableBody');
     if (!tbody) return;
@@ -180,6 +149,8 @@ async function fetchReports() {
         
         reports.forEach(r => {
             const row = document.createElement('tr');
+            
+            // ✅ UPDATED: Action buttons with NO icons, light-black text (#333333)
             row.innerHTML = `
                 <td><strong>#${r.id}</strong></td>
                 <td>${escapeHtml(r.title)}</td>
@@ -187,10 +158,64 @@ async function fetchReports() {
                 <td>${formatDate(r.createdAt)}</td>
                 <td><span class="status completed">Submitted</span></td>
                 <td>
-                    <button class="btn small-btn" style="background:#3b82f6;color:white;margin-right:6px;" onclick="viewReport(${r.id})">👁️ View</button>
-                    <button class="btn small-btn" style="background:#2563eb;color:white;margin-right:6px;" onclick="editReport(${r.id})">✏️ Edit</button>
-                    <button class="btn small-btn" style="background:#dc2626;color:white;margin-right:6px;" onclick="deleteReport(${r.id})">🗑️ Delete</button>
-                    <button class="btn small-btn" style="background:#d97706;color:white;" onclick="downloadPdf(${r.id})">📄 PDF</button>
+                    <button class="action-btn" style="
+                        background:#CBA345;
+                        color:#333333;
+                        border:none;
+                        padding:8px 16px;
+                        border-radius:8px;
+                        cursor:pointer;
+                        font-weight:700;
+                        font-size:13px;
+                        margin-right:6px;
+                        transition:all 0.2s;
+                    " onmouseover="this.style.background='#b8933d';this.style.transform='translateY(-1px)';" 
+                      onmouseout="this.style.background='#CBA345';this.style.transform='translateY(0)';"
+                      onclick="viewReport(${r.id})">View</button>
+                    
+                    <button class="action-btn" style="
+                        background:#CBA345;
+                        color:#333333;
+                        border:none;
+                        padding:8px 16px;
+                        border-radius:8px;
+                        cursor:pointer;
+                        font-weight:700;
+                        font-size:13px;
+                        margin-right:6px;
+                        transition:all 0.2s;
+                    " onmouseover="this.style.background='#b8933d';this.style.transform='translateY(-1px)';" 
+                      onmouseout="this.style.background='#CBA345';this.style.transform='translateY(0)';"
+                      onclick="editReport(${r.id})">Edit</button>
+                    
+                    <button class="action-btn" style="
+                        background:#CBA345;
+                        color:#333333;
+                        border:none;
+                        padding:8px 16px;
+                        border-radius:8px;
+                        cursor:pointer;
+                        font-weight:700;
+                        font-size:13px;
+                        margin-right:6px;
+                        transition:all 0.2s;
+                    " onmouseover="this.style.background='#b8933d';this.style.transform='translateY(-1px)';" 
+                      onmouseout="this.style.background='#CBA345';this.style.transform='translateY(0)';"
+                      onclick="deleteReport(${r.id})">Delete</button>
+                    
+                    <button class="action-btn" style="
+                        background:#CBA345;
+                        color:#333333;
+                        border:none;
+                        padding:8px 16px;
+                        border-radius:8px;
+                        cursor:pointer;
+                        font-weight:700;
+                        font-size:13px;
+                        transition:all 0.2s;
+                    " onmouseover="this.style.background='#b8933d';this.style.transform='translateY(-1px)';" 
+                      onmouseout="this.style.background='#CBA345';this.style.transform='translateY(0)';"
+                      onclick="downloadPdf(${r.id})">PDF</button>
                 </td>
             `;
             tbody.appendChild(row);

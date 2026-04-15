@@ -1,18 +1,17 @@
-/**
- * companies.js - Company Management Frontend Logic
- * Handles CRUD operations for companies via REST API
- */
-
+// companies.js - Company Management Frontend Logic
 const API_URL = '/api/companies';
 
-// ===== CSRF TOKEN HELPERS (Spring Security) =====
+// ===== CSRF TOKEN HELPERS =====
 function getCsrfToken() {
+    // Try meta tag first (Spring Boot default)
     const metaToken = document.querySelector('meta[name="_csrf"]')?.content;
     if (metaToken) return metaToken;
     
+    // Try hidden input field
     const inputToken = document.querySelector('input[name="_csrf"]')?.value;
     if (inputToken) return inputToken;
     
+    // Try cookie (fallback)
     const cookies = document.cookie.split(';');
     for (let cookie of cookies) {
         const [name, value] = cookie.trim().split('=');
@@ -27,86 +26,75 @@ function getCsrfHeaderName() {
     return document.querySelector('meta[name="_csrf_header"]')?.content || 'X-CSRF-TOKEN';
 }
 
-function getAuthHeaders() {
-    const headers = { 'Content-Type': 'application/json' };
-    const csrfToken = getCsrfToken();
-    const csrfHeader = getCsrfHeaderName();
-    if (csrfToken) {
-        headers[csrfHeader] = csrfToken;
-    }
-    return headers;
-}
+// ===== INITIALIZE ON PAGE LOAD =====
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Page loaded, fetching companies...');
+    fetchCompanies();
+    setupEventListeners();
+});
 
-// ===== AUTH & PROFILE =====
-function checkAuth() {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    if (isLoggedIn !== "true") {
-        window.location.href = "/login";
-        return false;
+// ===== SETUP EVENT LISTENERS =====
+function setupEventListeners() {
+    const form = document.getElementById('companyForm');
+    if (form) {
+        form.addEventListener('submit', handleFormSubmit);
     }
-    return true;
-}
 
-function updateProfileDisplay() {
-    const fullName = localStorage.getItem("fullName");
-    const role = localStorage.getItem("role");
-    
-    const avatar = document.getElementById("profileAvatar");
-    const nameEl = document.getElementById("profileName");
-    const roleEl = document.getElementById("profileRole");
-
-    if (fullName && nameEl) {
-        nameEl.textContent = fullName;
-    }
-    if (fullName && avatar) {
-        avatar.textContent = fullName.charAt(0).toUpperCase();
-    }
-    if (role && roleEl) {
-        roleEl.textContent = role;
+    const viewAllBtn = document.getElementById('viewAllBtn');
+    if (viewAllBtn) {
+        viewAllBtn.addEventListener('click', fetchCompanies);
     }
 }
 
 // ===== FETCH & DISPLAY COMPANIES =====
 async function fetchCompanies() {
-    const tbody = document.getElementById('companyTableBody');
-    if (!tbody) return;
-    
-    tbody.innerHTML = `
-        <tr><td colspan="6" style="text-align:center; padding:2rem;">
-            <i class='bx bx-loader-alt bx-spin' style="font-size:24px;"></i> Loading...
-        </td></tr>`;
-
     try {
+        console.log('Fetching companies from:', API_URL);
         const response = await fetch(API_URL);
         
-        if (response.status === 401 || response.status === 403) {
-            window.location.href = '/login';
+        if (!response.ok) {
+            if (response.status === 401 || response.status === 403) {
+                console.warn('Authentication required - redirecting to login');
+                window.location.href = '/login';
+                return;
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Received companies:', data);
+        
+        const tbody = document.getElementById('companyTableBody');
+        if (!tbody) {
+            console.error('Table body not found!');
             return;
         }
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-        const companies = await response.json();
         tbody.innerHTML = '';
 
-        if (companies.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2rem; color:#6b7280;">
-                No companies registered yet. Add one above!
-            </td></tr>`;
+        if (data.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align:center; padding: 2rem;">No companies yet</td>
+                </tr>`;
             return;
         }
 
-        companies.forEach(c => {
-            const statusClass = (c.status || 'Active').toLowerCase();
+        data.forEach(c => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td><strong>${escapeHtml(c.regNumber)}</strong></td>
+                <td>${escapeHtml(c.regNumber)}</td>
                 <td>${escapeHtml(c.name)}</td>
                 <td>${escapeHtml(c.email)}</td>
                 <td>${escapeHtml(c.phone || '-')}</td>
-                <td><span class="status ${statusClass}">${escapeHtml(c.status || 'Active')}</span></td>
+                <td><span class="status-pill ${c.status}">${escapeHtml(c.status)}</span></td>
                 <td>
-                    <button class="btn small-btn" onclick="editCompany(${c.id})">Edit</button>
-                    <button class="btn small-btn btn-danger" onclick="deleteCompany(${c.id})">Delete</button>
+                    <button class="edit-btn" onclick='prepEdit(${JSON.stringify(c)})'>
+                        <i class='bx bx-edit'></i> Edit
+                    </button>
+                    <button class="delete-btn" onclick="deleteCompany(${c.id})">
+                        <i class='bx bx-trash'></i> Delete
+                    </button>
                 </td>
             `;
             tbody.appendChild(row);
@@ -114,18 +102,25 @@ async function fetchCompanies() {
 
     } catch (err) {
         console.error('Error fetching companies:', err);
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2rem; color:#dc2626;">
-            ❌ Failed to load companies. Is the API running?
-        </td></tr>`;
+        const tbody = document.getElementById('companyTableBody');
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align:center; padding: 2rem; color: #dc2626;">
+                        <i class='bx bx-error-circle'></i> Error loading companies. Make sure backend is running.
+                    </td>
+                </tr>`;
+        }
     }
 }
 
-// ===== CREATE / UPDATE COMPANY =====
+// ===== CREATE / UPDATE =====
 async function handleFormSubmit(e) {
     e.preventDefault();
-    if (!checkAuth()) return;
+    console.log('Form submitted');
 
-    const compId = document.getElementById('compId').value;
+    const id = document.getElementById('compId').value;
+
     const companyData = {
         name: document.getElementById('name').value.trim(),
         regNumber: document.getElementById('regNumber').value.trim(),
@@ -135,109 +130,147 @@ async function handleFormSubmit(e) {
         status: document.getElementById('status').value
     };
 
+    console.log('Company data to save:', companyData);
+
     if (!companyData.name || !companyData.regNumber || !companyData.email) {
         alert('Please fill all required fields (marked with *)');
         return;
     }
 
     try {
-        const method = compId ? 'PUT' : 'POST';
-        const url = compId ? `${API_URL}/${compId}` : API_URL;
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `${API_URL}/${id}` : API_URL;
+
+        console.log(`Sending ${method} request to ${url}`);
+
+        // Build headers with CSRF token
+        const headers = { 
+            'Content-Type': 'application/json' 
+        };
+        
+        const csrfToken = getCsrfToken();
+        const csrfHeader = getCsrfHeaderName();
+        
+        if (csrfToken) {
+            headers[csrfHeader] = csrfToken;
+            console.log('CSRF token included in request');
+        } else {
+            console.warn('CSRF token not found - request may be rejected');
+        }
 
         const response = await fetch(url, {
             method: method,
-            headers: getAuthHeaders(),
+            headers: headers,
             body: JSON.stringify(companyData),
-            credentials: 'same-origin'
+            credentials: 'same-origin' // Important for cookies/session
         });
 
+        console.log('Response status:', response.status);
+
+        // Handle authentication/authorization errors
         if (response.status === 401 || response.status === 403) {
+            console.warn('Access denied - redirecting to login');
             alert('⚠️ Session expired. Please log in again.');
             window.location.href = '/login';
             return;
         }
+
         if (!response.ok) {
             const errorText = await response.text();
+            console.error('Server error:', errorText);
             throw new Error(`Server error: ${response.status} - ${errorText}`);
         }
 
-        alert(`✅ Company ${compId ? 'updated' : 'created'} successfully!`);
+        const savedCompany = await response.json();
+        console.log('Saved company:', savedCompany);
+
+        alert('✅ Company saved successfully!');
         resetForm();
         fetchCompanies();
 
     } catch (err) {
         console.error('Error saving company:', err);
-        alert(`❌ Failed to save: ${err.message}`);
+        alert(`❌ Failed to save company: ${err.message}\n\nCheck console for details.`);
     }
 }
 
-// ===== EDIT COMPANY =====
-async function editCompany(id) {
-    try {
-        const response = await fetch(`${API_URL}/${id}`);
-        if (!response.ok) throw new Error('Failed to load company');
-        
-        const comp = await response.json();
-        
-        document.getElementById('compId').value = comp.id;
-        document.getElementById('name').value = comp.name || '';
-        document.getElementById('regNumber').value = comp.regNumber || '';
-        document.getElementById('email').value = comp.email || '';
-        document.getElementById('phone').value = comp.phone || '';
-        document.getElementById('address').value = comp.address || '';
-        document.getElementById('status').value = comp.status || 'Active';
-
-        document.getElementById('formTitle').textContent = 'Edit Company';
-        document.getElementById('saveBtn').innerHTML = '<i class="bx bx-check"></i> Update Company';
-        document.getElementById('cancelBtn').style.display = 'inline-block';
-        
-        document.querySelector('.form-container')?.scrollIntoView({ behavior: 'smooth' });
-
-    } catch (err) {
-        console.error('Error loading company:', err);
-        alert('❌ Failed to load company details');
-    }
-}
-
-// ===== DELETE COMPANY =====
+// ===== DELETE =====
 async function deleteCompany(id) {
-    if (!confirm('Are you sure you want to delete this company? This cannot be undone.')) {
-        return;
-    }
+    if (!confirm('Are you sure you want to delete this company?')) return;
 
     try {
+        console.log('Deleting company with ID:', id);
+        
+        // Build headers with CSRF token for DELETE
+        const headers = {};
+        const csrfToken = getCsrfToken();
+        const csrfHeader = getCsrfHeaderName();
+        
+        if (csrfToken) {
+            headers[csrfHeader] = csrfToken;
+        }
+
         const response = await fetch(`${API_URL}/${id}`, {
             method: 'DELETE',
-            headers: getAuthHeaders(),
+            headers: headers,
             credentials: 'same-origin'
         });
 
+        // Handle authentication/authorization errors
         if (response.status === 401 || response.status === 403) {
             alert('⚠️ Session expired. Please log in again.');
             window.location.href = '/login';
             return;
         }
-        if (!response.ok) throw new Error(`Delete failed: ${response.status}`);
 
-        alert('✅ Company deleted successfully!');
+        if (!response.ok) {
+            throw new Error(`Delete failed: ${response.status}`);
+        }
+
+        alert('✅ Company deleted successfully');
         fetchCompanies();
 
     } catch (err) {
         console.error('Error deleting company:', err);
-        alert('❌ Failed to delete company');
+        alert('❌ Error deleting company');
     }
 }
 
-// ===== RESET FORM =====
-function resetForm() {
-    document.getElementById('companyForm')?.reset();
-    document.getElementById('compId').value = '';
-    document.getElementById('formTitle').textContent = 'Add New Company';
-    document.getElementById('saveBtn').innerHTML = '<i class="bx bx-save"></i> Save Company';
-    document.getElementById('cancelBtn').style.display = 'none';
+// ===== EDIT =====
+function prepEdit(c) {
+    console.log('Preparing edit for company:', c);
+    
+    document.getElementById('compId').value = c.id || '';
+    document.getElementById('name').value = c.name || '';
+    document.getElementById('regNumber').value = c.regNumber || '';
+    document.getElementById('email').value = c.email || '';
+    document.getElementById('phone').value = c.phone || '';
+    document.getElementById('address').value = c.address || '';
+    document.getElementById('status').value = c.status || 'Active';
+
+    const formTitle = document.getElementById('formTitle');
+    const saveBtn = document.getElementById('saveBtn');
+    
+    if (formTitle) formTitle.innerText = 'Edit Company';
+    if (saveBtn) saveBtn.innerHTML = '<i class=\'bx bx-check\'></i> Update Company';
+    
+    // Scroll to form
+    document.querySelector('.panel').scrollIntoView({ behavior: 'smooth' });
 }
 
-// ===== SECURITY: XSS Prevention =====
+// ===== RESET =====
+function resetForm() {
+    document.getElementById('companyForm').reset();
+    document.getElementById('compId').value = '';
+    
+    const formTitle = document.getElementById('formTitle');
+    const saveBtn = document.getElementById('saveBtn');
+    
+    if (formTitle) formTitle.innerText = 'Add Company';
+    if (saveBtn) saveBtn.innerHTML = '<i class=\'bx bx-plus\'></i> Save Company';
+}
+
+// ===== SECURITY =====
 function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
@@ -245,32 +278,6 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// ===== EVENT LISTENERS =====
-function setupEventListeners() {
-    const form = document.getElementById('companyForm');
-    if (form) {
-        form.addEventListener('submit', handleFormSubmit);
-    }
-
-    const cancelBtn = document.getElementById('cancelBtn');
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', resetForm);
-    }
-}
-
-// ===== GLOBAL EXPOSURE (for onclick attributes) =====
-window.fetchCompanies = fetchCompanies;
-window.editCompany = editCompany;
+// ===== GLOBAL FUNCTIONS =====
 window.deleteCompany = deleteCompany;
-window.resetForm = resetForm;
-
-// ===== INITIALIZATION =====
-document.addEventListener('DOMContentLoaded', () => {
-    if (!checkAuth()) return;
-    
-    updateProfileDisplay();
-    setupEventListeners();
-    fetchCompanies();
-    
-    console.log('✅ Companies page initialized');
-});
+window.prepEdit = prepEdit;

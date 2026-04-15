@@ -31,34 +31,29 @@ public class ReportController {
     public ResponseEntity<Report> createReport(@RequestBody Report report) {
         try {
             logger.info("📝 Creating report: title='{}'", report.getTitle());
-            if (report.getUpdatedAt() == null) {
-                report.setUpdatedAt(LocalDateTime.now());
-            }
+            if (report.getUpdatedAt() == null) report.setUpdatedAt(LocalDateTime.now());
+            
             Report saved = reportRepository.save(report);
             logger.info("✅ Saved report ID: {}", saved.getId());
             return ResponseEntity.ok(saved);
         } catch (Exception e) {
             logger.error("❌ Failed to create report", e);
-            e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
 
     @GetMapping
     public ResponseEntity<List<Report>> getAllReports() {
-        try {
-            return ResponseEntity.ok(reportRepository.findAll());
-        } catch (Exception e) {
+        try { return ResponseEntity.ok(reportRepository.findAll()); } 
+        catch (Exception e) { 
             logger.error("Error fetching reports", e);
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().build(); 
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Report> getReportById(@PathVariable Long id) {
-        return reportRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return reportRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
@@ -67,35 +62,31 @@ public class ReportController {
                 .map(existing -> {
                     if (details.getTitle() != null) existing.setTitle(details.getTitle());
                     if (details.getSiteVisitId() != null) existing.setSiteVisitId(details.getSiteVisitId());
-                    if (details.getSiteVisitRef() != null) existing.setSiteVisitRef(details.getSiteVisitRef());
                     if (details.getSummary() != null) existing.setSummary(details.getSummary());
                     if (details.getFindings() != null) existing.setFindings(details.getFindings());
                     if (details.getIssues() != null) existing.setIssues(details.getIssues());
                     if (details.getActionsTaken() != null) existing.setActionsTaken(details.getActionsTaken());
                     if (details.getRecommendations() != null) existing.setRecommendations(details.getRecommendations());
                     if (details.getNotes() != null) existing.setNotes(details.getNotes());
+                    
                     existing.setUpdatedAt(LocalDateTime.now());
-                    Report updated = reportRepository.save(existing);
-                    logger.info("✅ Updated report ID: {}", id);
-                    return ResponseEntity.ok(updated);
+                    return ResponseEntity.ok(reportRepository.save(existing));
                 })
-                .orElseGet(() -> {
-                    logger.warn("Report not found for update: {}", id);
-                    return ResponseEntity.notFound().build();
-                });
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReport(@PathVariable Long id) {
         if (reportRepository.existsById(id)) {
             reportRepository.deleteById(id);
-            logger.info("✅ Deleted report ID: {}", id);
             return ResponseEntity.noContent().build();
         }
-        logger.warn("Report not found for delete: {}", id);
         return ResponseEntity.notFound().build();
     }
 
+    // ==========================================
+    // ✅ UPDATED PDF GENERATION
+    // ==========================================
     @GetMapping("/{id}/pdf")
     public void downloadReport(@PathVariable Long id, HttpServletResponse response) throws IOException {
         Report report = reportRepository.findById(id)
@@ -105,8 +96,7 @@ public class ReportController {
         String safeTitle = report.getTitle() != null 
             ? report.getTitle().replaceAll("[^a-zA-Z0-9-_]", "_").substring(0, Math.min(30, report.getTitle().length()))
             : "report";
-        response.setHeader("Content-Disposition", 
-            "attachment; filename=SiteVisit_Report_" + safeTitle + "_" + id + ".pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=SiteVisit_Report_" + safeTitle + "_" + id + ".pdf");
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 
         try {
@@ -115,16 +105,57 @@ public class ReportController {
             document.open();
 
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, Font.BOLD);
-            Font valueFont = FontFactory.getFont(FontFactory.HELVETICA, 11);
+            Font labelFont = FontFactory.getFont(FontFactory.HELVETICA, 12, Font.BOLD);
+            Font valueFont = FontFactory.getFont(FontFactory.HELVETICA, 11, Font.NORMAL);
 
+            // 1. Header
             document.add(new Paragraph("SITEVISIT FIELD REPORT", titleFont));
             document.add(new Paragraph(" "));
-            document.add(new Paragraph("Report ID: " + report.getId(), valueFont));
+            
+            // 2. Basic Info
+            document.add(new Paragraph("Report ID: " + report.getId(), labelFont));
             document.add(new Paragraph("Title: " + report.getTitle(), valueFont));
             document.add(new Paragraph("Summary: " + report.getSummary(), valueFont));
-            
+            document.add(new Paragraph(" ")); // Space
+
+            // 3. ✅ NEW: Add all other fields if they exist
+            if (report.getFindings() != null && !report.getFindings().isEmpty()) {
+                document.add(new Paragraph("Findings:", labelFont));
+                document.add(new Paragraph(report.getFindings(), valueFont));
+                document.add(new Paragraph(" "));
+            }
+
+            if (report.getIssues() != null && !report.getIssues().isEmpty()) {
+                document.add(new Paragraph("Issues Identified:", labelFont));
+                document.add(new Paragraph(report.getIssues(), valueFont));
+                document.add(new Paragraph(" "));
+            }
+
+            if (report.getActionsTaken() != null && !report.getActionsTaken().isEmpty()) {
+                document.add(new Paragraph("Actions Taken:", labelFont));
+                document.add(new Paragraph(report.getActionsTaken(), valueFont));
+                document.add(new Paragraph(" "));
+            }
+
+            if (report.getRecommendations() != null && !report.getRecommendations().isEmpty()) {
+                document.add(new Paragraph("Recommendations:", labelFont));
+                document.add(new Paragraph(report.getRecommendations(), valueFont));
+                document.add(new Paragraph(" "));
+            }
+
+            if (report.getNotes() != null && !report.getNotes().isEmpty()) {
+                document.add(new Paragraph("Additional Notes:", labelFont));
+                document.add(new Paragraph(report.getNotes(), valueFont));
+                document.add(new Paragraph(" "));
+            }
+
+            // 4. Footer
+            document.add(new Paragraph("=".repeat(50), labelFont));
+            document.add(new Paragraph("Generated: " + LocalDateTime.now(), valueFont));
+
             document.close();
-            logger.info("Generated PDF for report: {}", id);
+            logger.info("✅ Generated PDF for report: {}", id);
+
         } catch (DocumentException e) {
             throw new RuntimeException("Failed to generate PDF", e);
         }
