@@ -46,7 +46,7 @@ function setupEventListeners() {
     }
 }
 
-// ===== FETCH & DISPLAY COMPANIES =====
+// ===== FETCH & DISPLAY COMPANIES (✅ FIXED) =====
 async function fetchCompanies() {
     try {
         console.log('Fetching companies from:', API_URL);
@@ -75,7 +75,7 @@ async function fetchCompanies() {
         if (data.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="6" style="text-align:center; padding: 2rem;">No companies yet</td>
+                    <td colspan="7" style="text-align:center; padding: 2rem;">No companies yet</td>
                 </tr>`;
             return;
         }
@@ -87,7 +87,8 @@ async function fetchCompanies() {
                 <td>${escapeHtml(c.name)}</td>
                 <td>${escapeHtml(c.email)}</td>
                 <td>${escapeHtml(c.phone || '-')}</td>
-                <td><span class="status-pill ${c.status}">${escapeHtml(c.status)}</span></td>
+                <td>${escapeHtml(c.address || '-')}</td>
+                <td><span class="status-pill ${c.status?.toLowerCase() || 'active'}">${escapeHtml(c.status || 'Active')}</span></td>
                 <td>
                     <button class="edit-btn" onclick='prepEdit(${JSON.stringify(c)})'>
                         <i class='bx bx-edit'></i> Edit
@@ -106,7 +107,7 @@ async function fetchCompanies() {
         if (tbody) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="6" style="text-align:center; padding: 2rem; color: #dc2626;">
+                    <td colspan="7" style="text-align:center; padding: 2rem; color: #dc2626;">
                         <i class='bx bx-error-circle'></i> Error loading companies. Make sure backend is running.
                     </td>
                 </tr>`;

@@ -397,3 +397,76 @@ label {
         grid-template-columns: 1fr !important;
     }
 }
+
+/* ===== TABLE ACTION BUTTONS - ADDED ✅ ===== */
+.edit-btn,
+.delete-btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.25s ease;
+    margin: 2px 3px;
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+/* Edit Button - Theme Green */
+.edit-btn {
+    background: rgba(31, 77, 58, 0.12);
+    color: #1f4d3a;
+    border: 1.5px solid #1f4d3a;
+}
+
+.edit-btn:hover {
+    background: #1f4d3a;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(31, 77, 58, 0.25);
+}
+
+.edit-btn:active {
+    transform: translateY(0);
+}
+
+/* Delete Button - Theme Red */
+.delete-btn {
+    background: rgba(220, 38, 38, 0.12);
+    color: #dc2626;
+    border: 1.5px solid #dc2626;
+}
+
+.delete-btn:hover {
+    background: #dc2626;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25);
+}
+
+.delete-btn:active {
+    transform: translateY(0);
+}
+
+/* Icons inside buttons */
+.edit-btn i,
+.delete-btn i {
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+}
+
+/* Mobile responsive for action buttons */
+@media (max-width: 900px) {
+    .edit-btn,
+    .delete-btn {
+        padding: 10px 16px;
+        margin: 4px 2px;
+        width: 100%;
+        justify-content: center;
+    }
+}
