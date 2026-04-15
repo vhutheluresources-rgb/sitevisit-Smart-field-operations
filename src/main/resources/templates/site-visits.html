@@ -5,15 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Site Visits | SiteVisit Smart Field Operations</title>
     <link rel="stylesheet" href="/css/site-visits.css" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
+
 <body>
 
 <section class="dashboard-section">
     <div class="dashboard-shell">
 
+        <!-- SIDEBAR -->
         <aside class="sidebar">
             <div class="sidebar-brand">
                 <div class="sidebar-logo">
@@ -37,7 +40,9 @@
             </nav>
         </aside>
 
+        <!-- MAIN -->
         <section class="dashboard-content">
+
             <div class="dashboard-topbar">
                 <div>
                     <h2>Site Visits</h2>
@@ -46,21 +51,22 @@
             </div>
 
             <div id="messageBox" class="message-box" style="display:none;"></div>
+            <div th:if="${successMessage}" class="message-box" style="display:block; background:#dcfce7; color:#166534; border:1px solid #86efac;"> <span th:text="${successMessage}"></span> </div>
+            <!-- TOAST POPUP -->
+            <div id="toast" class="toast"></div>
 
-            <div th:if="${successMessage}" class="message-box" style="display:block; background:#dcfce7; color:#166534; border:1px solid #86efac;">
-                <span th:text="${successMessage}"></span>
-            </div>
-
-            <!-- Schedule Site Visit Form -->
+            <!-- SCHEDULE FORM -->
+            <!-- Schedule Form -->
             <div class="panel large-panel" style="margin-bottom: 24px;">
                 <div class="panel-header">
                     <h3>Schedule Site Visit</h3>
                 </div>
 
                 <form action="/site-visits/save" method="post" class="site-visit-form">
+
                     <div class="form-grid">
 
-                        <!-- Company Select -->
+                        <!-- Company Selection -->
                         <div class="form-group">
                             <label>Select Company</label>
                             <select id="companyId" name="companyId" class="form-input" required>
@@ -72,25 +78,22 @@
                             </select>
                         </div>
 
-                        <!-- Company Name -->
+                        <!-- Company Details (Auto-filled) -->
                         <div class="form-group">
                             <label>Company Name</label>
                             <input type="text" id="companyName" class="form-input" readonly />
                         </div>
 
-                        <!-- Email -->
                         <div class="form-group">
                             <label>Email</label>
                             <input type="text" id="companyEmail" class="form-input" readonly />
                         </div>
 
-                        <!-- Phone -->
                         <div class="form-group">
                             <label>Phone</label>
                             <input type="text" id="companyPhone" class="form-input" readonly />
                         </div>
 
-                        <!-- Registration -->
                         <div class="form-group">
                             <label>Registration Number</label>
                             <input type="text" id="companyRegNumber" class="form-input" readonly />
@@ -102,13 +105,12 @@
                             <input type="text" id="companyAddress" class="form-input" readonly />
                         </div>
 
-                        <!-- Visit Date -->
+                        <!-- Visit Details -->
                         <div class="form-group">
                             <label>Visit Date</label>
                             <input type="date" id="visitDate" name="visitDate" class="form-input" required />
                         </div>
 
-                        <!-- Visit Time -->
                         <div class="form-group">
                             <label>Visit Time</label>
                             <input type="time" id="visitTime" name="visitTime" class="form-input" required />
@@ -122,13 +124,17 @@
 
                     </div>
 
+                    <!-- Submit -->
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Schedule Visit</button>
+                        <button type="submit" class="btn btn-primary">
+                            Schedule Visit
+                        </button>
                     </div>
+
                 </form>
             </div>
 
-            <!-- Scheduled Site Visits Table -->
+            <!-- TABLE -->
             <div class="panel large-panel">
                 <div class="panel-header">
                     <h3>View Scheduled Site Visits</h3>
@@ -138,34 +144,32 @@
                     <table>
                         <thead>
                         <tr>
-                            <th>Visit ID</th>
+                            <th>ID</th>
                             <th>Company</th>
                             <th>Email</th>
                             <th>Address</th>
                             <th>Date</th>
                             <th>Time</th>
                             <th>Status</th>
-                            <th>Attendance Status</th>
-                            <th>Check In Time</th>
-                            <th>Check Out Time</th>
+                            <th>Attendance</th>
+                            <th>Check In</th>
+                            <th>Check Out</th>
                             <th>Action</th>
                         </tr>
                         </thead>
+
                         <tbody>
                         <tr th:each="visit : ${siteVisits}">
-                            <td th:text="${visit.id}">1</td>
-                            <td th:text="${visit.company.name}">Company Name</td>
-                            <td th:text="${visit.company.email}">company@email.com</td>
-                            <td th:text="${visit.company.address}">Address</td>
-                            <td th:text="${visit.visitDate}">2026-04-15</td>
-                            <td th:text="${visit.visitTime}">10:00</td>
+                            <td th:text="${visit.id}"></td>
+                            <td th:text="${visit.company.name}"></td>
+                            <td th:text="${visit.company.email}"></td>
+                            <td th:text="${visit.company.address}"></td>
+                            <td th:text="${visit.visitDate}"></td>
+                            <td th:text="${visit.visitTime}"></td>
 
                             <td>
                                 <span class="status"
-                                      th:classappend="${visit.status == 'Completed'} ? ' completed' :
-                                                      (${visit.status == 'In Progress'} ? ' progress' : ' pending')"
                                       th:text="${visit.status}">
-                                    Scheduled
                                 </span>
                             </td>
 
@@ -173,48 +177,57 @@
                             <td th:attr="id='checkin-time-' + ${visit.id}">-</td>
                             <td th:attr="id='checkout-time-' + ${visit.id}">-</td>
 
-                            <td th:attr="id='action-' + ${visit.id}">
-                                <div style="display:flex; flex-direction:column; gap:8px;">
-                                    <select th:attr="id='status-select-' + ${visit.id}" class="form-input small-select">
-                                        <option value="Scheduled" th:selected="${visit.status == 'Scheduled'}">Scheduled</option>
-                                        <option value="In Progress" th:selected="${visit.status == 'In Progress'}">In Progress</option>
-                                        <option value="Completed" th:selected="${visit.status == 'Completed'}">Completed</option>
-                                    </select>
+                            <td>
+                                <button th:onclick="'checkIn(' + ${visit.id} + ')'" class="btn btn-primary small-btn">
+                                    Check In
+                                </button>
 
-                                    <button class="btn btn-primary small-btn"
-                                            th:attr="onclick='updateVisitStatus(' + ${visit.id} + ')'">
-                                        Update Status
-                                    </button>
-
-                                </div>
+                                <button th:onclick="'checkOut(' + ${visit.id} + ')'" class="btn btn-primary small-btn">
+                                    Check Out
+                                </button>
                             </td>
-                        </tr>
-
-                        <tr th:if="${#lists.isEmpty(siteVisits)}">
-                            <td colspan="11">No site visits available.</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+
         </section>
     </div>
 </section>
 
+<!-- TOAST SCRIPT -->
 <script>
+    let toastTimeout;
+
     function showMessage(message, isSuccess) {
-        const messageBox = document.getElementById("messageBox");
-        messageBox.style.display = "block";
-        messageBox.textContent = message;
-        messageBox.style.backgroundColor = isSuccess ? "#dcfce7" : "#fee2e2";
-        messageBox.style.color = isSuccess ? "#166534" : "#b91c1c";
-        messageBox.style.border = isSuccess ? "1px solid #86efac" : "1px solid #fca5a5";
+        const toast = document.getElementById("toast");
+
+        toast.textContent = message;
+
+        // reset classes cleanly
+        toast.className = "toast";
+
+        // force reflow so animation always restarts properly
+        void toast.offsetWidth;
+
+        toast.classList.add("show");
+        toast.classList.add(isSuccess ? "success" : "error");
+
+        // clear old timeout (IMPORTANT FIX)
+        if (toastTimeout) {
+            clearTimeout(toastTimeout);
+        }
+
+        toastTimeout = setTimeout(() => {
+            toast.classList.remove("show");
+        }, 4000);
     }
 
     function formatTime(time) {
-        if (!time) return "-";
-        return time;
+        return time ? time : "-";
     }
+
     async function loadSelectedCompanyDetails() {
         const companyId = document.getElementById("companyId").value;
 
@@ -229,11 +242,6 @@
 
         try {
             const response = await fetch(`/api/companies/${companyId}`);
-
-            if (!response.ok) {
-                throw new Error("Failed to load company details");
-            }
-
             const company = await response.json();
 
             document.getElementById("companyName").value = company.name || "";
@@ -241,81 +249,94 @@
             document.getElementById("companyPhone").value = company.phone || "";
             document.getElementById("companyAddress").value = company.address || "";
             document.getElementById("companyRegNumber").value = company.regNumber || "";
+
         } catch (error) {
-            console.error(error);
-            showMessage("Failed to load company details.", false);
+            showMessage("Failed to load company details", false);
         }
     }
 
     function renderAttendance(visitId, attendance) {
-        const attendanceStatus = document.getElementById(`attendance-status-${visitId}`);
-        const checkInTime = document.getElementById(`checkin-time-${visitId}`);
-        const checkOutTime = document.getElementById(`checkout-time-${visitId}`);
-        const actionCell = document.getElementById(`action-${visitId}`);
+        const statusEl = document.getElementById(`attendance-status-${visitId}`);
+        const inEl = document.getElementById(`checkin-time-${visitId}`);
+        const outEl = document.getElementById(`checkout-time-${visitId}`);
 
         if (!attendance) {
-            attendanceStatus.textContent = "Not Started";
-            checkInTime.textContent = "-";
-            checkOutTime.textContent = "-";
+            statusEl.textContent = "Not Started";
+            inEl.textContent = "-";
+            outEl.textContent = "-";
             return;
         }
 
-        attendanceStatus.textContent = attendance.status || "Checked In";
-        checkInTime.textContent = formatTime(attendance.checkInTime);
-        checkOutTime.textContent = formatTime(attendance.checkOutTime);
+        statusEl.textContent = attendance.status || "Checked In";
+        inEl.textContent = formatTime(attendance.checkInTime);
+        outEl.textContent = formatTime(attendance.checkOutTime);
     }
 
-    async function loadAttendanceAndRenderAction(visitId) {
+    async function checkIn(id) {
         try {
-            const response = await fetch(`/api/attendance/${visitId}`);
-            const optionalData = await response.json();
-
-            if (optionalData && optionalData.present && optionalData.value) {
-                renderAttendance(visitId, optionalData.value);
-            } else if (optionalData && optionalData.id) {
-                renderAttendance(visitId, optionalData);
-            } else {
-                renderAttendance(visitId, null);
-            }
-        } catch (error) {
-            renderAttendance(visitId, null);
-            console.error(error);
-        }
-    }
-
-    async function updateVisitStatus(visitId) {
-        const status = document.getElementById(`status-select-${visitId}`).value;
-
-        try {
-            const response = await fetch(`/site-visits/update-status/${visitId}?status=${encodeURIComponent(status)}`, {
+            const res = await fetch(`/api/attendance/check-in/${id}`, {
                 method: "POST"
             });
 
-            const data = await response.json();
+            const data = await res.json();
+
             showMessage(data.message, data.success);
 
             if (data.success) {
-                window.location.reload();
+                loadAttendance(id);
             }
+
         } catch (error) {
-            showMessage("Failed to update visit status.", false);
-            console.error(error);
+            showMessage("Check-in failed", false);
+        }
+    }
+
+    async function checkOut(id) {
+        try {
+            const res = await fetch(`/api/attendance/check-out/${id}`, {
+                method: "POST"
+            });
+
+            const data = await res.json();
+
+            showMessage(data.message, data.success);
+
+            if (data.success) {
+                loadAttendance(id);
+            }
+
+        } catch (error) {
+            showMessage("Check-out failed", false);
+        }
+    }
+
+    async function loadAttendance(visitId) {
+        try {
+            const res = await fetch(`/api/attendance/${visitId}`);
+            const data = await res.json();
+
+            renderAttendance(visitId, data);
+
+        } catch (error) {
+            console.error("Failed to load attendance");
         }
     }
 
     document.addEventListener("DOMContentLoaded", function () {
+
+        // load company dropdown
         const companySelect = document.getElementById("companyId");
         if (companySelect) {
             companySelect.addEventListener("change", loadSelectedCompanyDetails);
         }
 
-        const rows = document.querySelectorAll("[id^='attendance-status-']");
-        rows.forEach(row => {
-            const visitId = row.id.replace("attendance-status-", "");
-            loadAttendanceAndRenderAction(visitId);
+        // load attendance for all rows
+        document.querySelectorAll("[id^='attendance-status-']").forEach(el => {
+            const id = el.id.replace("attendance-status-", "");
+            loadAttendance(id);
         });
+
     });
 </script>
-
 </body>
 </html>
