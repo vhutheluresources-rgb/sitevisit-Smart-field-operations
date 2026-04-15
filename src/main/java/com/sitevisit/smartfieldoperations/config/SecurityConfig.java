@@ -21,18 +21,21 @@ public class SecurityConfig {
                                 "/dashboard",
                                 "/members",
                                 "/companies",
+                                "/site-visits",
+                                "/site-visits/save",
+                                "/site-visits/update-status/**",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
                                 "/api/auth/**",
                                 "/api/companies/**",
-                                "/api/members/**"
+                                "/api/members/**",
+                                "/api/attendance/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable());
-
         return http.build();
     }
 }

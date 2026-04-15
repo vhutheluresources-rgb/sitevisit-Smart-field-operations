@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Site Visits | SiteVisit Smart Field Operations</title>
+    <link rel="stylesheet" href="/css/site-visits.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<section class="dashboard-section">
+    <div class="dashboard-shell">
+
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-logo">
+                    <img src="/images/siteVisit%20logo.png" alt="SiteVisit Logo" class="actual-logo" />
+                </div>
+                <div>
+                    <h3>SiteVisit</h3>
+                    <p>Operations Panel</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/companies">Company Management</a>
+                <a href="/members">Member Management</a>
+                <a href="/site-visits" class="active">Site Visits</a>
+                <a href="/reports">Reports</a>
+                <a href="/reminders&notifications">Reminders&Notifications</a>
+                <a href="/profile">Profile</a>
+                <a href="/login">Logout</a>
+            </nav>
+        </aside>
+
+        <section class="dashboard-content">
+            <div class="dashboard-topbar">
+                <div>
+                    <h2>Site Visits</h2>
+                    <p>Schedule visits by selecting a company, then choose the visit date and time.</p>
+                </div>
+            </div>
+
+            <div id="messageBox" class="message-box" style="display:none;"></div>
+
+            <div th:if="${successMessage}" class="message-box" style="display:block; background:#dcfce7; color:#166534; border:1px solid #86efac;">
+                <span th:text="${successMessage}"></span>
+            </div>
+
+            <!-- Schedule Site Visit Form -->
+            <div class="panel large-panel" style="margin-bottom: 24px;">
+                <div class="panel-header">
+                    <h3>Schedule Site Visit</h3>
+                </div>
+
+                <form action="/site-visits/save" method="post" class="site-visit-form">
+                    <div class="form-grid">
+
+                        <!-- Company Select -->
+                        <div class="form-group">
+                            <label>Select Company</label>
+                            <select id="companyId" name="companyId" class="form-input" required>
+                                <option value="">-- Select Company --</option>
+                                <option th:each="company : ${companies}"
+                                        th:value="${company.id}"
+                                        th:text="${company.name + ' - ' + company.email}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Company Name -->
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" id="companyName" class="form-input" readonly />
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" id="companyEmail" class="form-input" readonly />
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="text" id="companyPhone" class="form-input" readonly />
+                        </div>
+
+                        <!-- Registration -->
+                        <div class="form-group">
+                            <label>Registration Number</label>
+                            <input type="text" id="companyRegNumber" class="form-input" readonly />
+                        </div>
+
+                        <!-- Address -->
+                        <div class="form-group full-width">
+                            <label>Company Address</label>
+                            <input type="text" id="companyAddress" class="form-input" readonly />
+                        </div>
+
+                        <!-- Visit Date -->
+                        <div class="form-group">
+                            <label>Visit Date</label>
+                            <input type="date" id="visitDate" name="visitDate" class="form-input" required />
+                        </div>
+
+                        <!-- Visit Time -->
+                        <div class="form-group">
+                            <label>Visit Time</label>
+                            <input type="time" id="visitTime" name="visitTime" class="form-input" required />
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="form-group full-width">
+                            <label>Notes</label>
+                            <textarea id="notes" name="notes" rows="4" class="form-input"></textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Schedule Visit</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Scheduled Site Visits Table -->
+            <div class="panel large-panel">
+                <div class="panel-header">
+                    <h3>View Scheduled Site Visits</h3>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Visit ID</th>
+                            <th>Company</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Attendance Status</th>
+                            <th>Check In Time</th>
+                            <th>Check Out Time</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="visit : ${siteVisits}">
+                            <td th:text="${visit.id}">1</td>
+                            <td th:text="${visit.company.name}">Company Name</td>
+                            <td th:text="${visit.company.email}">company@email.com</td>
+                            <td th:text="${visit.company.address}">Address</td>
+                            <td th:text="${visit.visitDate}">2026-04-15</td>
+                            <td th:text="${visit.visitTime}">10:00</td>
+
+                            <td>
+                                <span class="status"
+                                      th:classappend="${visit.status == 'Completed'} ? ' completed' :
+                                                      (${visit.status == 'In Progress'} ? ' progress' : ' pending')"
+                                      th:text="${visit.status}">
+                                    Scheduled
+                                </span>
+                            </td>
+
+                            <td th:attr="id='attendance-status-' + ${visit.id}">Loading...</td>
+                            <td th:attr="id='checkin-time-' + ${visit.id}">-</td>
+                            <td th:attr="id='checkout-time-' + ${visit.id}">-</td>
+
+                            <td th:attr="id='action-' + ${visit.id}">
+                                <div style="display:flex; flex-direction:column; gap:8px;">
+                                    <select th:attr="id='status-select-' + ${visit.id}" class="form-input small-select">
+                                        <option value="Scheduled" th:selected="${visit.status == 'Scheduled'}">Scheduled</option>
+                                        <option value="In Progress" th:selected="${visit.status == 'In Progress'}">In Progress</option>
+                                        <option value="Completed" th:selected="${visit.status == 'Completed'}">Completed</option>
+                                    </select>
+
+                                    <button class="btn btn-primary small-btn"
+                                            th:attr="onclick='updateVisitStatus(' + ${visit.id} + ')'">
+                                        Update Status
+                                    </button>
+
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(siteVisits)}">
+                            <td colspan="11">No site visits available.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+
+<script>
+    function showMessage(message, isSuccess) {
+        const messageBox = document.getElementById("messageBox");
+        messageBox.style.display = "block";
+        messageBox.textContent = message;
+        messageBox.style.backgroundColor = isSuccess ? "#dcfce7" : "#fee2e2";
+        messageBox.style.color = isSuccess ? "#166534" : "#b91c1c";
+        messageBox.style.border = isSuccess ? "1px solid #86efac" : "1px solid #fca5a5";
+    }
+
+    function formatTime(time) {
+        if (!time) return "-";
+        return time;
+    }
+    async function loadSelectedCompanyDetails() {
+        const companyId = document.getElementById("companyId").value;
+
+        if (!companyId) {
+            document.getElementById("companyName").value = "";
+            document.getElementById("companyEmail").value = "";
+            document.getElementById("companyPhone").value = "";
+            document.getElementById("companyAddress").value = "";
+            document.getElementById("companyRegNumber").value = "";
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/companies/${companyId}`);
+
+            if (!response.ok) {
+                throw new Error("Failed to load company details");
+            }
+
+            const company = await response.json();
+
+            document.getElementById("companyName").value = company.name || "";
+            document.getElementById("companyEmail").value = company.email || "";
+            document.getElementById("companyPhone").value = company.phone || "";
+            document.getElementById("companyAddress").value = company.address || "";
+            document.getElementById("companyRegNumber").value = company.regNumber || "";
+        } catch (error) {
+            console.error(error);
+            showMessage("Failed to load company details.", false);
+        }
+    }
+
+    function renderAttendance(visitId, attendance) {
+        const attendanceStatus = document.getElementById(`attendance-status-${visitId}`);
+        const checkInTime = document.getElementById(`checkin-time-${visitId}`);
+        const checkOutTime = document.getElementById(`checkout-time-${visitId}`);
+        const actionCell = document.getElementById(`action-${visitId}`);
+
+        if (!attendance) {
+            attendanceStatus.textContent = "Not Started";
+            checkInTime.textContent = "-";
+            checkOutTime.textContent = "-";
+            return;
+        }
+
+        attendanceStatus.textContent = attendance.status || "Checked In";
+        checkInTime.textContent = formatTime(attendance.checkInTime);
+        checkOutTime.textContent = formatTime(attendance.checkOutTime);
+    }
+
+    async function loadAttendanceAndRenderAction(visitId) {
+        try {
+            const response = await fetch(`/api/attendance/${visitId}`);
+            const optionalData = await response.json();
+
+            if (optionalData && optionalData.present && optionalData.value) {
+                renderAttendance(visitId, optionalData.value);
+            } else if (optionalData && optionalData.id) {
+                renderAttendance(visitId, optionalData);
+            } else {
+                renderAttendance(visitId, null);
+            }
+        } catch (error) {
+            renderAttendance(visitId, null);
+            console.error(error);
+        }
+    }
+
+    async function updateVisitStatus(visitId) {
+        const status = document.getElementById(`status-select-${visitId}`).value;
+
+        try {
+            const response = await fetch(`/site-visits/update-status/${visitId}?status=${encodeURIComponent(status)}`, {
+                method: "POST"
+            });
+
+            const data = await response.json();
+            showMessage(data.message, data.success);
+
+            if (data.success) {
+                window.location.reload();
+            }
+        } catch (error) {
+            showMessage("Failed to update visit status.", false);
+            console.error(error);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const companySelect = document.getElementById("companyId");
+        if (companySelect) {
+            companySelect.addEventListener("change", loadSelectedCompanyDetails);
+        }
+
+        const rows = document.querySelectorAll("[id^='attendance-status-']");
+        rows.forEach(row => {
+            const visitId = row.id.replace("attendance-status-", "");
+            loadAttendanceAndRenderAction(visitId);
+        });
+    });
+</script>
+
+</body>
+</html>

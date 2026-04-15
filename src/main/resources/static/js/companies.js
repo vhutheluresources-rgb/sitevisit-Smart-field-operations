@@ -9,10 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== SETUP EVENT LISTENERS =====
 function setupEventListeners() {
-    // Form submission
-    document.getElementById('companyForm').addEventListener('submit', handleFormSubmit);
-    
-    // Optional: Add "View All" button if it exists in your HTML
+    const companyForm = document.getElementById('companyForm');
+    if (companyForm) {
+        companyForm.addEventListener('submit', handleFormSubmit);
+    }
+
     const viewAllBtn = document.getElementById('viewAllBtn');
     if (viewAllBtn) {
         viewAllBtn.addEventListener('click', fetchCompanies);
@@ -23,25 +24,29 @@ function setupEventListeners() {
 async function fetchCompanies() {
     try {
         const response = await fetch(API_URL);
-        if (!response.ok) throw new Error('Failed to fetch companies');
-        
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch companies: ${response.status}`);
+        }
+
         const data = await response.json();
         const tbody = document.getElementById('companyTableBody');
-        
+
         if (!tbody) {
             console.warn('Table body element not found');
             return;
         }
-        
-        tbody.innerHTML = ''; // Clear existing rows
 
-        if (data.length === 0) {
+        tbody.innerHTML = '';
+
+        if (!data || data.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="5" style="text-align: center; padding: 2rem; color: #64748b;">
+                    <td colspan="6" style="text-align: center; padding: 2rem; color: #64748b;">
                         No companies registered yet. Add one above!
                     </td>
-                </tr>`;
+                </tr>
+            `;
             return;
         }
 
@@ -51,7 +56,8 @@ async function fetchCompanies() {
                 <td>${escapeHtml(c.regNumber)}</td>
                 <td><strong>${escapeHtml(c.name)}</strong></td>
                 <td>${escapeHtml(c.email)}</td>
-                <td><span class="status-pill ${c.status}">${escapeHtml(c.status)}</span></td>
+                <td>${escapeHtml(c.address)}</td>
+                <td><span class="status-pill ${escapeHtml(c.status)}">${escapeHtml(c.status)}</span></td>
                 <td>
                     <button class="edit-btn" onclick='prepEdit(${JSON.stringify(c).replace(/'/g, "\\'")})'>Edit</button>
                     <button class="delete-btn" onclick="deleteCompany(${c.id})">Delete</button>
@@ -68,17 +74,18 @@ async function fetchCompanies() {
 // ===== HANDLE FORM SUBMIT (CREATE / UPDATE) =====
 async function handleFormSubmit(e) {
     e.preventDefault();
-    
-    const id = document.getElementById('compId').value;
+
+    const id = document.getElementById('compId')?.value || '';
+
     const companyData = {
-        name: document.getElementById('name').value.trim(),
-        regNumber: document.getElementById('regNumber').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        status: document.getElementById('status').value
+        name: document.getElementById('name')?.value.trim() || '',
+        regNumber: document.getElementById('regNumber')?.value.trim() || '',
+        email: document.getElementById('email')?.value.trim() || '',
+        phone: document.getElementById('phone')?.value.trim() || '',
+        status: document.getElementById('status')?.value || 'Active',
+        address: document.getElementById('address')?.value.trim() || ''
     };
 
-    // Basic validation
     if (!companyData.name || !companyData.regNumber || !companyData.email) {
         alert('Please fill in all required fields (Name, Reg Number, Email)');
         return;
@@ -90,15 +97,19 @@ async function handleFormSubmit(e) {
 
         const response = await fetch(url, {
             method: method,
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(companyData)
         });
 
-        if (!response.ok) throw new Error('Save failed');
+        if (!response.ok) {
+            throw new Error(`Save failed: ${response.status}`);
+        }
 
         alert(id ? '✅ Company Updated!' : '✅ Company Saved!');
         resetForm();
-        fetchCompanies(); // Refresh table
+        fetchCompanies();
     } catch (err) {
         console.error('Error saving company:', err);
         alert('Failed to save company. Please try again.');
@@ -112,15 +123,18 @@ async function deleteCompany(id) {
     }
 
     try {
-        const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-        
-        if (!response.ok) throw new Error('Delete failed');
-        
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error(`Delete failed: ${response.status}`);
+        }
+
         alert('🗑️ Company deleted successfully');
-        fetchCompanies(); // Refresh table
-        
-        // If we were editing this company, reset the form
-        if (document.getElementById('compId').value == id) {
+        fetchCompanies();
+
+        if (document.getElementById('compId')?.value == id) {
             resetForm();
         }
     } catch (err) {
@@ -131,50 +145,71 @@ async function deleteCompany(id) {
 
 // ===== PREPARE FORM FOR EDIT (UPDATE) =====
 function prepEdit(c) {
-    // Populate form fields with company data
     document.getElementById('compId').value = c.id || '';
     document.getElementById('name').value = c.name || '';
     document.getElementById('regNumber').value = c.regNumber || '';
     document.getElementById('email').value = c.email || '';
     document.getElementById('phone').value = c.phone || '';
     document.getElementById('status').value = c.status || 'Active';
-    
-    // Update UI labels
-    document.getElementById('formTitle').innerText = '✏️ Edit Company';
-    document.getElementById('saveBtn').innerHTML = '⟳ Update Company';
-    
-    // Smooth scroll to form
-    document.querySelector('.panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    
-    // Highlight the form briefly
+    document.getElementById('address').value = c.address || '';
+
+    const formTitle = document.getElementById('formTitle');
+    if (formTitle) {
+        formTitle.innerText = '✏️ Edit Company';
+    }
+
+    const saveBtn = document.getElementById('saveBtn');
+    if (saveBtn) {
+        saveBtn.innerHTML = '⟳ Update Company';
+    }
+
+    document.querySelector('.panel')?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+
     const form = document.getElementById('companyForm');
-    form.style.transition = 'background 0.3s ease';
-    form.style.background = 'rgba(201, 169, 97, 0.1)';
-    setTimeout(() => { form.style.background = 'transparent'; }, 1000);
+    if (form) {
+        form.style.transition = 'background 0.3s ease';
+        form.style.background = 'rgba(201, 169, 97, 0.1)';
+        setTimeout(() => {
+            form.style.background = 'transparent';
+        }, 1000);
+    }
 }
 
 // ===== RESET FORM TO ADD MODE =====
 function resetForm() {
-    document.getElementById('companyForm').reset();
+    document.getElementById('companyForm')?.reset();
     document.getElementById('compId').value = '';
-    document.getElementById('formTitle').innerText = '➕ Add Company';
-    document.getElementById('saveBtn').innerHTML = '+ Save Company';
+
+    const formTitle = document.getElementById('formTitle');
+    if (formTitle) {
+        formTitle.innerText = '➕ Add Company';
+    }
+
+    const saveBtn = document.getElementById('saveBtn');
+    if (saveBtn) {
+        saveBtn.innerHTML = 'Save Company';
+    }
 }
 
 // ===== SECURITY: Escape HTML to prevent XSS =====
 function escapeHtml(text) {
-    if (!text) return '';
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return text.replace(/[&<>"']/g, m => map[m]);
+    if (text === null || text === undefined) return '';
+    return String(text).replace(/[&<>"']/g, function (m) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return map[m];
+    });
 }
 
-// ===== EXPOSE FUNCTIONS GLOBALLY (for onclick attributes) =====
+// ===== EXPOSE FUNCTIONS GLOBALLY =====
 window.deleteCompany = deleteCompany;
 window.prepEdit = prepEdit;
 window.fetchCompanies = fetchCompanies;

@@ -94,7 +94,17 @@
                                 <option value="Inactive">Inactive</option>
                             </select>
                         </div>
-
+                        <div>
+                            <label for="address">Company Address</label>
+                            <textarea
+                                    id="address"
+                                    class="form-input"
+                                    placeholder="Enter company address"
+                                    name="address"
+                                    rows="3"
+                                    style="width: 100%; resize: vertical;"
+                            ></textarea>
+                        </div>
                         <div style="grid-column: 1 / -1; display:flex; gap:12px; flex-wrap: wrap;">
                             <button type="submit" id="saveBtn" class="btn-save">
                                 Save Company
@@ -119,13 +129,14 @@
                             <th>Reg Number</th>
                             <th>Company Name</th>
                             <th>Email</th>
+                            <th>Address</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody id="companyTableBody">
                         <tr>
-                            <td colspan="5" style="text-align:center;">Loading companies...</td>
+                            <td colspan="6" style="text-align:center;">Loading companies...</td>
                         </tr>
                         </tbody>
                     </table>
