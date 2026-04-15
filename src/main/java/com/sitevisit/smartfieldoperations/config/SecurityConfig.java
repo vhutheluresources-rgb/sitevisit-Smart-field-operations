@@ -3,6 +3,7 @@ package com.sitevisit.smartfieldoperations.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -11,74 +12,78 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // ✅ CORS configuration (allows frontend to call API)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            
-            // ⚠️ CSRF disabled for API testing (enable with CookieCsrfTokenRepository for production)
             .csrf(csrf -> csrf.disable())
-            
-            // ✅ Authorization rules
             .authorizeHttpRequests(auth -> auth
+                // Public endpoints - no authentication required
                 .requestMatchers(
-                    "/",
-                    "/login",
-                    "/forgot-password",
-                    "/reset-password",
-                    "/dashboard",
-                    "/members",
-                    "/companies",
-                    "/css/**",
-                    "/js/**",
-                    "/images/**",
-                    "/fonts/**",
-                    "/api/auth/**",
-                    "/api/companies/**",  // ✅ ADD THIS: Allow company API endpoints
-                    "/api/companies"       // ✅ ADD THIS: Allow company list endpoint
+                    "/", "/index", "/login", "/forgot-password", "/reset-password",
+                    "/dashboard", "/members", "/companies", "/reports", "/reports/**",
+                    "/site-visits", "/team-activity", "/reminders", "/notifications",
+                    "/settings", "/profile", "/change-password",
+                    "/css/**", "/js/**", "/images/**", "/fonts/**",
+                    "/api/auth/**", "/api/companies/**", "/api/companies",
+                    "/api/reports/**", "/api/reports",
+                    "/h2-console/**"
                 ).permitAll()
+                // Admin-only endpoints
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                // All other endpoints require authentication
                 .anyRequest().authenticated()
             )
-            
-            // ✅ Keep form login disabled (as per your setup)
-            .formLogin(form -> form.disable())
-            
-            // ✅ Keep HTTP Basic disabled (as per your setup)
+            .formLogin(form -> form
+                .loginPage("/login")
+                .defaultSuccessUrl("/dashboard", true)
+                .failureUrl("/login?error=true")
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout=true")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .permitAll()
+            )
             .httpBasic(basic -> basic.disable());
 
         return http.build();
     }
 
-    // ✅ CORS Configuration Source (allows frontend to call backend)
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
+        CorsConfiguration config = new CorsConfiguration();
         
-        // Allow your frontend origins (adjust for production)
-        configuration.setAllowedOrigins(List.of(
+        // Allowed origins - add production URLs before deploy
+        config.setAllowedOrigins(List.of(
             "http://localhost:8080",
-            "http://127.0.0.1:8080"
+            "http://127.0.0.1:8080", 
+            "http://localhost:3000",
+            "http://localhost:5173"
         ));
         
-        // Allow methods your frontend uses
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        // Allowed HTTP methods
+        config.setAllowedMethods(List.of(
+            "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
+        ));
         
-        // Allow headers your frontend sends
-        configuration.setAllowedHeaders(List.of("*"));
+        // Allowed headers
+        config.setAllowedHeaders(List.of("*"));
         
         // Allow credentials (cookies, auth headers)
-        configuration.setAllowCredentials(true);
+        config.setAllowCredentials(true);
         
         // Cache preflight requests for 1 hour
-        configuration.setMaxAge(3600L);
+        config.setMaxAge(3600L);
         
         // Apply to all endpoints
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 }
