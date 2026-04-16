@@ -172,20 +172,21 @@
                             <td th:attr="id='attendance-status-' + ${visit.id}">Loading...</td>
                             <td th:attr="id='checkin-time-' + ${visit.id}">-</td>
                             <td th:attr="id='checkout-time-' + ${visit.id}">-</td>
-
-                            <td th:attr="id='action-' + ${visit.id}">
-                                <div style="display:flex; flex-direction:column; gap:8px;">
-                                    <select th:attr="id='status-select-' + ${visit.id}" class="form-input small-select">
-                                        <option value="Scheduled" th:selected="${visit.status == 'Scheduled'}">Scheduled</option>
-                                        <option value="In Progress" th:selected="${visit.status == 'In Progress'}">In Progress</option>
-                                        <option value="Completed" th:selected="${visit.status == 'Completed'}">Completed</option>
-                                    </select>
-
-                                    <button class="btn btn-primary small-btn"
-                                            th:attr="onclick='updateVisitStatus(' + ${visit.id} + ')'">
-                                        Update Status
+                            <td>
+                                <div class="status-action-buttons">
+                                    <button type="button"
+                                            class="btn small-btn"
+                                            th:classappend="${visit.status == 'In Progress'} ? ' btn-primary' : ' btn-light'"
+                                            th:attr="onclick='updateVisitStatus(' + ${visit.id} + ', \'In Progress\')'">
+                                        In Progress
                                     </button>
 
+                                    <button type="button"
+                                            class="btn small-btn"
+                                            th:classappend="${visit.status == 'Completed'} ? ' btn-primary' : ' btn-light'"
+                                            th:attr="onclick='updateVisitStatus(' + ${visit.id} + ', \'Completed\')'">
+                                        Completed
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -283,9 +284,7 @@
         }
     }
 
-    async function updateVisitStatus(visitId) {
-        const status = document.getElementById(`status-select-${visitId}`).value;
-
+    async function updateVisitStatus(visitId, status) {
         try {
             const response = await fetch(`/site-visits/update-status/${visitId}?status=${encodeURIComponent(status)}`, {
                 method: "POST"
