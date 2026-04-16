@@ -105,7 +105,7 @@ function viewReport(id) {
                     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:25px;padding-top:15px;border-top:1px solid #e5e7eb;">
                         <button onclick="closeViewModal()" style="background:#6b7280;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;">Close</button>
                         <button onclick="closeViewModal(); openModal(${JSON.stringify(r).replace(/"/g, '&quot;')})" style="background:#2563eb;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;">✏️ Edit</button>
-                        <button onclick="closeViewModal(); downloadPdf(${r.id})" style="background:#d97706;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;">📄 PDF</button>
+                        <button onclick="closeViewModal(); downloadPdf(${r.id})" style="background:#d97706;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;">📄 Download PDF</button>
                     </div>
                 </div>
             `;
