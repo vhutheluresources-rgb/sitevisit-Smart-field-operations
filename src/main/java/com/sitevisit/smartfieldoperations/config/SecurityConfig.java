@@ -22,6 +22,7 @@ public class SecurityConfig {
                                 "/members",
                                 "/companies",
                                 "/site-visits",
+                                "/reports",
                                 "/site-visits/save",
                                 "/site-visits/update-status/**",
                                 "/css/**",
@@ -30,12 +31,14 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/api/companies/**",
                                 "/api/members/**",
-                                "/api/attendance/**"
+                                "/api/attendance/**",
+                                "/api/reports/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable());
+
         return http.build();
     }
 }
