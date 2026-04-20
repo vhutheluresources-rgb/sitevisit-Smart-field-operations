@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reports | SiteVisit Smart Field Operations</title>
+    
+    <!-- CSRF Meta Tags for Spring Security -->
+    <meta name="_csrf" th:content="${_csrf?.token}" th:if="${_csrf}">
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}" th:if="${_csrf}">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/dashboard.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<section class="dashboard-section">
+    <div class="dashboard-shell">
+
+        <!-- ===== SIDEBAR - EXACT COPY FROM DASHBOARD ===== -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-logo">
+                    <img src="/images/siteVisit%20logo.png" alt="SiteVisit Logo" class="actual-logo" />
+                </div>
+                <div>
+                    <h3>SiteVisit</h3>
+                    <p>Operations Panel</p>
+                </div>
+            </div>
+            <nav class="sidebar-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/companies">Company Management</a>
+                <a href="/members">Member Management</a>
+                <a href="/site-visits">Site Visits</a>
+                <a href="/reports" class="active">Reports</a>
+                <a href="/team-activity">Team Activity</a>
+                <a href="/reminders">Reminders</a>
+                <a href="/notifications">Notifications</a>
+                <a href="/settings">Settings</a>
+                <a href="/profile">Profile</a>
+                <a href="/change-password">Change Password</a>
+                <a href="/">Back to Welcome</a>
+                <a href="/logout">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- ===== MAIN CONTENT - REPORTS ===== -->
+        <section class="dashboard-content">
+            
+            <!-- ✅ UPDATED: Button styled with dark green, white bold text, rounded corners -->
+            <div class="dashboard-topbar" style="flex-direction: column; align-items: flex-start; gap: 1rem; margin-bottom: 2.5rem;">
+                <div>
+                    <h2 style="font-size: 34px; margin-bottom: 8px; color: var(--site-dark);"> Field Reports</h2>
+                    <p style="font-size: 16px; color: #6b7280; line-height: 1.6; max-width: 600px;">
+                        Manage and generate reports from site visits.
+                    </p>
+                </div>
+                
+                <!-- ✅ UPDATED BUTTON: Dark green background, white bold text, rounded corners -->
+                <button onclick="openModal()" style="
+                    background: #1a3f3a;
+                    color: white;
+                    border: none;
+                    padding: 16px 32px;
+                    border-radius: 12px;
+                    cursor: pointer;
+                    font-weight: 700;
+                    font-size: 16px;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 10px;
+                    transition: all 0.3s ease;
+                    margin-top: 0.5rem;
+                " onmouseover="this.style.background='#254a45'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" 
+                   onmouseout="this.style.background='#1a3f3a'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                    <span style="font-size: 20px;"></span>
+                    Write a New Report
+                </button>
+            </div>
+
+            <!-- Reports Table -->
+            <div class="panel large-panel" style="margin-top: 1.5rem;">
+                <div class="panel-header">
+                    <h3>Submitted Reports</h3>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Summary</th>
+                                <th>Created</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align:center; padding:2.5rem; color:#6b7280; font-size: 16px;">
+                                    No reports yet. Create one above!
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+
+<!-- ===== REPORT MODAL (Create/Edit) ===== -->
+<div id="reportModal" class="modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); overflow-y:auto;">
+    <div class="modal-content" style="background:white; margin:4% auto; padding:30px; width:75%; max-width:900px; border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,0.25);">
+        <h3 id="modalTitle" style="margin-bottom:10px; font-size:22px; color:var(--site-dark);">Create New Report</h3>
+        <p style="font-size:15px; color:#6b7280; margin-bottom:20px; line-height:1.6;">Provide detailed findings from your site operation.</p>
+        <hr style="margin-bottom:25px; border:none; border-top:1px solid #e5e7eb;">
+        
+        <form id="reportForm">
+            <input type="hidden" id="reportId">
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:25px; margin-bottom:20px;">
+                <div>
+                    <label style="display:block; font-weight:600; margin-bottom:10px; color:var(--site-dark); font-size:15px;">Report Title *</label>
+                    <input type="text" id="title" class="form-input" placeholder="e.g. Weekly Safety Review" required style="padding:14px 16px; font-size:15px;">
+                </div>
+                <div>
+                    <label style="display:block; font-weight:600; margin-bottom:10px; color:var(--site-dark); font-size:15px;">Site Visit ID</label>
+                    <input type="number" id="siteVisitId" class="form-input" placeholder="Enter numeric ID (e.g. 1)" style="padding:14px 16px; font-size:15px;">
+                </div>
+            </div>
+            
+            <div style="margin-bottom:20px;">
+                <label style="display:block; font-weight:600; margin-bottom:10px; color:var(--site-dark); font-size:15px;">Summary *</label>
+                <textarea id="summary" class="form-input" rows="4" placeholder="Brief overview of the visit outcome..." required style="padding:14px 16px; font-size:15px; min-height:100px;"></textarea>
+            </div>
+            
+            <div style="margin-bottom:20px;">
+                <label style="display:block; font-weight:600; margin-bottom:10px; color:var(--site-dark); font-size:15px;">Findings</label>
+                <textarea id="findings" class="form-input" rows="4" placeholder="Detailed observations..." style="padding:14px 16px; font-size:15px; min-height:100px;"></textarea>
+            </div>
+            
+            <div style="margin-bottom:20px;">
+                <label style="display:block; font-weight:600; margin-bottom:10px; color:var(--site-dark); font-size:15px;">Issues Identified</label>
+                <textarea id="issues" class="form-input" rows="4" placeholder="Problems or concerns noted..." style="padding:14px 16px; font-size:15px; min-height:100px;"></textarea>
+            </div>
+            
+            <div style="margin-bottom:20px;">
+                <label style="display:block; font-weight:600; margin-bottom:10px; color:var(--site-dark); font-size:15px;">Actions Taken</label>
+                <textarea id="actionsTaken" class="form-input" rows="4" placeholder="Steps taken to address issues..." style="padding:14px 16px; font-size:15px; min-height:100px;"></textarea>
+            </div>
+            
+            <div style="margin-bottom:20px;">
+                <label style="display:block; font-weight:600; margin-bottom:10px; color:var(--site-dark); font-size:15px;">Recommendations</label>
+                <textarea id="recommendations" class="form-input" rows="4" placeholder="Suggestions for improvement..." style="padding:14px 16px; font-size:15px; min-height:100px;"></textarea>
+            </div>
+            
+            <div style="margin-bottom:25px;">
+                <label style="display:block; font-weight:600; margin-bottom:10px; color:var(--site-dark); font-size:15px;">Additional Notes</label>
+                <textarea id="notes" class="form-input" rows="3" placeholder="Any other relevant information..." style="padding:14px 16px; font-size:15px; min-height:80px;"></textarea>
+            </div>
+            
+            <div style="display:flex; gap:20px; justify-content:center; margin-top:30px; padding:25px 0;">
+                <button type="button" onclick="closeModal()" 
+                        style="background:#1a3f3a; color:white; border:none; padding:16px 40px; border-radius:12px; cursor:pointer; font-weight:700; font-size:16px; transition:all 0.3s ease;">
+                    Cancel
+                </button>
+                <button type="submit" 
+                        style="background:#1a3f3a; color:white; border:none; padding:16px 40px; border-radius:12px; cursor:pointer; font-weight:700; font-size:16px; transition:all 0.3s ease;">
+                    Save Report
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ===== EXTERNAL JAVASCRIPT ===== -->
+<script src="/js/reports.js"></script>
+
+</body>
+</html>

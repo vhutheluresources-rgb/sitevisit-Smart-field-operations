@@ -18,7 +18,9 @@ public class PageController {
     private final SiteVisitRepository siteVisitRepository;
     private final CompanyRepository companyRepository;
 
-    public PageController(UserRepository userRepository, SiteVisitRepository siteVisitRepository,CompanyRepository companyRepository) {
+    public PageController(UserRepository userRepository,
+                          SiteVisitRepository siteVisitRepository,
+                          CompanyRepository companyRepository) {
         this.userRepository = userRepository;
         this.siteVisitRepository = siteVisitRepository;
         this.companyRepository = companyRepository;
@@ -47,10 +49,7 @@ public class PageController {
     @GetMapping("/dashboard")
     public String dashboard(Model model, HttpSession session) {
         User user = getLoggedInUser(session);
-
-        if (user == null) {
-            return "redirect:/login";
-        }
+        if (user == null) return "redirect:/login";
 
         addUserToModel(model, user);
         return "dashboard";
@@ -59,10 +58,7 @@ public class PageController {
     @GetMapping("/companies")
     public String companiesPage(Model model, HttpSession session) {
         User user = getLoggedInUser(session);
-
-        if (user == null) {
-            return "redirect:/login";
-        }
+        if (user == null) return "redirect:/login";
 
         addUserToModel(model, user);
         return "companies";
@@ -71,10 +67,7 @@ public class PageController {
     @GetMapping("/members")
     public String membersPage(Model model, HttpSession session) {
         User user = getLoggedInUser(session);
-
-        if (user == null) {
-            return "redirect:/login";
-        }
+        if (user == null) return "redirect:/login";
 
         addUserToModel(model, user);
         return "members";
@@ -83,16 +76,22 @@ public class PageController {
     @GetMapping("/site-visits")
     public String siteVisitsPage(Model model, HttpSession session) {
         User user = getLoggedInUser(session);
-
-        if (user == null) {
-            return "redirect:/login";
-        }
+        if (user == null) return "redirect:/login";
 
         addUserToModel(model, user);
         model.addAttribute("companies", companyRepository.findAll());
         model.addAttribute("siteVisits", siteVisitRepository.findAll());
 
         return "site-visits";
+    }
+
+    @GetMapping("/reports")
+    public String reportsPage(Model model, HttpSession session) {
+        User user = getLoggedInUser(session);
+        if (user == null) return "redirect:/login";
+
+        addUserToModel(model, user);
+        return "reports";
     }
 
     private User getLoggedInUser(HttpSession session) {
