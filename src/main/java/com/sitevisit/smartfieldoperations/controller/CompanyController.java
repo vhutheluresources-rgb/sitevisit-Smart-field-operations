@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/companies")
-@CrossOrigin(origins = "*") // 🔥 important for frontend requests
+@CrossOrigin(origins = "*")
 public class CompanyController {
 
     @Autowired
@@ -18,7 +18,7 @@ public class CompanyController {
     // ✅ CREATE
     @PostMapping
     public Company createCompany(@RequestBody Company company) {
-        System.out.println("Saving company: " + company.getName()); // debug
+        System.out.println("Saving company: " + company.getName());
         return companyRepository.save(company);
     }
 
@@ -26,6 +26,13 @@ public class CompanyController {
     @GetMapping
     public List<Company> getAllCompanies() {
         return companyRepository.findAll();
+    }
+
+    // ✅ READ ONE COMPANY BY ID
+    @GetMapping("/{id}")
+    public Company getCompanyById(@PathVariable Long id) {
+        return companyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Company not found"));
     }
 
     // ✅ UPDATE
@@ -36,7 +43,7 @@ public class CompanyController {
             company.setRegNumber(updatedCompany.getRegNumber());
             company.setEmail(updatedCompany.getEmail());
             company.setPhone(updatedCompany.getPhone());
-            company.setAddress(updatedCompany.getAddress()); // ✅ FIXED
+            company.setAddress(updatedCompany.getAddress());
             company.setStatus(updatedCompany.getStatus());
             return companyRepository.save(company);
         }).orElseThrow(() -> new RuntimeException("Company not found"));

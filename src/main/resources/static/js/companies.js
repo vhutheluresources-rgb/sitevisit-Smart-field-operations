@@ -35,11 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== SETUP EVENT LISTENERS =====
 function setupEventListeners() {
-    const form = document.getElementById('companyForm');
-    if (form) {
-        form.addEventListener('submit', handleFormSubmit);
-    }
-
+    // Form submission
+    document.getElementById('companyForm').addEventListener('submit', handleFormSubmit);
+    
+    // Optional: Add "View All" button if it exists in your HTML
     const viewAllBtn = document.getElementById('viewAllBtn');
     if (viewAllBtn) {
         viewAllBtn.addEventListener('click', fetchCompanies);
@@ -51,20 +50,13 @@ async function fetchCompanies() {
     try {
         console.log('Fetching companies from:', API_URL);
         const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('Failed to fetch companies');
         
-        if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                console.warn('Authentication required - redirecting to login');
-                window.location.href = '/login';
-                return;
-            }
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
         const data = await response.json();
         console.log('Received companies:', data);
         
         const tbody = document.getElementById('companyTableBody');
+        
         if (!tbody) {
             console.error('Table body not found!');
             return;
@@ -72,10 +64,12 @@ async function fetchCompanies() {
 
         tbody.innerHTML = '';
 
-        if (data.length === 0) {
+        if (!data || data.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="7" style="text-align:center; padding: 2rem;">No companies yet</td>
+                    <td colspan="5" style="text-align: center; padding: 2rem; color: #64748b;">
+                        No companies registered yet. Add one above!
+                    </td>
                 </tr>`;
             return;
         }
@@ -86,9 +80,7 @@ async function fetchCompanies() {
                 <td>${escapeHtml(c.regNumber)}</td>
                 <td>${escapeHtml(c.name)}</td>
                 <td>${escapeHtml(c.email)}</td>
-                <td>${escapeHtml(c.phone || '-')}</td>
-                <td>${escapeHtml(c.address || '-')}</td>
-                <td><span class="status-pill ${c.status?.toLowerCase() || 'active'}">${escapeHtml(c.status || 'Active')}</span></td>
+                <td><span class="status-pill ${c.status}">${escapeHtml(c.status)}</span></td>
                 <td>
                     <button class="edit-btn" onclick='prepEdit(${JSON.stringify(c)})'>
                         <i class='bx bx-edit'></i> Edit
@@ -118,21 +110,17 @@ async function fetchCompanies() {
 // ===== CREATE / UPDATE =====
 async function handleFormSubmit(e) {
     e.preventDefault();
-    console.log('Form submitted');
-
+    
     const id = document.getElementById('compId').value;
-
     const companyData = {
         name: document.getElementById('name').value.trim(),
         regNumber: document.getElementById('regNumber').value.trim(),
         email: document.getElementById('email').value.trim(),
         phone: document.getElementById('phone').value.trim(),
-        address: document.getElementById('address').value.trim(),
         status: document.getElementById('status').value
     };
 
-    console.log('Company data to save:', companyData);
-
+    // Basic validation
     if (!companyData.name || !companyData.regNumber || !companyData.email) {
         alert('Please fill all required fields (marked with *)');
         return;
@@ -161,34 +149,15 @@ async function handleFormSubmit(e) {
 
         const response = await fetch(url, {
             method: method,
-            headers: headers,
-            body: JSON.stringify(companyData),
-            credentials: 'same-origin' // Important for cookies/session
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(companyData)
         });
 
-        console.log('Response status:', response.status);
+        if (!response.ok) throw new Error('Save failed');
 
-        // Handle authentication/authorization errors
-        if (response.status === 401 || response.status === 403) {
-            console.warn('Access denied - redirecting to login');
-            alert('⚠️ Session expired. Please log in again.');
-            window.location.href = '/login';
-            return;
-        }
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Server error:', errorText);
-            throw new Error(`Server error: ${response.status} - ${errorText}`);
-        }
-
-        const savedCompany = await response.json();
-        console.log('Saved company:', savedCompany);
-
-        alert('✅ Company saved successfully!');
+        alert(id ? '✅ Company Updated!' : '✅ Company Saved!');
         resetForm();
-        fetchCompanies();
-
+        fetchCompanies(); // Refresh table
     } catch (err) {
         console.error('Error saving company:', err);
         alert(`❌ Failed to save company: ${err.message}\n\nCheck console for details.`);
@@ -197,40 +166,22 @@ async function handleFormSubmit(e) {
 
 // ===== DELETE =====
 async function deleteCompany(id) {
-    if (!confirm('Are you sure you want to delete this company?')) return;
+    if (!confirm('⚠️ Are you sure you want to delete this company? This action cannot be undone.')) {
+        return;
+    }
 
     try {
-        console.log('Deleting company with ID:', id);
+        const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
         
-        // Build headers with CSRF token for DELETE
-        const headers = {};
-        const csrfToken = getCsrfToken();
-        const csrfHeader = getCsrfHeaderName();
+        if (!response.ok) throw new Error('Delete failed');
         
-        if (csrfToken) {
-            headers[csrfHeader] = csrfToken;
+        alert('🗑️ Company deleted successfully');
+        fetchCompanies(); // Refresh table
+        
+        // If we were editing this company, reset the form
+        if (document.getElementById('compId').value == id) {
+            resetForm();
         }
-
-        const response = await fetch(`${API_URL}/${id}`, {
-            method: 'DELETE',
-            headers: headers,
-            credentials: 'same-origin'
-        });
-
-        // Handle authentication/authorization errors
-        if (response.status === 401 || response.status === 403) {
-            alert('⚠️ Session expired. Please log in again.');
-            window.location.href = '/login';
-            return;
-        }
-
-        if (!response.ok) {
-            throw new Error(`Delete failed: ${response.status}`);
-        }
-
-        alert('✅ Company deleted successfully');
-        fetchCompanies();
-
     } catch (err) {
         console.error('Error deleting company:', err);
         alert('❌ Error deleting company');
@@ -239,8 +190,7 @@ async function deleteCompany(id) {
 
 // ===== EDIT =====
 function prepEdit(c) {
-    console.log('Preparing edit for company:', c);
-    
+    // Populate form fields with company data
     document.getElementById('compId').value = c.id || '';
     document.getElementById('name').value = c.name || '';
     document.getElementById('regNumber').value = c.regNumber || '';
@@ -248,37 +198,42 @@ function prepEdit(c) {
     document.getElementById('phone').value = c.phone || '';
     document.getElementById('address').value = c.address || '';
     document.getElementById('status').value = c.status || 'Active';
-
-    const formTitle = document.getElementById('formTitle');
-    const saveBtn = document.getElementById('saveBtn');
     
-    if (formTitle) formTitle.innerText = 'Edit Company';
-    if (saveBtn) saveBtn.innerHTML = '<i class=\'bx bx-check\'></i> Update Company';
+    // Update UI labels
+    document.getElementById('formTitle').innerText = '✏️ Edit Company';
+    document.getElementById('saveBtn').innerHTML = '⟳ Update Company';
     
-    // Scroll to form
-    document.querySelector('.panel').scrollIntoView({ behavior: 'smooth' });
+    // Smooth scroll to form
+    document.querySelector('.panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    // Highlight the form briefly
+    const form = document.getElementById('companyForm');
+    form.style.transition = 'background 0.3s ease';
+    form.style.background = 'rgba(201, 169, 97, 0.1)';
+    setTimeout(() => { form.style.background = 'transparent'; }, 1000);
 }
 
 // ===== RESET =====
 function resetForm() {
-    document.getElementById('companyForm').reset();
+    document.getElementById('companyForm')?.reset();
     document.getElementById('compId').value = '';
-    
-    const formTitle = document.getElementById('formTitle');
-    const saveBtn = document.getElementById('saveBtn');
-    
-    if (formTitle) formTitle.innerText = 'Add Company';
-    if (saveBtn) saveBtn.innerHTML = '<i class=\'bx bx-plus\'></i> Save Company';
+    document.getElementById('formTitle').innerText = '➕ Add Company';
+    document.getElementById('saveBtn').innerHTML = '+ Save Company';
 }
 
 // ===== SECURITY =====
 function escapeHtml(text) {
     if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
 }
 
-// ===== GLOBAL FUNCTIONS =====
+// ===== EXPOSE FUNCTIONS GLOBALLY (for onclick attributes) =====
 window.deleteCompany = deleteCompany;
 window.prepEdit = prepEdit;

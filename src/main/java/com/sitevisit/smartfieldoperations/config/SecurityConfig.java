@@ -18,39 +18,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                // Public endpoints - no authentication required
-                .requestMatchers(
-                    "/", "/index", "/login", "/forgot-password", "/reset-password",
-                    "/dashboard", "/members", "/companies", "/reports", "/reports/**",
-                    "/site-visits", "/team-activity", "/reminders", "/notifications",
-                    "/settings", "/profile", "/change-password",
-                    "/css/**", "/js/**", "/images/**", "/fonts/**",
-                    "/api/auth/**", "/api/companies/**", "/api/companies",
-                    "/api/reports/**", "/api/reports",
-                    "/h2-console/**"
-                ).permitAll()
-                // Admin-only endpoints
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                // All other endpoints require authentication
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .loginPage("/login")
-                .defaultSuccessUrl("/dashboard", true)
-                .failureUrl("/login?error=true")
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout=true")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .permitAll()
-            )
-            .httpBasic(basic -> basic.disable());
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/",
+                                "/login",
+                                "/forgot-password",
+                                "/reset-password",
+                                "/dashboard",
+                                "/members",
+                                "/companies",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/api/auth/**"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable());
 
         return http.build();
     }
