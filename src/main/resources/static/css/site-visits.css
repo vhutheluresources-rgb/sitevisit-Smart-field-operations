@@ -31,10 +31,10 @@
 .form-actions {
     margin-top: 20px;
 }* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+ }
 
 body {
     font-family: "Inter", sans-serif;
@@ -356,6 +356,7 @@ tbody tr {
         padding: 12px 10px;
     }
 }
+
 .status-action-buttons {
     display: flex;
     gap: 8px;
@@ -372,3 +373,33 @@ tbody tr {
 .btn-light:hover {
     background: #ece7dc;
 }
+
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    min-width: 280px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-weight: 500;
+    color: #fff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+    z-index: 9999;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.success {
+    background: #16a34a;
+}
+
+.toast.error {
+    background: #dc2626;
+} 
+
