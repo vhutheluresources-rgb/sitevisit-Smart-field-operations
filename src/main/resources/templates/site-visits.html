@@ -156,7 +156,6 @@
                             <th>Check In</th>
                             <th>Check Out</th>
                             <th>Status Action</th>
-                            <th>Attendance Action</th>
                         </tr>
                         </thead>
 
@@ -177,21 +176,6 @@
                             <td th:id="'checkin-time-' + ${visit.id}">-</td>
                             <td th:id="'checkout-time-' + ${visit.id}">-</td>
 
-                            <td>
-                                <button type="button"
-                                        class="btn small-btn"
-                                        th:classappend="${visit.status == 'In Progress'} ? ' btn-primary' : ' btn-light'"
-                                        th:onclick="'updateVisitStatus(' + ${visit.id} + ', \'In Progress\')'">
-                                    In Progress
-                                </button>
-
-                                <button type="button"
-                                        class="btn small-btn"
-                                        th:classappend="${visit.status == 'Completed'} ? ' btn-primary' : ' btn-light'"
-                                        th:onclick="'updateVisitStatus(' + ${visit.id} + ', \'Completed\')'">
-                                    Completed
-                                </button>
-                            </td>
 
                             <td>
                                 <div class="status-action-buttons">

@@ -33,15 +33,39 @@ public class AttendanceService {
 
         SiteVisit siteVisit = optionalVisit.get();
 
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        // ❌ BEFORE DATE
+        if (today.isBefore(siteVisit.getVisitDate())) {
+            return new ApiResponse(false, "You cannot check in before the scheduled date.");
+        }
+
+        // ❌ AFTER DATE
+        if (today.isAfter(siteVisit.getVisitDate())) {
+            return new ApiResponse(false, "This visit has already passed.");
+        }
+
+        // ❌ BEFORE TIME (same day)
+        if (today.equals(siteVisit.getVisitDate()) && now.isBefore(siteVisit.getVisitTime())) {
+            return new ApiResponse(false, "You cannot check in before the scheduled time.");
+        }
+
+        // OPTIONAL: prevent very late check-in (e.g. 2+ hours later)
+        if (today.equals(siteVisit.getVisitDate()) && now.isAfter(siteVisit.getVisitTime().plusHours(2))) {
+            return new ApiResponse(false, "Check-in time window has expired.");
+        }
+
+        // existing logic
         Optional<Attendance> existingAttendance = attendanceRepository.findBySiteVisitId(siteVisitId);
         if (existingAttendance.isPresent()) {
-            return new ApiResponse(false, "This visit has already been checked in.");
+            return new ApiResponse(false, "Already checked in.");
         }
 
         Attendance attendance = new Attendance();
         attendance.setSiteVisitId(siteVisitId);
-        attendance.setDate(LocalDate.now());
-        attendance.setCheckInTime(LocalTime.now());
+        attendance.setDate(today);
+        attendance.setCheckInTime(now);
         attendance.setStatus("Checked In");
 
         attendanceRepository.save(attendance);
@@ -56,27 +80,31 @@ public class AttendanceService {
         Optional<Attendance> optionalAttendance = attendanceRepository.findBySiteVisitId(siteVisitId);
 
         if (optionalAttendance.isEmpty()) {
-            return new ApiResponse(false, "You must check in first before checking out.");
+            return new ApiResponse(false, "You must check in first.");
         }
 
         Attendance attendance = optionalAttendance.get();
 
         if (attendance.getCheckOutTime() != null) {
-            return new ApiResponse(false, "This visit has already been checked out.");
+            return new ApiResponse(false, "Already checked out.");
         }
 
-        Optional<SiteVisit> optionalVisit = siteVisitRepository.findById(siteVisitId);
-        if (optionalVisit.isEmpty()) {
-            return new ApiResponse(false, "Scheduled site visit not found.");
+        SiteVisit visit = siteVisitRepository.findById(siteVisitId)
+                .orElseThrow(() -> new RuntimeException("Site visit not found"));
+
+        LocalDate today = LocalDate.now();
+
+        // ❌ Prevent checkout on wrong day
+        if (!today.equals(visit.getVisitDate())) {
+            return new ApiResponse(false, "You can only check out on the visit date.");
         }
 
         attendance.setCheckOutTime(LocalTime.now());
         attendance.setStatus("Completed");
         attendanceRepository.save(attendance);
 
-        SiteVisit siteVisit = optionalVisit.get();
-        siteVisit.setStatus("Completed");
-        siteVisitRepository.save(siteVisit);
+        visit.setStatus("Completed");
+        siteVisitRepository.save(visit);
 
         return new ApiResponse(true, "Check-out recorded successfully.");
     }
