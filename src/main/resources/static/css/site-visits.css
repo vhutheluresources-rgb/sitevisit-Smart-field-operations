@@ -31,10 +31,10 @@
 .form-actions {
     margin-top: 20px;
 }* {
-     margin: 0;
-     padding: 0;
-     box-sizing: border-box;
- }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
     font-family: "Inter", sans-serif;
@@ -356,7 +356,6 @@ tbody tr {
         padding: 12px 10px;
     }
 }
-
 .status-action-buttons {
     display: flex;
     gap: 8px;
@@ -370,6 +369,7 @@ tbody tr {
     border: 1px solid #d6c7a8;
 }
 
+<<<<<<< HEAD
 .form-input:focus {
     border-color: #d4a84f;
     box-shadow: 0 0 0 3px rgba(212, 168, 79, 0.15);
@@ -385,4 +385,8 @@ label {
     form[style*="grid-template-columns: repeat(2, 1fr)"] {
         grid-template-columns: 1fr !important;
     }
+=======
+.btn-light:hover {
+    background: #ece7dc;
+>>>>>>> parent of 96f014e (Fixed site visits page and merged Amahle branch)
 }
