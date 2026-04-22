@@ -9,6 +9,7 @@ import com.sitevisit.smartfieldoperations.entity.PasswordResetToken;
 import com.sitevisit.smartfieldoperations.entity.User;
 import com.sitevisit.smartfieldoperations.repository.PasswordResetTokenRepository;
 import com.sitevisit.smartfieldoperations.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,15 +21,26 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthService(UserRepository userRepository,
-                       PasswordResetTokenRepository passwordResetTokenRepository) {
+                       PasswordResetTokenRepository passwordResetTokenRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public LoginResponse login(LoginRequest request) {
-        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
+        if (request == null || request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            return new LoginResponse(false, "Email is required", null, null);
+        }
+
+        if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+            return new LoginResponse(false, "Password is required", null, null);
+        }
+
+        Optional<User> userOptional = userRepository.findByEmail(request.getEmail().trim());
 
         if (userOptional.isEmpty()) {
             return new LoginResponse(false, "Invalid email or password", null, null);
@@ -36,7 +48,7 @@ public class AuthService {
 
         User user = userOptional.get();
 
-        if (!user.getPassword().equals(request.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             return new LoginResponse(false, "Invalid email or password", null, null);
         }
 
@@ -55,29 +67,32 @@ public class AuthService {
 
         Optional<User> userOptional = userRepository.findByEmail(request.getEmail().trim());
 
-        if (userOptional.isEmpty()) {
-            return new ApiResponse(false, "No user found with that email");
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            passwordResetTokenRepository.findByUser(user)
+                    .ifPresent(passwordResetTokenRepository::delete);
+
+            String token = UUID.randomUUID().toString();
+            LocalDateTime expiryDate = LocalDateTime.now().plusMinutes(15);
+
+            PasswordResetToken resetToken = new PasswordResetToken();
+            resetToken.setToken(token);
+            resetToken.setUser(user);
+            resetToken.setExpiryDate(expiryDate);
+
+            passwordResetTokenRepository.save(resetToken);
+
+            return new ApiResponse(
+                    true,
+                    "If the account exists, a reset token has been generated.",
+                    token
+            );
         }
-
-        User user = userOptional.get();
-
-        passwordResetTokenRepository.findByUser(user)
-                .ifPresent(passwordResetTokenRepository::delete);
-
-        String token = UUID.randomUUID().toString();
-        LocalDateTime expiryDate = LocalDateTime.now().plusMinutes(30);
-
-        PasswordResetToken resetToken = new PasswordResetToken();
-        resetToken.setToken(token);
-        resetToken.setUser(user);
-        resetToken.setExpiryDate(expiryDate);
-
-        passwordResetTokenRepository.save(resetToken);
 
         return new ApiResponse(
                 true,
-                "Reset token generated successfully. Use it to reset your password.",
-                token
+                "If the account exists, a reset token has been generated."
         );
     }
 
@@ -90,22 +105,31 @@ public class AuthService {
             return new ApiResponse(false, "New password is required");
         }
 
+        if (request.getNewPassword().trim().length() < 8) {
+            return new ApiResponse(false, "New password must be at least 8 characters long");
+        }
+
         Optional<PasswordResetToken> tokenOptional =
                 passwordResetTokenRepository.findByToken(request.getToken().trim());
 
         if (tokenOptional.isEmpty()) {
-            return new ApiResponse(false, "Invalid reset token");
+            return new ApiResponse(false, "Invalid or expired token");
         }
 
         PasswordResetToken resetToken = tokenOptional.get();
 
         if (resetToken.isExpired()) {
             passwordResetTokenRepository.delete(resetToken);
-            return new ApiResponse(false, "Reset token has expired");
+            return new ApiResponse(false, "Invalid or expired token");
         }
 
         User user = resetToken.getUser();
-        user.setPassword(request.getNewPassword().trim());
+
+        if (passwordEncoder.matches(request.getNewPassword().trim(), user.getPassword())) {
+            return new ApiResponse(false, "New password must be different from the current password");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword().trim()));
         userRepository.save(user);
 
         passwordResetTokenRepository.delete(resetToken);

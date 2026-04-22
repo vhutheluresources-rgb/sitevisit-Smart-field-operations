@@ -2,6 +2,7 @@ package com.sitevisit.smartfieldoperations.controller;
 
 import com.sitevisit.smartfieldoperations.entity.User;
 import com.sitevisit.smartfieldoperations.repository.CompanyRepository;
+import com.sitevisit.smartfieldoperations.repository.ReportRepository;
 import com.sitevisit.smartfieldoperations.repository.SiteVisitRepository;
 import com.sitevisit.smartfieldoperations.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -17,13 +18,16 @@ public class PageController {
     private final UserRepository userRepository;
     private final SiteVisitRepository siteVisitRepository;
     private final CompanyRepository companyRepository;
+    private final ReportRepository reportRepository;
 
     public PageController(UserRepository userRepository,
                           SiteVisitRepository siteVisitRepository,
-                          CompanyRepository companyRepository) {
+                          CompanyRepository companyRepository,
+                          ReportRepository reportRepository) {
         this.userRepository = userRepository;
         this.siteVisitRepository = siteVisitRepository;
         this.companyRepository = companyRepository;
+        this.reportRepository = reportRepository;
     }
 
     @GetMapping("/")
@@ -52,6 +56,15 @@ public class PageController {
         if (user == null) return "redirect:/login";
 
         addUserToModel(model, user);
+
+        model.addAttribute("totalSiteVisits", siteVisitRepository.count());
+        model.addAttribute("totalMembers", userRepository.count());
+        model.addAttribute("totalCompanies", companyRepository.count());
+        model.addAttribute("totalReports", reportRepository.count());
+
+        model.addAttribute("siteVisits", siteVisitRepository.findAll());
+        model.addAttribute("reports", reportRepository.findAll());
+
         return "dashboard";
     }
 
@@ -93,7 +106,14 @@ public class PageController {
         addUserToModel(model, user);
         return "reports";
     }
+    @GetMapping("/change-password")
+    public String changePasswordPage(Model model, HttpSession session) {
+        User user = getLoggedInUser(session);
+        if (user == null) return "redirect:/login";
 
+        addUserToModel(model, user);
+        return "change-password";
+    }
     private User getLoggedInUser(HttpSession session) {
         String email = (String) session.getAttribute("loggedInUserEmail");
 
@@ -109,5 +129,15 @@ public class PageController {
         model.addAttribute("fullName", user.getFullName());
         model.addAttribute("role", user.getRole());
         model.addAttribute("initial", user.getFullName().substring(0, 1).toUpperCase());
+    }
+    @GetMapping("/profile")
+    public String profilePage(Model model, HttpSession session) {
+        User user = getLoggedInUser(session);
+        if (user == null) return "redirect:/login";
+
+        addUserToModel(model, user);
+        model.addAttribute("email", user.getEmail());
+
+        return "profile";
     }
 }

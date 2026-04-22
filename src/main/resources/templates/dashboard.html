@@ -58,33 +58,26 @@
                     </div>
                 </div>
             </div>
-
             <div class="stats-grid">
                 <div class="stat-card">
                     <span>Total Site Visits</span>
-                    <h3>128</h3>
-                    <p>+12 from last week</p>
+                    <h3 th:text="${totalSiteVisits}">0</h3>
+                    <p>All recorded site visits</p>
                 </div>
 
                 <div class="stat-card">
-                    <span>Pending Reports</span>
-                    <h3>14</h3>
-                    <p>Needs follow-up</p>
+                    <span>Total Members</span>
+                    <h3 th:text="${totalMembers}">0</h3>
+                    <p>Registered system members</p>
                 </div>
 
                 <div class="stat-card">
-                    <span>Active Members</span>
-                    <h3>23</h3>
-                    <p>On duty today</p>
+                    <span>Total Companies</span>
+                    <h3 th:text="${totalCompanies}">0</h3>
+                    <p>Registered companies</p>
                 </div>
 
-                <div class="stat-card">
-                    <span>Upcoming Tasks</span>
-                    <h3>09</h3>
-                    <p>Due before 5 PM</p>
-                </div>
             </div>
-
             <div class="dashboard-grid">
                 <div class="panel large-panel">
                     <div class="panel-header">
@@ -99,40 +92,25 @@
                             <thead>
                             <tr>
                                 <th>Visit ID</th>
-                                <th>Location</th>
+                                <th>Company</th>
                                 <th>Date</th>
-                                <th>Assigned To</th>
+                                <th>Time</th>
                                 <th>Status</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>SV-001</td>
-                                <td>Johannesburg South</td>
-                                <td>24 Mar 2026</td>
-                                <td>Thabo</td>
-                                <td><span class="status completed">Completed</span></td>
+                            <tr th:if="${#lists.isEmpty(siteVisits)}">
+                                <td colspan="5">No site visits available</td>
                             </tr>
-                            <tr>
-                                <td>SV-002</td>
-                                <td>Pretoria Central</td>
-                                <td>25 Mar 2026</td>
-                                <td>Lerato</td>
-                                <td><span class="status pending">Pending</span></td>
-                            </tr>
-                            <tr>
-                                <td>SV-003</td>
-                                <td>Soweto</td>
-                                <td>26 Mar 2026</td>
-                                <td>James</td>
-                                <td><span class="status progress">In Progress</span></td>
-                            </tr>
-                            <tr>
-                                <td>SV-004</td>
-                                <td>Midrand</td>
-                                <td>27 Mar 2026</td>
-                                <td>Amanda</td>
-                                <td><span class="status pending">Pending</span></td>
+
+                            <tr th:each="visit : ${siteVisits}">
+                                <td th:text="${visit.id}">1</td>
+                                <td th:text="${visit.company != null ? visit.company.name : 'No Company'}">Company Name</td>
+                                <td th:text="${visit.visitDate}">2026-04-22</td>
+                                <td th:text="${visit.visitTime}">10:00</td>
+                                <td>
+                                    <span class="status" th:text="${visit.status}">Pending</span>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -146,18 +124,20 @@
                         </div>
 
                         <ul class="report-list">
-                            <li>
-                                <strong>Weekly Field Report</strong>
-                                <span>Submitted 2 hours ago</span>
+
+                            <li th:if="${#lists.isEmpty(reports)}">
+                                <strong>No reports available</strong>
+                                <span>Create a report to see it here</span>
                             </li>
-                            <li>
-                                <strong>Safety Inspection Report</strong>
-                                <span>Submitted yesterday</span>
+
+                            <li th:each="report : ${reports}">
+                                <strong th:text="${report.title}">Report Title</strong>
+
+                                <span th:text="${#temporals.format(report.createdAt, 'yyyy-MM-dd HH:mm')}">
+            Date
+        </span>
                             </li>
-                            <li>
-                                <strong>Attendance Summary</strong>
-                                <span>Pending upload</span>
-                            </li>
+
                         </ul>
                     </div>
 
@@ -167,10 +147,10 @@
                         </div>
 
                         <div class="quick-actions">
-                            <button onclick="showMessage('Create new site visit')">+ New Site Visit</button>
-                            <button onclick="showMessage('Create new report')">+ New Report</button>
-                            <button onclick="showMessage('Send reminder')">+ Send Reminder</button>
-                            <button onclick="showMessage('View team activity')">+ Team Activity</button>
+                            <button onclick="window.location.href='/site-visits'">+ New Site Visit</button>
+                            <button onclick="window.location.href='/reports'">+ New Report</button>
+                            <button onclick="window.location.href='/reminders'">+ Send Reminder</button>
+                            <button onclick="window.location.href='/dashboard'">+ Team Activity</button>
                         </div>
                     </div>
                 </div>

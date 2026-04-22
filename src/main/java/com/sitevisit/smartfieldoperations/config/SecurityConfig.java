@@ -23,6 +23,8 @@ public class SecurityConfig {
                                 "/companies",
                                 "/site-visits",
                                 "/reports",
+                                "/profile",
+                                "/change-password",
                                 "/site-visits/save",
                                 "/site-visits/update-status/**",
                                 "/css/**",
