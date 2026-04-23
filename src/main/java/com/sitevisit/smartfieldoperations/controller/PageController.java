@@ -93,13 +93,12 @@ public class PageController {
         addUserToModel(model, user);
         return "reports";
     }
-    @GetMapping("/reminders&notifications")
+    @GetMapping("/reminders-notifications")
     public String remindersPage(Model model, HttpSession session) {
         User user = getLoggedInUser(session);
-        if (user == null) return "redirect:/login";
+        if (user == null) return "/login";
 
         addUserToModel(model, user);
-
         return "reminders-notifications";
     }
 

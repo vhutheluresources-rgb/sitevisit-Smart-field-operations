@@ -32,7 +32,7 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
-                                "/api/**"   // 🔥 IMPORTANT FIX FOR YOUR NOTIFICATIONS API
+                                "/api/**" // 🔥 IMPORTANT FIX FOR YOUR NOTIFICATIONS API
                         ).permitAll()
                         .anyRequest().authenticated()
                 );
