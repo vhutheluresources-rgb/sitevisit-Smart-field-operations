@@ -1,0 +1,125 @@
+/* ===============================
+   NOTIFICATION BELL
+================================ */
+.notification-bell {
+    cursor: pointer;
+    font-size: 22px;
+    position: relative;
+    background: #fff;
+    padding: 8px 12px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+#notif-count {
+    background: #e63946;
+    color: #fff;
+    font-size: 11px;
+    padding: 3px 6px;
+    border-radius: 50%;
+    position: absolute;
+    top: -6px;
+    right: -6px;
+}
+
+/* ===============================
+   NOTIFICATION PANEL
+================================ */
+#notification-panel {
+    margin-top: 20px;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+/* Hide panel */
+.hidden {
+    display: none;
+}
+
+/* ===============================
+   NOTIFICATION LIST
+================================ */
+.notification-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notification {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.notification:hover {
+    background: #f8f9fa;
+}
+
+/* UNREAD STYLE */
+.notification.unread {
+    background: #eef6ff;
+    border-left: 4px solid #007bff;
+    font-weight: 600;
+}
+
+.notification p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.notification span {
+    font-size: 12px;
+    color: #888;
+}
+
+/* ===============================
+   REMINDERS SECTION
+================================ */
+.reminder-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.reminder-list li {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    transition: 0.3s;
+}
+
+.reminder-list li:hover {
+    background: #f8f9fa;
+}
+
+.reminder-list strong {
+    display: block;
+    font-size: 14px;
+}
+
+.reminder-list span {
+    font-size: 12px;
+    color: #666;
+}
+
+/* ===============================
+   PANEL IMPROVEMENT
+================================ */
+.panel {
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    margin-top: 20px;
+}
+
+.panel-header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.panel-header h3 {
+    margin: 0;
+    font-size: 16px;
+}

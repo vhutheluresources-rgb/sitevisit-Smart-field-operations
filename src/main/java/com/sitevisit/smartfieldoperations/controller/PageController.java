@@ -93,6 +93,15 @@ public class PageController {
         addUserToModel(model, user);
         return "reports";
     }
+    @GetMapping("/reminders&notifications")
+    public String remindersPage(Model model, HttpSession session) {
+        User user = getLoggedInUser(session);
+        if (user == null) return "redirect:/login";
+
+        addUserToModel(model, user);
+
+        return "reminders-notifications";
+    }
 
     private User getLoggedInUser(HttpSession session) {
         String email = (String) session.getAttribute("loggedInUserEmail");

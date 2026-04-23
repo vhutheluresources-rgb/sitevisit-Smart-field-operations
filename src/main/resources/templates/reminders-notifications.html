@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reminders & Notifications</title>
+
+    <link rel="stylesheet" href="/css/dashboard.css" />
+    <link rel="stylesheet" href="/css/reminders-notifications.css" />
+</head>
+
+<body>
+
+<section class="dashboard-section">
+    <div class="dashboard-shell">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-logo">
+                    <img src="/images/siteVisit%20logo.png" class="actual-logo" />
+                </div>
+                <div>
+                    <h3>SiteVisit</h3>
+                    <p>Operations Panel</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/companies">Company Management</a>
+                <a href="/members">Member Management</a>
+                <a href="/site-visits">Site Visits</a>
+                <a href="/reports">Reports</a>
+                <a href="/reminders-notifications" class="active">Reminders & Notifications</a>
+                <a href="/profile">Profile</a>
+                <a href="/login">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <section class="dashboard-content">
+
+            <!-- TOPBAR -->
+            <div class="dashboard-topbar">
+                <div>
+                    <h2>Reminders & Notifications</h2>
+                    <p>Stay updated with alerts and important activities</p>
+                </div>
+
+                <!-- Notification Bell -->
+                <div class="notification-bell" onclick="toggleNotifications()">
+                    🔔 <span id="notif-count">0</span>
+                </div>
+            </div>
+
+            <!-- NOTIFICATION PANEL -->
+            <div id="notification-panel" class="panel hidden">
+                <div class="panel-header">
+                    <h3>Notifications</h3>
+                </div>
+
+                <ul id="notification-list" class="notification-list">
+                    <!-- Dynamic notifications will be loaded here -->
+                </ul>
+            </div>
+
+            <!-- REMINDERS SECTION -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Reminders</h3>
+                </div>
+
+                <ul class="reminder-list">
+                    <li>
+                        <strong>Submit weekly report</strong>
+                        <span>Due today</span>
+                    </li>
+
+                    <li>
+                        <strong>Site inspection - Midrand</strong>
+                        <span>Tomorrow</span>
+                    </li>
+
+                    <li>
+                        <strong>Team meeting</strong>
+                        <span>Friday 10 AM</span>
+                    </li>
+                </ul>
+            </div>
+
+        </section>
+    </div>
+</section>
+
+<!-- JS FILE -->
+<script src="/js/notifications.js"></script>
+
+</body>
+</html>
