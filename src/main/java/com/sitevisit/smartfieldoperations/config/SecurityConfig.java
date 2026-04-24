@@ -25,18 +25,19 @@ public class SecurityConfig {
                                 "/reports",
                                 "/profile",
                                 "/change-password",
-                                "/site-visits/save",
-                                "/site-visits/update-status/**",
+                                "/reminders-notifications",
+
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
+
                                 "/api/auth/**",
                                 "/api/companies/**",
                                 "/api/members/**",
-                                "/api/attendance/**",
-                                "/api/reports/**"
+                                "/api/reports/**",
+                                "/api/payment-reminders/**"
                         ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable());

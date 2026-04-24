@@ -140,4 +140,12 @@ public class PageController {
 
         return "profile";
     }
+    @GetMapping("/reminders-notifications")
+    public String remindersNotificationsPage(Model model, HttpSession session) {
+        User user = getLoggedInUser(session);
+        if (user == null) return "redirect:/login";
+
+        addUserToModel(model, user);
+        return "reminders-notifications";
+    }
 }

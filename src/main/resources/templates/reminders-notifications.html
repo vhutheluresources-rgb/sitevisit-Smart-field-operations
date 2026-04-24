@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reminders & Notifications | SiteVisit</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+
+<section class="dashboard-section">
+    <div class="dashboard-shell">
+
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-logo">
+                    <img src="/images/siteVisit%20logo.png" alt="SiteVisit Logo" class="actual-logo" />
+                </div>
+                <div>
+                    <h3>SiteVisit</h3>
+                    <p>Operations Panel</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/companies">Company Management</a>
+                <a href="/members">Member Management</a>
+                <a href="/site-visits">Site Visits</a>
+                <a href="/reports">Reports</a>
+                <a href="/reminders-notifications" class="active">Reminders & Notifications</a>
+                <a href="/profile">Profile</a>
+                <a href="/login">Logout</a>
+            </nav>
+        </aside>
+
+        <section class="dashboard-content">
+
+            <div class="dashboard-topbar">
+                <div>
+                    <h2>Reminders & Notifications</h2>
+                    <p>Create stipend payment reminders and track payment status.</p>
+                </div>
+            </div>
+
+            <div class="dashboard-grid" style="grid-template-columns: 1fr 1.3fr; gap: 24px;">
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Add Stipend Payment Reminder</h3>
+                    </div>
+
+                    <form id="paymentReminderForm">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="title" class="form-input" placeholder="e.g. Monthly stipend payment" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Payment Date</label>
+                            <input type="date" id="paymentDate" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Recipient Email</label>
+                            <input type="email" id="recipientEmail" class="form-input" placeholder="Enter email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Reminder Message</label>
+                            <textarea id="message" class="form-input" rows="5" placeholder="Enter reminder message"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            Save Reminder
+                        </button>
+                    </form>
+                </div>
+
+                <div class="panel large-panel">
+                    <div class="panel-header">
+                        <h3>Payment Reminders</h3>
+                        <button class="btn btn-primary small-btn" onclick="sendReminderCheckNow()">Send Check Now</button>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Payment Date</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Last Reminder</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="paymentReminderTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align:center;">Loading reminders...</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+</section>
+
+<script src="/js/payment-reminders.js"></script>
+
+</body>
+</html>
