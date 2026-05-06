@@ -85,57 +85,53 @@ public class PaymentReminderService {
         List<PaymentReminder> reminders = paymentReminderRepository.findAll();
 
         for (PaymentReminder reminder : reminders) {
+            try {
 
-            boolean dueSoon = !reminder.getPaymentDate().isBefore(today)
-                    && !reminder.getPaymentDate().isAfter(fourDaysFromNow);
+                boolean dueSoon = !reminder.getPaymentDate().isBefore(today)
+                        && !reminder.getPaymentDate().isAfter(fourDaysFromNow);
 
-            boolean overdue = reminder.getPaymentDate().isBefore(today);
+                boolean overdue = reminder.getPaymentDate().isBefore(today);
 
-            boolean alreadySentToday = today.equals(reminder.getLastReminderSentDate());
+                boolean alreadySentToday = today.equals(reminder.getLastReminderSentDate());
 
-            if (!reminder.isPaid() && (dueSoon || overdue) && !alreadySentToday) {
+                if (!reminder.isPaid() && (dueSoon || overdue) && !alreadySentToday) {
 
-                String subject = overdue
-                        ? "Overdue Stipend Payment Reminder"
-                        : "Upcoming Stipend Payment Reminder";
+                    String subject = overdue
+                            ? "Overdue Stipend Payment Reminder"
+                            : "Upcoming Stipend Payment Reminder";
 
-                String message;
+                    String message;
 
-                if (overdue) {
-                    message = "OVERDUE: " + reminder.getTitle()
-                            + " was due on " + reminder.getPaymentDate()
-                            + ". Please process the payment as soon as possible.";
-                } else {
-                    message = reminder.getTitle()
-                            + " is due on " + reminder.getPaymentDate()
-                            + ". Please ensure it is processed on time.";
+                    if (overdue) {
+                        message = "OVERDUE: " + reminder.getTitle()
+                                + " was due on " + reminder.getPaymentDate()
+                                + ". Please process the payment as soon as possible.";
+                    } else {
+                        message = reminder.getTitle()
+                                + " is due on " + reminder.getPaymentDate()
+                                + ". Please ensure it is processed on time.";
+                    }
+
+                    if (reminder.getMessage() != null && !reminder.getMessage().isBlank()) {
+                        message += "\n\nNote: " + reminder.getMessage();
+                    }
+
+                    // 🔔 ALWAYS CREATE NOTIFICATION (even if email fails)
+                    notificationService.createNotification(
+                            "Payment Reminder: " + reminder.getTitle() + " (" + reminder.getPaymentDate() + ")",
+                            overdue ? "PAYMENT_OVERDUE" : "PAYMENT_REMINDER",
+                            "/reminders-notifications"
+                    );
+
+                    reminder.setLastReminderSentDate(today);
+                    paymentReminderRepository.save(reminder);
                 }
 
-                if (reminder.getMessage() != null && !reminder.getMessage().isBlank()) {
-                    message += "\n\nNote: " + reminder.getMessage();
-                }
-
-                // 📧 SEND EMAIL
-                emailService.sendEmail(
-                        reminder.getRecipientEmail(),
-                        subject,
-                        message
-                );
-
-                // 🔔 CREATE NOTIFICATION WITH LINK
-                notificationService.createNotification(
-                        "Payment Reminder: " + reminder.getTitle() + " (" + reminder.getPaymentDate() + ")",
-                        overdue ? "PAYMENT_OVERDUE" : "PAYMENT_REMINDER",
-                        "/reminders-notifications"
-                );
-
-                // update last sent date
-                reminder.setLastReminderSentDate(today);
-                paymentReminderRepository.save(reminder);
+            } catch (Exception e) {
+                System.err.println("Reminder processing failed: " + e.getMessage());
             }
         }
     }
-
     // 🔹 UPDATE REMINDER
     public PaymentReminder updateReminder(Long id, PaymentReminder updatedReminder) {
         PaymentReminder existingReminder = paymentReminderRepository.findById(id)

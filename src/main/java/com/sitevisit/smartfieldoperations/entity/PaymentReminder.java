@@ -15,7 +15,6 @@ public class PaymentReminder {
 
     private LocalDate paymentDate;
 
-    private String recipientEmail;
 
     @Column(length = 1000)
     private String message;
@@ -41,9 +40,6 @@ public class PaymentReminder {
         return paymentDate;
     }
 
-    public String getRecipientEmail() {
-        return recipientEmail;
-    }
 
     public String getMessage() {
         return message;
@@ -71,10 +67,6 @@ public class PaymentReminder {
 
     public void setPaymentDate(LocalDate paymentDate) {
         this.paymentDate = paymentDate;
-    }
-
-    public void setRecipientEmail(String recipientEmail) {
-        this.recipientEmail = recipientEmail;
     }
 
     public void setMessage(String message) {

@@ -27,7 +27,7 @@
                 <a href="/members">Member Management</a>
                 <a href="/site-visits">Site Visits</a>
                 <a href="/reports">Reports</a>
-                <a href="/reminders-notifications" class="active">Reminders&Notifications</a>
+                <a href="/reminders-notifications" class="active">Reminders & Notifications</a>
                 <a href="/profile">Profile</a>
                 <a href="/login">Logout</a>
             </nav>
@@ -79,11 +79,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Recipient Email</label>
-                            <input type="hidden" id="recipientEmail" th:value="${email}">
-                        </div>
-
-                        <div class="form-group">
                             <label>Reminder Message</label>
                             <textarea id="message" class="form-input" rows="5" placeholder="Enter reminder message"></textarea>
                         </div>
@@ -113,7 +108,6 @@
                             <tr>
                                 <th>Title</th>
                                 <th>Payment Date</th>
-                                <th>Email</th>
                                 <th>Status</th>
                                 <th>Last Reminder</th>
                                 <th>Action</th>
@@ -121,7 +115,7 @@
                             </thead>
                             <tbody id="paymentReminderTableBody">
                             <tr>
-                                <td colspan="6" style="text-align:center;">Loading reminders...</td>
+                                <td colspan="5" style="text-align:center;">Loading reminders...</td>
                             </tr>
                             </tbody>
                         </table>
