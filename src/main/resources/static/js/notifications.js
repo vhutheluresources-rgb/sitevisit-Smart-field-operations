@@ -165,3 +165,85 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
+function filterNotifications() {
+
+    const search =
+        document.getElementById(
+            "notificationSearch"
+        ).value.toLowerCase();
+
+    const type =
+        document.getElementById(
+            "notificationTypeFilter"
+        ).value;
+
+    const date =
+        document.getElementById(
+            "notificationDateFilter"
+        ).value;
+
+    const notifications =
+        document.querySelectorAll(
+            "#notification-list .notification"
+        );
+
+    notifications.forEach(notification => {
+
+        const message =
+            notification.innerText.toLowerCase();
+
+        const typeText =
+            notification.querySelector(
+                ".notif-meta"
+            )?.innerText || "";
+
+        let matchesSearch =
+            message.includes(search);
+
+        let matchesType =
+            !type || typeText.includes(type);
+
+        let matchesDate = true;
+
+        if (date) {
+
+            const notificationDate =
+                new Date(typeText)
+                    .toISOString()
+                    .split("T")[0];
+
+            matchesDate =
+                notificationDate === date;
+        }
+
+        if (
+            matchesSearch
+            && matchesType
+            && matchesDate
+        ) {
+
+            notification.style.display = "";
+
+        } else {
+
+            notification.style.display = "none";
+        }
+    });
+}
+
+function resetNotificationFilters() {
+
+    document.getElementById(
+        "notificationSearch"
+    ).value = "";
+
+    document.getElementById(
+        "notificationTypeFilter"
+    ).value = "";
+
+    document.getElementById(
+        "notificationDateFilter"
+    ).value = "";
+
+    filterNotifications();
+}
