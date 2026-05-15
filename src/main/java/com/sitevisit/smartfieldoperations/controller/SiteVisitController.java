@@ -7,6 +7,7 @@ import com.sitevisit.smartfieldoperations.repository.SiteVisitRepository;
 import com.sitevisit.smartfieldoperations.service.NotificationService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -26,6 +27,10 @@ public class SiteVisitController {
         this.companyRepository = companyRepository;
         this.notificationService = notificationService;
     }
+
+    // =========================
+    // SAVE NEW SITE VISIT
+    // =========================
 
     @PostMapping("/site-visits/save")
     public String saveSiteVisit(
@@ -69,7 +74,6 @@ public class SiteVisitController {
 
         siteVisitRepository.save(siteVisit);
 
-        // NOTIFICATION + EMAIL
         notificationService.createNotification(
                 "New site visit scheduled with "
                         + company.getName()
@@ -94,6 +98,115 @@ public class SiteVisitController {
 
         return "redirect:/site-visits";
     }
+
+    // =========================
+    // EDIT SITE VISIT
+    // =========================
+
+    @GetMapping("/site-visits/edit/{id}")
+    public String editSiteVisit(
+            @PathVariable Long id,
+            Model model
+    ) {
+
+        SiteVisit siteVisit =
+                siteVisitRepository.findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Site visit not found"
+                                ));
+
+        model.addAttribute(
+                "editVisit",
+                siteVisit
+        );
+
+        model.addAttribute(
+                "companies",
+                companyRepository.findAll()
+        );
+
+        model.addAttribute(
+                "siteVisits",
+                siteVisitRepository.findAll()
+        );
+
+        return "site-visits";
+    }
+
+    // =========================
+    // UPDATE SITE VISIT
+    // =========================
+
+    @PostMapping("/site-visits/update/{id}")
+    public String updateSiteVisit(
+            @PathVariable Long id,
+            @RequestParam Long companyId,
+            @RequestParam String visitDate,
+            @RequestParam String visitTime,
+            @RequestParam(required = false) String notes,
+            RedirectAttributes redirectAttributes
+    ) {
+
+        SiteVisit siteVisit =
+                siteVisitRepository.findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Site visit not found"
+                                ));
+
+        Company company =
+                companyRepository.findById(companyId)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Company not found"
+                                ));
+
+        siteVisit.setCompany(company);
+
+        siteVisit.setVisitDate(
+                java.time.LocalDate.parse(visitDate)
+        );
+
+        siteVisit.setVisitTime(
+                java.time.LocalTime.parse(visitTime)
+        );
+
+        siteVisit.setNotes(notes);
+
+        siteVisitRepository.save(siteVisit);
+
+        redirectAttributes.addFlashAttribute(
+                "successMessage",
+                "Site visit updated successfully."
+        );
+
+        return "redirect:/site-visits";
+    }
+
+    // =========================
+    // DELETE SITE VISIT
+    // =========================
+
+    @PostMapping("/site-visits/delete/{id}")
+    public String deleteSiteVisit(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes
+    ) {
+
+        siteVisitRepository.deleteById(id);
+
+        redirectAttributes.addFlashAttribute(
+                "successMessage",
+                "Site visit deleted successfully."
+        );
+
+        return "redirect:/site-visits";
+    }
+
+    // =========================
+    // UPDATE STATUS
+    // =========================
 
     @PostMapping("/site-visits/update-status/{id}")
     @ResponseBody

@@ -44,7 +44,6 @@ public class CompanyController {
             company.setEmail(updatedCompany.getEmail());
             company.setPhone(updatedCompany.getPhone());
             company.setAddress(updatedCompany.getAddress());
-            company.setStatus(updatedCompany.getStatus());
             return companyRepository.save(company);
         }).orElseThrow(() -> new RuntimeException("Company not found"));
     }

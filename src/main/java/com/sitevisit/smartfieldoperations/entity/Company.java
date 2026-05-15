@@ -17,15 +17,21 @@ public class Company {
     private String email;
     private String phone;
     private String address;
-    private String status;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Member> members;
 
+    @OneToMany(
+            mappedBy = "company",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JsonIgnore
+    private List<SiteVisit> siteVisits;
+
     public Company() {
     }
-
     public Long getId() {
         return id;
     }
@@ -72,14 +78,6 @@ public class Company {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public List<Member> getMembers() {

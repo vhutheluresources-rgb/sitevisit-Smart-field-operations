@@ -4,148 +4,427 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Company Management | SiteVisit</title>
+
     <link rel="stylesheet" href="/css/dashboard.css" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <link
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
             rel="stylesheet"
     />
 </head>
+
 <body>
 
 <section class="dashboard-section">
+
     <div class="dashboard-shell">
 
+        <!-- SIDEBAR -->
         <aside class="sidebar">
+
             <div class="sidebar-brand">
+
                 <div class="sidebar-logo">
-                    <img src="/images/siteVisit%20logo.png" alt="SiteVisit Logo" class="actual-logo" />
+                    <img src="/images/siteVisit%20logo.png"
+                         alt="SiteVisit Logo"
+                         class="actual-logo" />
                 </div>
+
                 <div>
                     <h3>SiteVisit</h3>
                     <p>Operations Panel</p>
                 </div>
+
             </div>
 
             <nav class="sidebar-links">
                 <a href="/dashboard">Dashboard</a>
-                <a href="/companies" class="active">Company Management</a>
+                <a href="/companies" class="active">
+                    Company Management
+                </a>
                 <a href="/members">Member Management</a>
                 <a href="/site-visits">Site Visits</a>
                 <a href="/reports">Reports</a>
-                <a href="/reminders-notifications">Reminders & Notifications</a>
+                <a href="/reminders-notifications">
+                    Reminders & Notifications
+                </a>
                 <a href="/profile">Profile</a>
                 <a href="/login">Logout</a>
             </nav>
+
         </aside>
 
+        <!-- MAIN -->
         <section class="dashboard-content">
+
             <div class="dashboard-topbar">
+
                 <div>
                     <h2>Company Management</h2>
+
                     <p th:text="'Welcome back, ' + ${fullName} + '. Here is your operations overview.'">
-                        Welcome back, User. Here is your operations overview.
+                        Welcome back, User.
                     </p>
                 </div>
 
                 <div class="profile-card">
-                    <div class="profile-avatar" th:text="${initial}">N</div>
+
+                    <div class="profile-avatar"
+                         th:text="${initial}">
+                        N
+                    </div>
+
                     <div>
                         <h4 th:text="${fullName}"></h4>
                         <span th:text="${role}"></span>
                     </div>
+
                 </div>
+
             </div>
 
+            <!-- ADD COMPANY -->
             <div class="panel" style="margin-bottom: 24px;">
+
                 <div class="panel-header">
                     <h3>Add Company</h3>
                 </div>
 
                 <div class="form-container">
-                    <form id="companyForm" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:16px;">
+
+                    <form id="companyForm"
+                          style="display:grid;
+                                 grid-template-columns: repeat(2, 1fr);
+                                 gap:16px;">
+
                         <input type="hidden" id="compId" />
 
                         <div>
-                            <label for="name">Company Name *</label>
-                            <input type="text" id="name" class="form-input" placeholder="Enter company name" required />
+                            <label for="name">
+                                Company Name *
+                            </label>
+
+                            <input type="text"
+                                   id="name"
+                                   class="form-input"
+                                   placeholder="Enter company name"
+                                   required />
                         </div>
 
                         <div>
-                            <label for="regNumber">Registration Number *</label>
-                            <input type="text" id="regNumber" class="form-input" placeholder="CIPC Reg No" required />
+                            <label for="regNumber">
+                                Registration Number *
+                            </label>
+
+                            <input type="text"
+                                   id="regNumber"
+                                   class="form-input"
+                                   placeholder="CIPC Reg No"
+                                   required />
                         </div>
 
                         <div>
-                            <label for="email">Email Address *</label>
-                            <input type="email" id="email" class="form-input" placeholder="contact@company.co.za" required />
+                            <label for="email">
+                                Email Address *
+                            </label>
+
+                            <input type="email"
+                                   id="email"
+                                   class="form-input"
+                                   placeholder="contact@company.co.za"
+                                   required />
                         </div>
 
                         <div>
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" class="form-input" placeholder="+27 XX XXX XXXX" />
+                            <label for="phone">
+                                Phone Number
+                            </label>
+
+                            <input type="tel"
+                                   id="phone"
+                                   class="form-input"
+                                   placeholder="+27 XX XXX XXXX" />
                         </div>
 
                         <div>
-                            <label for="status">Status</label>
-                            <select id="status" class="form-input">
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="address">Company Address</label>
+                            <label for="address">
+                                Company Address
+                            </label>
+
                             <textarea
                                     id="address"
                                     class="form-input"
                                     placeholder="Enter company address"
                                     name="address"
                                     rows="3"
-                                    style="width: 100%; resize: vertical;"
-                            ></textarea>
+                                    style="width:100%;
+                                           resize:vertical;">
+                            </textarea>
                         </div>
-                        <div style="grid-column: 1 / -1; display:flex; gap:12px; flex-wrap: wrap;">
-                            <button type="submit" id="saveBtn" class="btn-save">
+
+                        <div style="grid-column: 1 / -1;
+                                    display:flex;
+                                    gap:12px;
+                                    flex-wrap:wrap;">
+
+                            <button type="submit"
+                                    id="saveBtn"
+                                    class="btn-save">
+
                                 Save Company
+
                             </button>
+
                         </div>
+
                     </form>
+
                 </div>
+
             </div>
 
+            <!-- TABLE -->
             <div class="panel large-panel">
+
                 <div class="panel-header">
+
                     <h3>Registered Companies</h3>
-                    <button id="viewAllBtn" class="btn-primary" type="button">
+
+                    <button id="viewAllBtn"
+                            class="btn-primary"
+                            type="button">
+
                         View All
+
                     </button>
+
                 </div>
 
                 <div class="table-wrapper">
+
                     <table>
+
                         <thead>
+
                         <tr>
                             <th>Reg Number</th>
                             <th>Company Name</th>
                             <th>Email</th>
                             <th>Address</th>
-                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
+
                         </thead>
+
                         <tbody id="companyTableBody">
+
                         <tr>
-                            <td colspan="6" style="text-align:center;">Loading companies...</td>
+                            <td colspan="6"
+                                style="text-align:center;">
+
+                                Loading companies...
+
+                            </td>
                         </tr>
+
                         </tbody>
+
                     </table>
+
                 </div>
+
             </div>
+
         </section>
+
     </div>
+
 </section>
 
+<!-- DELETE MODAL -->
+<div id="deleteModal" class="custom-modal">
+
+    <div class="custom-modal-content">
+
+        <div class="custom-modal-header">
+            <h3>Delete Company</h3>
+        </div>
+
+        <div class="custom-modal-body">
+
+            <p>
+                Are you sure you want to delete this company?
+            </p>
+
+            <p class="modal-warning">
+                This action cannot be undone.
+            </p>
+
+        </div>
+
+        <div class="custom-modal-actions">
+
+            <button type="button"
+                    class="btn btn-secondary"
+                    onclick="closeDeleteModal()">
+
+                Cancel
+
+            </button>
+
+            <button type="button"
+                    id="confirmDeleteBtn"
+                    class="btn btn-danger">
+
+                Delete Company
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    let selectedCompanyId = null;
+
+    // OPEN MODAL
+    function confirmDelete(companyId) {
+
+        selectedCompanyId = companyId;
+
+        document.getElementById(
+            "deleteModal"
+        ).style.display = "flex";
+    }
+
+    // CLOSE MODAL
+    function closeDeleteModal() {
+
+        document.getElementById(
+            "deleteModal"
+        ).style.display = "none";
+
+        selectedCompanyId = null;
+    }
+
+    // DELETE COMPANY
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const confirmBtn =
+                document.getElementById(
+                    "confirmDeleteBtn"
+                );
+
+            if (confirmBtn) {
+
+                confirmBtn.addEventListener(
+                    "click",
+                    async function () {
+
+                        if (!selectedCompanyId) return;
+
+                        try {
+
+                            const response =
+                                await fetch(
+                                    `/api/companies/${selectedCompanyId}`,
+                                    {
+                                        method: "DELETE"
+                                    }
+                                );
+
+                            if (!response.ok) {
+                                throw new Error(
+                                    "Delete failed"
+                                );
+                            }
+
+                            closeDeleteModal();
+
+                            window.location.reload();
+
+                        } catch (error) {
+
+                            alert(
+                                "Failed to delete company."
+                            );
+                        }
+                    }
+                );
+            }
+        }
+    );
+
+    // CLOSE WHEN CLICK OUTSIDE
+    window.onclick = function(event) {
+
+        const modal =
+            document.getElementById(
+                "deleteModal"
+            );
+
+        if (event.target === modal) {
+            closeDeleteModal();
+        }
+    }
+
+</script>
+<!-- CUSTOM MODAL -->
+<div id="customModal" class="custom-modal">
+
+    <div class="custom-modal-content">
+
+        <!-- HEADER -->
+        <div class="custom-modal-header">
+
+            <h3 id="modalTitle">
+                Confirm Action
+            </h3>
+
+        </div>
+
+        <!-- BODY -->
+        <div class="custom-modal-body">
+
+            <p id="modalMessage">
+                Message goes here.
+            </p>
+
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="custom-modal-actions">
+
+            <button type="button"
+                    class="btn btn-secondary"
+                    onclick="closeCustomModal()">
+
+                Cancel
+
+            </button>
+
+            <button type="button"
+                    id="modalConfirmBtn"
+                    class="btn btn-danger">
+
+                Confirm
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 <script src="/js/companies.js"></script>
+
 </body>
 </html>

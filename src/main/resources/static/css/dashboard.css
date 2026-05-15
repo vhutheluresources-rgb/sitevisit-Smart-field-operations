@@ -902,3 +902,220 @@ td {
     font-size: 14px;
     font-weight: 800;
 }
+/* ACTION BUTTON CONTAINER */
+.action-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* GENERAL BUTTON STYLE */
+.action-btn {
+    padding: 9px 18px;
+    border-radius: 14px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: 1.5px solid transparent;
+    backdrop-filter: blur(6px);
+    background: rgba(255,255,255,0.65);
+}
+
+/* EDIT BUTTON */
+.btn-edit {
+    color: #1f4d3a;
+    border-color: rgba(31, 77, 58, 0.22);
+    background: rgba(31, 77, 58, 0.08);
+    box-shadow: 0 4px 12px rgba(31, 77, 58, 0.08);
+}
+
+.btn-edit:hover {
+    background: rgba(31, 77, 58, 0.14);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(31, 77, 58, 0.12);
+}
+
+/* DELETE BUTTON */
+.btn-delete {
+    color: #b45353;
+    border-color: rgba(180, 83, 83, 0.18);
+    background: rgba(180, 83, 83, 0.08);
+    box-shadow: 0 4px 12px rgba(180, 83, 83, 0.08);
+}
+
+.btn-delete:hover {
+    background: rgba(180, 83, 83, 0.14);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(180, 83, 83, 0.12);
+}
+
+/* VIEW ALL BUTTON */
+#viewAllBtn {
+    background: rgba(212, 168, 79, 0.12);
+    color: #8a6517;
+    border: 1.5px solid rgba(212, 168, 79, 0.3);
+    padding: 11px 22px;
+    border-radius: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 16px rgba(212, 168, 79, 0.12);
+}
+
+#viewAllBtn:hover {
+    background: rgba(212, 168, 79, 0.18);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(212, 168, 79, 0.16);
+}
+/* ACTION COLUMN */
+.actions-cell {
+    vertical-align: middle;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* BUTTON CONTAINER */
+.action-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* TABLE ALIGNMENT */
+table th:last-child,
+table td:last-child {
+    text-align: center;
+    width: 220px;
+}
+/* MODAL BACKDROP */
+.custom-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(6px);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* MODAL BOX */
+.custom-modal-content {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    border-radius: 22px;
+    overflow: hidden;
+
+    box-shadow:
+            0 25px 60px rgba(15, 23, 42, 0.22);
+
+    animation: modalFade 0.22s ease;
+}
+
+/* HEADER */
+.custom-modal-header {
+    padding: 24px 24px 18px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.custom-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.3px;
+}
+
+/* BODY */
+.custom-modal-body {
+    padding: 24px;
+}
+
+.custom-modal-body p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #475569;
+    font-weight: 500;
+}
+
+/* WARNING TEXT */
+.modal-warning {
+    margin-top: 14px !important;
+    color: #dc2626 !important;
+    font-weight: 700 !important;
+    font-size: 15px;
+}
+
+/* ACTIONS */
+.custom-modal-actions {
+    padding: 20px 24px;
+    border-top: 1px solid #e5e7eb;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+}
+
+/* BUTTON BASE */
+.custom-modal-actions .btn {
+    border: none;
+    border-radius: 16px;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* CANCEL BUTTON */
+.btn-secondary {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.btn-secondary:hover {
+    background: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+/* DELETE BUTTON */
+.btn-danger {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+/* PRIMARY BUTTON */
+.btn-primary {
+    background: #c9a227;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #b38f1f;
+    transform: translateY(-1px);
+}
+
+/* ANIMATION */
+@keyframes modalFade {
+
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
