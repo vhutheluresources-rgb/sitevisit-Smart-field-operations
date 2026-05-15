@@ -13,8 +13,6 @@ public class Member {
     private String fullName;
     private String email;
     private String phoneNumber;
-    private String role;
-    private String status;
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
@@ -53,22 +51,6 @@ public class Member {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public Company getCompany() {

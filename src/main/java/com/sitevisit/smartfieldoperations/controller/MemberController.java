@@ -30,8 +30,6 @@ public class MemberController {
         m.setFullName(data.get("fullName"));
         m.setEmail(data.get("email"));
         m.setPhoneNumber(data.get("phoneNumber"));
-        m.setRole(data.get("role"));
-        m.setStatus(data.get("status"));
 
         Long companyId = Long.parseLong(data.get("companyId"));
         Company company = companyRepo.findById(companyId)
@@ -55,8 +53,6 @@ public class MemberController {
         member.setFullName(data.get("fullName"));
         member.setEmail(data.get("email"));
         member.setPhoneNumber(data.get("phoneNumber"));
-        member.setRole(data.get("role"));
-        member.setStatus(data.get("status"));
 
         Long companyId = Long.parseLong(data.get("companyId"));
         Company company = companyRepo.findById(companyId)

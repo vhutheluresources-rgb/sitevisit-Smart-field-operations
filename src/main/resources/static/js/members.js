@@ -87,12 +87,6 @@ async function loadMembers() {
                 <td>${member.fullName}</td>
                 <td>${member.email}</td>
                 <td>${member.phoneNumber}</td>
-                <td>${member.role}</td>
-                <td>
-                    <span class="status ${member.status === 'Active' ? 'completed' : 'pending'}">
-                        ${member.status}
-                    </span>
-                </td>
                 <td>${member.company ? member.company.name : 'No Company'}</td>
                 <td>
     <div class="action-buttons">
@@ -104,8 +98,6 @@ async function loadMembers() {
                 '${escapeHtml(member.fullName)}',
                 '${escapeHtml(member.email)}',
                 '${escapeHtml(member.phoneNumber)}',
-                '${escapeHtml(member.role)}',
-                '${escapeHtml(member.status)}',
                 '${member.company ? member.company.id : ""}'
             )">
             Update
@@ -127,7 +119,7 @@ async function loadMembers() {
         console.error("Error loading members:", error);
         tableBody.innerHTML = `
             <tr>
-                <td colspan="8" style="text-align:center; color:red;">Failed to load members.</td>
+                <td colspan="6" style="text-align:center; color:red;">Failed to load members.</td>
             </tr>
         `;
     }
@@ -142,8 +134,6 @@ async function saveOrUpdateMember(event) {
         fullName: document.getElementById("fullName").value.trim(),
         email: document.getElementById("email").value.trim(),
         phoneNumber: document.getElementById("phoneNumber").value.trim(),
-        role: document.getElementById("role").value,
-        status: document.getElementById("status").value,
         companyId: document.getElementById("company").value
     };
 
@@ -181,13 +171,11 @@ async function saveOrUpdateMember(event) {
     }
 }
 
-function editMember(id, fullName, email, phoneNumber, role, status, companyId) {
+function editMember(id, fullName, email, phoneNumber, companyId) {
     document.getElementById("memberId").value = id;
     document.getElementById("fullName").value = fullName;
     document.getElementById("email").value = email;
     document.getElementById("phoneNumber").value = phoneNumber;
-    document.getElementById("role").value = role;
-    document.getElementById("status").value = status;
     document.getElementById("company").value = companyId;
 
     document.getElementById("saveMemberBtn").textContent = "Update Member";
@@ -195,7 +183,6 @@ function editMember(id, fullName, email, phoneNumber, role, status, companyId) {
 
     window.scrollTo({ top: 0, behavior: "smooth" });
 
-    document.getElementById("saveMemberBtn").textContent = "Update Member";
     document.getElementById("saveMemberBtn").style.background = "#2563eb";
     document.getElementById("saveMemberBtn").style.color = "#ffffff";
 }
@@ -235,7 +222,11 @@ async function confirmDeleteMember() {
 function resetForm() {
     document.getElementById("memberForm").reset();
     document.getElementById("memberId").value = "";
+
     document.getElementById("saveMemberBtn").textContent = "+ Save Member";
+    document.getElementById("saveMemberBtn").style.background = "";
+    document.getElementById("saveMemberBtn").style.color = "";
+
     document.getElementById("cancelEditBtn").style.display = "none";
 }
 
